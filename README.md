@@ -12,7 +12,6 @@ This launcher is one component of a larger nullDC distribution for Windows, toge
 * [nullDC](https://github.com/skmp/nulldc)
 * qkoJAMMA
 * [GNU sed](https://www.gnu.org/software/sed/)
-* [Info-Zip unzip](http://infozip.sourceforge.net/)
 
 Each open source component will be made available in their own repositories, while a compilation of all of them will be made available in the Releases.
 
