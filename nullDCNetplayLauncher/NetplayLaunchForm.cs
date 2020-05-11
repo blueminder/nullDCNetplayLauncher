@@ -148,6 +148,10 @@ namespace nullDCNetplayLauncher
                 List<string> romPaths = Directory.GetFiles(RomDir, "*?.lst", SearchOption.AllDirectories).Where(item => item.EndsWith(".lst")).ToList();
                 romDict = romPaths
                     .ToDictionary(x => Launcher.ExtractRomNameFromPath(x), x => Launcher.ExtractRelativeRomPath(x));
+                if (romDict.Count == 0)
+                {
+                    throw new FileNotFoundException();
+                }
             }
             catch (Exception)
             {
