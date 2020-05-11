@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -172,5 +173,19 @@ namespace nullDCNetplayLauncher
             LoadPreset(cboPresetName.Text);
         }
 
+        private void btnGuess_Click(object sender, EventArgs e)
+        {
+            long guessedDelay = Launcher.GuessDelay(txtIP.Text);
+            if (guessedDelay >= 0)
+            {
+                numDelay.BackColor = Color.White;
+                numDelay.Value = guessedDelay;
+            }
+            else
+            {
+                numDelay.BackColor = Color.Tomato;
+                numDelay.Text = "";
+            }
+        }
     }
 }

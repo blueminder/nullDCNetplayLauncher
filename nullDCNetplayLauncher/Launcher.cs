@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace nullDCNetplayLauncher
 {
@@ -12,6 +13,66 @@ namespace nullDCNetplayLauncher
 
         public Launcher()
         {
+        }
+
+        public static int GuessDelay(string IP)
+        {
+            int delay = -1;
+            long avgResponseTime;
+
+            List<long> responseTimes = new List<long>();
+            for (int i = 0; i < 10; i++) {
+                try
+                {
+                    Ping ping = new Ping();
+                    PingReply pingReply = ping.Send(IP, 1000);
+                    if (pingReply.Status == 0)
+                    {
+                        long responseTime = pingReply.RoundtripTime;
+                        responseTimes.Add(responseTime);
+                        Console.WriteLine(responseTime);
+                    }
+                }
+                catch (Exception err)
+                {
+                    Console.WriteLine(err.Message);
+                }
+            }
+
+            if (responseTimes.Count > 0)
+            {
+                avgResponseTime = (long)responseTimes.Average();
+
+                if (avgResponseTime < 25)
+                {
+                    delay = 1;
+                }
+                else if (avgResponseTime < 60)
+                {
+                    delay = 2;
+                }
+                else if (avgResponseTime < 100)
+                {
+                    delay = 3;
+                }
+                else if (avgResponseTime < 130)
+                {
+                    delay = 4;
+                }
+                else if (avgResponseTime < 155)
+                {
+                    delay = 5;
+                }
+                else if (avgResponseTime < 180)
+                {
+                    delay = 6;
+                }
+                else if (avgResponseTime > 180)
+                {
+                    delay = 7;
+                }
+            }
+            return delay;
         }
 
         public static void LaunchNullDC(string RomPath, bool isHost = false)
