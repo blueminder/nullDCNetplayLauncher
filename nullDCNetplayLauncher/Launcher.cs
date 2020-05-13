@@ -9,7 +9,7 @@ namespace nullDCNetplayLauncher
 {
     public class Launcher
     {
-        public static string rootDir = GetApplicationExecutableDirectoryName() + "\\";
+        public static string rootDir = AppDomain.CurrentDomain.BaseDirectory + "\\";
 
         public Launcher()
         {
