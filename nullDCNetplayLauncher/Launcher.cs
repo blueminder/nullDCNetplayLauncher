@@ -9,7 +9,7 @@ namespace nullDCNetplayLauncher
 {
     public class Launcher
     {
-        public static string rootDir = GetApplicationExecutableDirectoryName() + "\\";
+        public static string rootDir = GetDistributionRootDirectoryName() + "\\";
 
         public Launcher()
         {
@@ -127,7 +127,7 @@ namespace nullDCNetplayLauncher
             }
         }
 
-        public static string GetApplicationExecutableDirectoryName()
+        public static string GetDistributionRootDirectoryName()
         {
             var LauncherPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
             return Directory.GetParent(LauncherPath).ToString();
