@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Resources;
 using System.Windows.Forms;
 
 namespace nullDCNetplayLauncher
@@ -13,13 +15,24 @@ namespace nullDCNetplayLauncher
         Launcher launcher;
         Dictionary<String, String> romDict;
         ConnectionPresetList presets;
+        UserControl sc = new SettingsControl();
 
         public NetplayLaunchForm()
         {
             launcher = new Launcher();
             romDict = ScanRoms();
             presets = ConnectionPreset.ReadPresetsFile();
+            string launcherCfgText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            if (launcherCfgText.Contains("launch_antimicro=1"))
+            {
+                if (Process.GetProcessesByName("antimicro").Length == 0)
+                {
+                    Process.Start(Launcher.rootDir + "antimicro\\antimicro.exe", " --hidden --profile " + Launcher.rootDir + "\\antimicro\\profiles\\nulldc.gamecontroller.amgp");
+                }
+            }
+
             InitializeComponent();
+
 
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
@@ -190,6 +203,25 @@ namespace nullDCNetplayLauncher
                 numDelay.BackColor = Color.Tomato;
                 numDelay.Text = "";
             }
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            ResourceManager rm = new ResourceManager("Images", this.GetType().Assembly);
+            Form window = new Form
+            {
+                Text = "Settings",
+                TopLevel = true,
+                FormBorderStyle = FormBorderStyle.Fixed3D,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ClientSize = sc.Size,
+                Icon = nullDCNetplayLauncher.Properties.Resources.settings
+        };
+
+            window.Controls.Add(sc);
+            sc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            window.ShowDialog();
         }
     }
 }
