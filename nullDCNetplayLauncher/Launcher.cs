@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Runtime.InteropServices;
 
 namespace nullDCNetplayLauncher
 {
@@ -149,5 +151,56 @@ namespace nullDCNetplayLauncher
             List<string> splitPath = path.Split(Path.DirectorySeparatorChar).ToList();
             return String.Join("\\", Enumerable.Reverse(splitPath).Take(2).Reverse().ToList<string>());
         }
+
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        public static extern IntPtr FindWindow(string strClassName, string strWindowName);
+
+        [DllImport("user32.dll")]
+        public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
+
+        public const int DWMWA_EXTENDED_FRAME_BOUNDS = 9;
+        [DllImport("dwmapi.dll")]
+        public static extern int DwmGetWindowAttribute(IntPtr hWnd, int dwAttribute, out Rect lpRect, int cbAttribute);
+
+        public struct Rect
+        {
+            public int Left { get; set; }
+            public int Top { get; set; }
+            public int Right { get; set; }
+            public int Bottom { get; set; }
+        }
+
+
+
+        public static IntPtr NullDCWindowHandle()
+        {
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            Process ndc = processes[0];
+            IntPtr ptr = ndc.MainWindowHandle;
+            return ptr;
+        }
+
+        public static Point NullDCWindowDimensions()
+        {
+            Rect ndcWindowDim = new Rect();
+            if (Environment.OSVersion.Version.Major < 6)
+            {
+                GetWindowRect(NullDCWindowHandle(), ref ndcWindowDim);
+            }
+            else
+            {
+                if ((DwmGetWindowAttribute(NullDCWindowHandle(), DWMWA_EXTENDED_FRAME_BOUNDS, out ndcWindowDim, Marshal.SizeOf(ndcWindowDim)) != 0))
+                {
+                    //GetWindowRect(Launcher.NullDCWindowHandle(), ref ndcWindowDim);
+                }
+            }
+
+            var ndcWinX = ndcWindowDim.Right - ndcWindowDim.Left;
+            var ndcWinY = ndcWindowDim.Bottom - ndcWindowDim.Top;
+
+            return new Point(ndcWinX, ndcWinY);
+        }
+
     }
 }
