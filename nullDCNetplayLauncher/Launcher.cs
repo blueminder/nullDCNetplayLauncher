@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace nullDCNetplayLauncher
 {
@@ -75,6 +76,31 @@ namespace nullDCNetplayLauncher
                 }
             }
             return delay;
+        }
+
+        public static void KillAntiMicro()
+        {
+            var amInstances = Process.GetProcessesByName("antimicro");
+            if (amInstances.Length > 0)
+            {
+                foreach (Process amInstance in amInstances)
+                {
+                    amInstance.Kill();
+                    amInstance.WaitForExit();
+                    amInstance.Dispose();
+                }
+            }
+        }
+
+        public static void LaunchAntiMicro(bool hidden=false)
+        {
+            string hiddenArg = "";
+            KillAntiMicro();
+            if (hidden)
+            {
+                hiddenArg = " --hidden";
+            }
+            Process.Start(Launcher.rootDir + "antimicro\\antimicro.exe", $"{hiddenArg} --profile {Launcher.rootDir}\\antimicro\\profiles\\nulldc.gamecontroller.amgp");
         }
 
         public static void LaunchNullDC(string RomPath, bool isHost = false)

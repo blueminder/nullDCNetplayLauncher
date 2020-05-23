@@ -79,21 +79,21 @@ namespace nullDCNetplayLauncher
             {
                 rdoDefault.Checked = true;
             }
+
+            string launcherText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            if (launcherText.Contains("launch_antimicro=1"))
+            {
+                chkEnableMapper.Checked = true;
+            }
+            else
+            {
+                chkEnableMapper.Checked = false;
+            }
         }
 
-        private void btnClearNVMEM_Click(object sender, EventArgs e)
+        private void btnLaunchAntiMicro_Click(object sender, EventArgs e)
         {
-            string nvmemPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\data\\naomi_nvmem.bin";
-            try
-            {
-                File.SetAttributes(nvmemPath, FileAttributes.Normal);
-                File.Delete(nvmemPath);
-                MessageBox.Show("NVMEM Successfully Cleared");
-            }
-            catch(System.IO.FileNotFoundException)
-            {
-                MessageBox.Show("NVMEM Already Clear");
-            }
+            Launcher.LaunchAntiMicro();
         }
 
         private void btnEditCFG_Click(object sender, EventArgs e)
@@ -168,6 +168,7 @@ namespace nullDCNetplayLauncher
             else
                 result = regex.Replace(rlText, "\t; apply window settings ");
             File.WriteAllText(Launcher.rootDir + "nulldc_rom_launcher\\nulldc_rom_launcher.ahk", result);
+            MessageBox.Show("Window Settings Successfully Saved");
         }
 
         private void btnGrabWindowSize_Click(object sender, EventArgs e)

@@ -207,7 +207,6 @@ namespace nullDCNetplayLauncher
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            ResourceManager rm = new ResourceManager("Images", this.GetType().Assembly);
             Form window = new Form
             {
                 Text = "Settings",
@@ -221,6 +220,25 @@ namespace nullDCNetplayLauncher
 
             window.Controls.Add(sc);
             sc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            window.ShowDialog();
+        }
+
+        private void btnController_Click(object sender, EventArgs e)
+        {
+            UserControl cc = new ControllerControl();
+            Form window = new Form
+            {
+                Text = "Controller Setup",
+                TopLevel = true,
+                FormBorderStyle = FormBorderStyle.Fixed3D,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ClientSize = cc.Size,
+                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
+            };
+
+            window.Controls.Add(cc);
+            cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
         }
     }
