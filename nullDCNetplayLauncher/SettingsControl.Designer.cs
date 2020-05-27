@@ -41,7 +41,7 @@
             this.txtWindowX = new System.Windows.Forms.TextBox();
             this.txtWindowY = new System.Windows.Forms.TextBox();
             this.btnGrabWindowSize = new System.Windows.Forms.Button();
-            this.btnClearNVMEM = new System.Windows.Forms.Button();
+            this.btnLaunchAntiMicro = new System.Windows.Forms.Button();
             this.btnEditCFG = new System.Windows.Forms.Button();
             this.btnOpenQKO = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -193,15 +193,15 @@
             this.btnGrabWindowSize.UseVisualStyleBackColor = true;
             this.btnGrabWindowSize.Click += new System.EventHandler(this.btnGrabWindowSize_Click);
             // 
-            // btnClearNVMEM
+            // btnLaunchAntiMicro
             // 
-            this.btnClearNVMEM.Location = new System.Drawing.Point(3, 114);
-            this.btnClearNVMEM.Name = "btnClearNVMEM";
-            this.btnClearNVMEM.Size = new System.Drawing.Size(190, 30);
-            this.btnClearNVMEM.TabIndex = 7;
-            this.btnClearNVMEM.Text = "Clear NVMEM";
-            this.btnClearNVMEM.UseVisualStyleBackColor = true;
-            this.btnClearNVMEM.Click += new System.EventHandler(this.btnClearNVMEM_Click);
+            this.btnLaunchAntiMicro.Location = new System.Drawing.Point(3, 114);
+            this.btnLaunchAntiMicro.Name = "btnLaunchAntiMicro";
+            this.btnLaunchAntiMicro.Size = new System.Drawing.Size(190, 30);
+            this.btnLaunchAntiMicro.TabIndex = 7;
+            this.btnLaunchAntiMicro.Text = "Launch AntiMicro";
+            this.btnLaunchAntiMicro.UseVisualStyleBackColor = true;
+            this.btnLaunchAntiMicro.Click += new System.EventHandler(this.btnLaunchAntiMicro_Click);
             // 
             // btnEditCFG
             // 
@@ -274,7 +274,7 @@
             this.tabWindow.Location = new System.Drawing.Point(4, 25);
             this.tabWindow.Name = "tabWindow";
             this.tabWindow.Padding = new System.Windows.Forms.Padding(3);
-            this.tabWindow.Size = new System.Drawing.Size(205, 163);
+            this.tabWindow.Size = new System.Drawing.Size(207, 199);
             this.tabWindow.TabIndex = 1;
             this.tabWindow.Text = "Window";
             this.tabWindow.UseVisualStyleBackColor = true;
@@ -293,12 +293,12 @@
             // 
             this.tabAdvanced.Controls.Add(this.btnJoyCpl);
             this.tabAdvanced.Controls.Add(this.btnOpenQKO);
-            this.tabAdvanced.Controls.Add(this.btnClearNVMEM);
+            this.tabAdvanced.Controls.Add(this.btnLaunchAntiMicro);
             this.tabAdvanced.Controls.Add(this.btnEditCFG);
             this.tabAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabAdvanced.Name = "tabAdvanced";
             this.tabAdvanced.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAdvanced.Size = new System.Drawing.Size(205, 163);
+            this.tabAdvanced.Size = new System.Drawing.Size(207, 163);
             this.tabAdvanced.TabIndex = 2;
             this.tabAdvanced.Text = "Advanced";
             this.tabAdvanced.UseVisualStyleBackColor = true;
@@ -347,7 +347,7 @@
         private System.Windows.Forms.RadioButton rdoDefault;
         private System.Windows.Forms.Button btnOpenQKO;
         private System.Windows.Forms.Button btnEditCFG;
-        private System.Windows.Forms.Button btnClearNVMEM;
+        private System.Windows.Forms.Button btnLaunchAntiMicro;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabInput;
         private System.Windows.Forms.Button btnSaveInput;
