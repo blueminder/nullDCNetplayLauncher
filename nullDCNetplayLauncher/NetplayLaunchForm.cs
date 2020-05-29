@@ -22,6 +22,7 @@ namespace nullDCNetplayLauncher
             launcher = new Launcher();
             romDict = ScanRoms();
             presets = ConnectionPreset.ReadPresetsFile();
+            
             string launcherCfgText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
             if (launcherCfgText.Contains("launch_antimicro=1"))
             {
@@ -32,7 +33,6 @@ namespace nullDCNetplayLauncher
             }
 
             InitializeComponent();
-
 
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
@@ -45,111 +45,55 @@ namespace nullDCNetplayLauncher
                 btnJoin.Enabled = false;
                 cboGameSelect.Enabled = false;
             }
-
-            cboPresetName.DataSource = presets.ConnectionPresets;
-
-            btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
+            else
+            {
+                Launcher.SelectedGame = romDict.First().Value;
+            }
         }
 
         private void btnOffline_Click(object sender, EventArgs e)
         {
             Launcher.UpdateCFGFile(
-                netplayEnabled: false,
-                frameDelay: Convert.ToInt32(numDelay.Value)
-                                   .ToString());
+                netplayEnabled: false);
             Launcher.LaunchNullDC(cboGameSelect.SelectedValue.ToString());
         }
 
         private void btnHost_Click(object sender, EventArgs e)
         {
-            Launcher.UpdateCFGFile(
-                netplayEnabled: true,
-                isHost: true,
-                hostAddress: txtIP.Text,
-                hostPort: txtPort.Text,
-                frameDelay: Convert.ToInt32(numDelay.Value)
-                                   .ToString());
-            Launcher.LaunchNullDC(cboGameSelect.SelectedValue.ToString(), isHost: true);
+            UserControl hc = new HostControl();
+            Form window = new Form
+            {
+                Text = "Host Game",
+                TopLevel = true,
+                FormBorderStyle = FormBorderStyle.Fixed3D,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ClientSize = hc.Size,
+                Icon = nullDCNetplayLauncher.Properties.Resources.round_multiple_stop_black_24dp
+            };
+
+            window.Controls.Add(hc);
+            hc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            window.ShowDialog();
         }
 
         private void btnJoin_Click(object sender, EventArgs e)
         {
-            Launcher.UpdateCFGFile(
-                netplayEnabled: true,
-                isHost: false,
-                hostAddress: txtIP.Text,
-                hostPort: txtPort.Text,
-                frameDelay: Convert.ToInt32(numDelay.Value)
-                                   .ToString());
-            Launcher.LaunchNullDC(cboGameSelect.SelectedValue.ToString());
-        }
-
-        private void LoadPreset(string presetName)
-        {
-            ConnectionPreset toLoad = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
-            if (toLoad != null)
+            UserControl jc = new JoinControl();
+            Form window = new Form
             {
-                txtIP.Text = toLoad.IP;
-                txtPort.Text = toLoad.Port;
-                numDelay.Value = toLoad.Delay;
-            }
-        }
+                Text = "Join Game",
+                TopLevel = true,
+                FormBorderStyle = FormBorderStyle.Fixed3D,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ClientSize = jc.Size,
+                Icon = nullDCNetplayLauncher.Properties.Resources.round_multiple_stop_black_24dp
+            };
 
-        public void SavePreset(string presetName)
-        {
-            var toEdit = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
-            if (toEdit != null)
-            {
-                toEdit.IP = txtIP.Text;
-                toEdit.Port = txtPort.Text;
-                toEdit.Delay = numDelay.Value;
-            }
-            else
-            {
-                var toAdd = new ConnectionPreset();
-                toAdd.Name = cboPresetName.Text;
-                toAdd.IP = txtIP.Text;
-                toAdd.Port = txtPort.Text;
-                toAdd.Delay = numDelay.Value;
-                presets.ConnectionPresets.Add(toAdd);
-            }
-
-            var path = Launcher.GetApplicationConfigurationDirectoryName() + "//ConnectionPresetList.xml";
-            System.Xml.Serialization.XmlSerializer serializer =
-                new System.Xml.Serialization.XmlSerializer(typeof(ConnectionPresetList));
-            StreamWriter writer = new StreamWriter(path);
-            serializer.Serialize(writer.BaseStream, presets);
-            writer.Close();
-            presets = ConnectionPreset.ReadPresetsFile();
-            cboPresetName.DataSource = presets.ConnectionPresets;
-            cboPresetName.SelectedIndex = cboPresetName.FindStringExact(presetName);
-            if (presets.ConnectionPresets.Count > 1)
-            {
-                btnDeletePreset.Enabled = true;
-            }
-        }
-
-        public void DeletePreset(string presetName)
-        {
-            if (presets.ConnectionPresets.Count > 1)
-            {
-                var toDelete = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
-                presets.ConnectionPresets.Remove(toDelete);
-
-                var path = Launcher.GetApplicationConfigurationDirectoryName() + "//ConnectionPresetList.xml";
-                System.Xml.Serialization.XmlSerializer serializer =
-                    new System.Xml.Serialization.XmlSerializer(typeof(ConnectionPresetList));
-                StreamWriter writer = new StreamWriter(path);
-                serializer.Serialize(writer.BaseStream, presets);
-                writer.Close();
-                presets = ConnectionPreset.ReadPresetsFile();
-                cboPresetName.DataSource = presets.ConnectionPresets;
-                cboPresetName.SelectedIndex = 0;
-                if (presets.ConnectionPresets.Count == 1)
-                {
-                    btnDeletePreset.Enabled = false;
-                }
-            }
+            window.Controls.Add(jc);
+            jc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            window.ShowDialog();
         }
 
         private Dictionary<string, string> ScanRoms()
@@ -173,36 +117,6 @@ namespace nullDCNetplayLauncher
                 romDict = romPaths.ToDictionary(x => x, x => x);
             }
             return romDict;
-        }
-
-        private void btnSavePreset_Click(object sender, EventArgs e)
-        {
-            SavePreset(cboPresetName.Text);
-        }
-
-        private void btnDeletePreset_Click(object sender, EventArgs e)
-        {
-            DeletePreset(cboPresetName.Text);
-        }
-
-        private void cboPresetName_TextChanged(object sender, EventArgs e)
-        {
-            LoadPreset(cboPresetName.Text);
-        }
-
-        private void btnGuess_Click(object sender, EventArgs e)
-        {
-            long guessedDelay = Launcher.GuessDelay(txtIP.Text);
-            if (guessedDelay >= 0)
-            {
-                numDelay.BackColor = Color.White;
-                numDelay.Value = guessedDelay;
-            }
-            else
-            {
-                numDelay.BackColor = Color.Tomato;
-                numDelay.Text = "";
-            }
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -240,6 +154,12 @@ namespace nullDCNetplayLauncher
             window.Controls.Add(cc);
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
+        }
+
+        private void cboGameSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
+            Console.WriteLine(cboGameSelect.SelectedValue);
         }
     }
 }

@@ -13,6 +13,7 @@ namespace nullDCNetplayLauncher
     public class Launcher
     {
         public static string rootDir = GetDistributionRootDirectoryName() + "\\";
+        public static string SelectedGame;
 
         public Launcher()
         {
@@ -178,6 +179,31 @@ namespace nullDCNetplayLauncher
             return String.Join("\\", Enumerable.Reverse(splitPath).Take(2).Reverse().ToList<string>());
         }
 
+        public static string GenerateHostCode(string ip, string port, string delay)
+        {
+            string combinedHostInfo = ip + "|" + port + "|" + delay;
+            var infoBytes = System.Text.Encoding.UTF8.GetBytes(combinedHostInfo);
+            return System.Convert.ToBase64String(infoBytes);
+        }
+
+        public struct HostInfo
+        {
+            public string IP { get; set; }
+            public string Port { get; set; }
+            public string Delay { get; set; }
+        }
+
+        public static HostInfo DecodeHostCode(string hostCode)
+        {
+            var encodedInfoBytes = System.Convert.FromBase64String(hostCode);
+            var infoString = System.Text.Encoding.UTF8.GetString(encodedInfoBytes);
+            var hostInfoArray = infoString.Split('|');
+            HostInfo decodedHostInfo = new HostInfo();
+            decodedHostInfo.IP = hostInfoArray[0];
+            decodedHostInfo.Port = hostInfoArray[1];
+            decodedHostInfo.Delay = hostInfoArray[2];
+            return decodedHostInfo;
+        }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         public static extern IntPtr FindWindow(string strClassName, string strWindowName);

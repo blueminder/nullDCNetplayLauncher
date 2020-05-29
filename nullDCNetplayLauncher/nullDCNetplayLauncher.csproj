@@ -77,6 +77,12 @@
     <Compile Include="ControllerControl.Designer.cs">
       <DependentUpon>ControllerControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="HostControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="HostControl.Designer.cs">
+      <DependentUpon>HostControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -93,8 +99,17 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="JoinControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="JoinControl.Designer.cs">
+      <DependentUpon>JoinControl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ControllerControl.resx">
       <DependentUpon>ControllerControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HostControl.resx">
+      <DependentUpon>HostControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NetplayLaunchForm.resx">
       <DependentUpon>NetplayLaunchForm.cs</DependentUpon>
@@ -111,6 +126,9 @@
     </Compile>
     <EmbeddedResource Include="SettingsControl.resx">
       <DependentUpon>SettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JoinControl.resx">
+      <DependentUpon>JoinControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -187,13 +205,12 @@
     <None Include="Resources\icons8-game-controller-26.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\nnn.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\naomi.ico" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="naomi.ico" />
+    <None Include="Resources\round_multiple_stop_black_24dp.ico" />
+    <None Include="Resources\round_multiple_stop_black_24dp.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
