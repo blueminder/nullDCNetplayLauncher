@@ -7,14 +7,92 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Xml;
 
 namespace nullDCNetplayLauncher
 {
     public partial class HostControl : UserControl
     {
+        ConnectionPresetList presets;
+
         public HostControl()
         {
+            presets = ConnectionPreset.ReadPresetsFile();
             InitializeComponent();
+
+            cboPresetName.DataSource = presets.ConnectionPresets;
+
+            btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
+        }
+
+        public void SavePreset(string presetName)
+        {
+            var toEdit = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
+            if (toEdit != null)
+            {
+                toEdit.IP = txtHostIP.Text;
+                toEdit.Port = txtHostPort.Text;
+                toEdit.Delay = numDelay.Value;
+            }
+            else
+            {
+                var toAdd = new ConnectionPreset();
+                toAdd.Name = cboPresetName.Text;
+                toAdd.IP = txtHostIP.Text;
+                toAdd.Port = txtHostPort.Text;
+                toAdd.Delay = numDelay.Value;
+                presets.ConnectionPresets.Add(toAdd);
+            }
+
+            var path = Launcher.GetApplicationConfigurationDirectoryName() + "//ConnectionPresetList.xml";
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(ConnectionPresetList));
+            StreamWriter writer = new StreamWriter(path);
+            serializer.Serialize(writer.BaseStream, presets);
+            writer.Close();
+            presets = ConnectionPreset.ReadPresetsFile();
+            cboPresetName.DataSource = presets.ConnectionPresets;
+            cboPresetName.SelectedIndex = cboPresetName.FindStringExact(presetName);
+            if (presets.ConnectionPresets.Count > 1)
+            {
+                btnDeletePreset.Enabled = true;
+            }
+            cboPresetName.BackColor = Color.LemonChiffon;
+        }
+
+        public void DeletePreset(string presetName)
+        {
+            if (presets.ConnectionPresets.Count > 1)
+            {
+                var toDelete = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
+                presets.ConnectionPresets.Remove(toDelete);
+
+                var path = Launcher.GetApplicationConfigurationDirectoryName() + "//ConnectionPresetList.xml";
+                System.Xml.Serialization.XmlSerializer serializer =
+                    new System.Xml.Serialization.XmlSerializer(typeof(ConnectionPresetList));
+                StreamWriter writer = new StreamWriter(path);
+                serializer.Serialize(writer.BaseStream, presets);
+                writer.Close();
+                presets = ConnectionPreset.ReadPresetsFile();
+                cboPresetName.DataSource = presets.ConnectionPresets;
+                cboPresetName.SelectedIndex = 0;
+                if (presets.ConnectionPresets.Count == 1)
+                {
+                    btnDeletePreset.Enabled = false;
+                }
+            }
+        }
+
+        private void LoadPreset(string presetName)
+        {
+            ConnectionPreset toLoad = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
+            if (toLoad != null)
+            {
+                txtHostIP.Text = toLoad.IP;
+                txtHostPort.Text = toLoad.Port;
+                numDelay.Value = toLoad.Delay;
+            }
         }
 
         private void btnGuess_Click(object sender, EventArgs e)
@@ -54,9 +132,59 @@ namespace nullDCNetplayLauncher
 
         private void btnCopy_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(txtHostCode.Text);
-            MessageBox.Show("Host Code Copied to Clipboard");
+            if (txtHostCode.Text == "")
+            {
+                txtHostCode.BackColor = Color.Tomato;
+            }
+            else
+            {
+                txtHostCode.BackColor = Color.LemonChiffon;
+                Clipboard.SetText(txtHostCode.Text);
+            }
         }
 
+        private void txtHostCode_GotFocus(object sender, EventArgs e)
+        {
+            txtHostCode.BackColor = Color.White;
+        }
+
+        private void txtHostPort_GotFocus(object sender, EventArgs e)
+        {
+            txtHostPort.BackColor = Color.White;
+        }
+
+        private void numDelay_GotFocus(object sender, EventArgs e)
+        {
+            numDelay.BackColor = Color.White;
+        }
+
+        private void cboPresetName_GotFocus(object sender, EventArgs e)
+        {
+            cboPresetName.BackColor = Color.White;
+        }
+
+        private void btnSavePreset_Click(object sender, EventArgs e)
+        {
+            SavePreset(cboPresetName.Text);
+        }
+
+        private void btnDeletePreset_Click(object sender, EventArgs e)
+        {
+            DeletePreset(cboPresetName.Text);
+        }
+
+        private void cboPresetName_TextChanged(object sender, EventArgs e)
+        {
+            LoadPreset(cboPresetName.Text);
+        }
+
+        private void cboPresetName_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtHostCode.BackColor = Color.White;
+            txtHostIP.BackColor = Color.White;
+            txtHostPort.BackColor = Color.White;
+            numDelay.BackColor = Color.White;
+            LoadPreset(cboPresetName.Text);
+        }
     }
 }

@@ -187,9 +187,12 @@ namespace nullDCNetplayLauncher
             var infoString = System.Text.Encoding.UTF8.GetString(encodedInfoBytes);
             var hostInfoArray = infoString.Split('|');
             HostInfo decodedHostInfo = new HostInfo();
-            decodedHostInfo.IP = hostInfoArray[0];
-            decodedHostInfo.Port = hostInfoArray[1];
-            decodedHostInfo.Delay = hostInfoArray[2];
+            if (hostInfoArray.Length == 3)
+            {
+                decodedHostInfo.IP = hostInfoArray[0];
+                decodedHostInfo.Port = hostInfoArray[1];
+                decodedHostInfo.Delay = hostInfoArray[2];
+            }
             return decodedHostInfo;
         }
 
