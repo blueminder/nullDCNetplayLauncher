@@ -22,8 +22,17 @@ namespace nullDCNetplayLauncher
             launcher = new Launcher();
             romDict = ScanRoms();
             presets = ConnectionPreset.ReadPresetsFile();
-            
-            string launcherCfgText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            string launcherCfgText = "";
+            try
+            {
+                launcherCfgText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            }
+            catch(System.IO.DirectoryNotFoundException e)
+            {
+                MessageBox.Show("launcher.cfg not found. Please enter a valid root directory.");
+                System.Environment.Exit(1);
+            }
+
             if (launcherCfgText.Contains("launch_antimicro=1"))
             {
                 if (Process.GetProcessesByName("antimicro").Length == 0)
@@ -159,7 +168,6 @@ namespace nullDCNetplayLauncher
         private void cboGameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
-            Console.WriteLine(cboGameSelect.SelectedValue);
         }
     }
 }

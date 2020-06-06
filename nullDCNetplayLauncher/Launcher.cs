@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,7 +16,6 @@ namespace nullDCNetplayLauncher
     {
         public static string rootDir = GetDistributionRootDirectoryName() + "\\";
         public static string SelectedGame;
-
         public Launcher()
         {
         }
@@ -47,36 +48,23 @@ namespace nullDCNetplayLauncher
             {
                 avgResponseTime = (long)responseTimes.Average();
 
-                if (avgResponseTime < 25)
-                {
-                    delay = 1;
-                }
-                else if (avgResponseTime < 60)
-                {
-                    delay = 2;
-                }
-                else if (avgResponseTime < 100)
-                {
-                    delay = 3;
-                }
-                else if (avgResponseTime < 130)
-                {
-                    delay = 4;
-                }
-                else if (avgResponseTime < 155)
-                {
-                    delay = 5;
-                }
-                else if (avgResponseTime < 180)
-                {
-                    delay = 6;
-                }
-                else if (avgResponseTime > 180)
-                {
-                    delay = 7;
-                }
+                var calcDelay = Math.Ceiling((double)avgResponseTime / 32.66);
+                delay = Convert.ToInt32(calcDelay);
             }
             return delay;
+        }
+
+        public static string GetRomPathFromGameId(string gameid)
+        {
+            string RomDir = rootDir + "nulldc-1-0-4-en-win\\roms\\";
+            string GameJsonPath = rootDir + "games.json";
+
+            JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
+
+            var path = games.FirstOrDefault(x => x.Value<string>("gameid") == $"nulldc_{gameid}").Value<string>("path");
+            path = RomDir + path;
+
+            return path;
         }
 
         public static void KillAntiMicro()
@@ -107,8 +95,8 @@ namespace nullDCNetplayLauncher
         public static void LaunchNullDC(string RomPath, bool isHost = false)
         {
             string WorkDir = rootDir + "nulldc_rom_launcher\\";
-            string RomDir = rootDir + "nulldc-1-0-4-en-win\\roms\\";
-            string launchArgs = "\"" + WorkDir + "nulldc_rom_launcher.ahk" + "\" " + "\"" + RomDir + RomPath + "\"";
+            //string RomDir = rootDir + "nulldc-1-0-4-en-win\\roms\\";
+            string launchArgs = "\"" + WorkDir + "nulldc_rom_launcher.ahk" + "\" " + "\"" + Path.GetFullPath(RomPath) + "\"";
             if (isHost == true)
                 launchArgs += " host";
             Console.WriteLine("\"" + WorkDir + "AutoHotkeyU32.exe" + "\" " + launchArgs);
