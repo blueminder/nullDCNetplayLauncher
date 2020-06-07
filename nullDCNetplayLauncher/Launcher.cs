@@ -120,14 +120,22 @@ namespace nullDCNetplayLauncher
             string portcfg = "Port=" + hostPort;
             string delaycfg = "Delay=" + frameDelay;
 
+            // if host, enable audio frame sync
+            // if guest, disable audio frame sync
+            string limitfpscfg = "LimitFPS=" + (isHost || !netplayEnabled ? 2 : 0).ToString();
+
             string[] lines = File.ReadAllLines(CfgPath);
 
             using (StreamWriter writer = new StreamWriter(CfgPath))
             {
                 for (int i = 0; i < lines.Length; i++)
                 {
+                    if (lines[i].Contains("LimitFPS"))
+                    {
+                            writer.WriteLine(limitfpscfg);
+                    }
                     //section netplay                   
-                    if (lines[i].Contains("[Netplay]"))
+                    else if (lines[i].Contains("[Netplay]"))
                     {
                         writer.WriteLine("[Netplay]");
                         //rewriting all the lines in this section
@@ -139,7 +147,9 @@ namespace nullDCNetplayLauncher
                         i = i + 5;
                     }
                     else
+                    {
                         writer.WriteLine(lines[i]);
+                    }
                 }
             }
         }
