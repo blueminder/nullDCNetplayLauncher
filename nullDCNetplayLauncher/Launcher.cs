@@ -164,7 +164,7 @@ namespace nullDCNetplayLauncher
         public static string ExtractRelativeRomPath(string path)
         {
             List<string> splitPath = path.Split(Path.DirectorySeparatorChar).ToList();
-            return String.Join("\\", Enumerable.Reverse(splitPath).Take(2).Reverse().ToList<string>());
+            return String.Join("\\", Enumerable.Reverse(splitPath).Take(4).Reverse().ToList<string>());
         }
 
         public static string GenerateHostCode(string ip, string port, string delay)
@@ -187,9 +187,12 @@ namespace nullDCNetplayLauncher
             var infoString = System.Text.Encoding.UTF8.GetString(encodedInfoBytes);
             var hostInfoArray = infoString.Split('|');
             HostInfo decodedHostInfo = new HostInfo();
-            decodedHostInfo.IP = hostInfoArray[0];
-            decodedHostInfo.Port = hostInfoArray[1];
-            decodedHostInfo.Delay = hostInfoArray[2];
+            if (hostInfoArray.Length == 3)
+            {
+                decodedHostInfo.IP = hostInfoArray[0];
+                decodedHostInfo.Port = hostInfoArray[1];
+                decodedHostInfo.Delay = hostInfoArray[2];
+            }
             return decodedHostInfo;
         }
 
@@ -210,8 +213,6 @@ namespace nullDCNetplayLauncher
             public int Right { get; set; }
             public int Bottom { get; set; }
         }
-
-
 
         public static IntPtr NullDCWindowHandle()
         {

@@ -44,13 +44,16 @@
             this.btnLaunchGame = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
             this.txtHostCode = new System.Windows.Forms.TextBox();
+            this.cboPresetName = new System.Windows.Forms.ComboBox();
+            this.btnDeletePreset = new System.Windows.Forms.Button();
+            this.btnSavePreset = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             this.grpCodeLaunch.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(171, 98);
+            this.btnGuess.Location = new System.Drawing.Point(171, 125);
             this.btnGuess.Margin = new System.Windows.Forms.Padding(4);
             this.btnGuess.Name = "btnGuess";
             this.btnGuess.Size = new System.Drawing.Size(75, 25);
@@ -61,7 +64,7 @@
             // 
             // txtHostPort
             // 
-            this.txtHostPort.Location = new System.Drawing.Point(120, 41);
+            this.txtHostPort.Location = new System.Drawing.Point(120, 68);
             this.txtHostPort.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtHostPort.Name = "txtHostPort";
             this.txtHostPort.Size = new System.Drawing.Size(124, 22);
@@ -71,7 +74,7 @@
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(44, 102);
+            this.lblDelay.Location = new System.Drawing.Point(44, 129);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(44, 17);
             this.lblDelay.TabIndex = 42;
@@ -79,17 +82,16 @@
             // 
             // txtGuestIP
             // 
-            this.txtGuestIP.Location = new System.Drawing.Point(120, 69);
+            this.txtGuestIP.Location = new System.Drawing.Point(120, 96);
             this.txtGuestIP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtGuestIP.Name = "txtGuestIP";
             this.txtGuestIP.Size = new System.Drawing.Size(124, 22);
             this.txtGuestIP.TabIndex = 3;
-            this.txtGuestIP.Text = "0.0.0.0";
             // 
             // lblHostPort
             // 
             this.lblHostPort.AutoSize = true;
-            this.lblHostPort.Location = new System.Drawing.Point(44, 44);
+            this.lblHostPort.Location = new System.Drawing.Point(44, 71);
             this.lblHostPort.Name = "lblHostPort";
             this.lblHostPort.Size = new System.Drawing.Size(67, 17);
             this.lblHostPort.TabIndex = 39;
@@ -98,7 +100,7 @@
             // lblGuestIP
             // 
             this.lblGuestIP.AutoSize = true;
-            this.lblGuestIP.Location = new System.Drawing.Point(44, 74);
+            this.lblGuestIP.Location = new System.Drawing.Point(44, 101);
             this.lblGuestIP.Name = "lblGuestIP";
             this.lblGuestIP.Size = new System.Drawing.Size(62, 17);
             this.lblGuestIP.TabIndex = 41;
@@ -106,7 +108,7 @@
             // 
             // numDelay
             // 
-            this.numDelay.Location = new System.Drawing.Point(120, 98);
+            this.numDelay.Location = new System.Drawing.Point(120, 125);
             this.numDelay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numDelay.Name = "numDelay";
             this.numDelay.Size = new System.Drawing.Size(44, 22);
@@ -116,10 +118,11 @@
             0,
             0,
             0});
+            this.numDelay.GotFocus += new System.EventHandler(this.numDelay_GotFocus);
             // 
             // txtHostIP
             // 
-            this.txtHostIP.Location = new System.Drawing.Point(120, 13);
+            this.txtHostIP.Location = new System.Drawing.Point(120, 40);
             this.txtHostIP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtHostIP.Name = "txtHostIP";
             this.txtHostIP.Size = new System.Drawing.Size(124, 22);
@@ -129,7 +132,7 @@
             // lblHostIP
             // 
             this.lblHostIP.AutoSize = true;
-            this.lblHostIP.Location = new System.Drawing.Point(44, 16);
+            this.lblHostIP.Location = new System.Drawing.Point(44, 43);
             this.lblHostIP.Name = "lblHostIP";
             this.lblHostIP.Size = new System.Drawing.Size(53, 17);
             this.lblHostIP.TabIndex = 48;
@@ -137,7 +140,7 @@
             // 
             // btnGenHostCode
             // 
-            this.btnGenHostCode.Location = new System.Drawing.Point(10, 131);
+            this.btnGenHostCode.Location = new System.Drawing.Point(10, 158);
             this.btnGenHostCode.Name = "btnGenHostCode";
             this.btnGenHostCode.Size = new System.Drawing.Size(273, 23);
             this.btnGenHostCode.TabIndex = 6;
@@ -151,7 +154,7 @@
             this.grpCodeLaunch.Controls.Add(this.btnLaunchGame);
             this.grpCodeLaunch.Controls.Add(this.btnCopy);
             this.grpCodeLaunch.Controls.Add(this.txtHostCode);
-            this.grpCodeLaunch.Location = new System.Drawing.Point(5, 160);
+            this.grpCodeLaunch.Location = new System.Drawing.Point(5, 187);
             this.grpCodeLaunch.Name = "grpCodeLaunch";
             this.grpCodeLaunch.Size = new System.Drawing.Size(280, 104);
             this.grpCodeLaunch.TabIndex = 50;
@@ -195,11 +198,46 @@
             this.txtHostCode.Name = "txtHostCode";
             this.txtHostCode.Size = new System.Drawing.Size(235, 22);
             this.txtHostCode.TabIndex = 7;
+            this.txtHostCode.GotFocus += new System.EventHandler(this.txtHostCode_GotFocus);
+            // 
+            // cboPresetName
+            // 
+            this.cboPresetName.FormattingEnabled = true;
+            this.cboPresetName.Location = new System.Drawing.Point(47, 6);
+            this.cboPresetName.Name = "cboPresetName";
+            this.cboPresetName.Size = new System.Drawing.Size(135, 24);
+            this.cboPresetName.TabIndex = 1;
+            this.cboPresetName.SelectedIndexChanged += new System.EventHandler(this.cboPresetName_SelectedIndexChanged);
+            this.cboPresetName.GotFocus += new System.EventHandler(this.cboPresetName_GotFocus);
+
+            // 
+            // btnDeletePreset
+            // 
+            this.btnDeletePreset.Image = ((System.Drawing.Image)(resources.GetObject("btnDeletePreset.Image")));
+            this.btnDeletePreset.Location = new System.Drawing.Point(184, 4);
+            this.btnDeletePreset.Name = "btnDeletePreset";
+            this.btnDeletePreset.Size = new System.Drawing.Size(30, 27);
+            this.btnDeletePreset.TabIndex = 2;
+            this.btnDeletePreset.UseVisualStyleBackColor = true;
+            this.btnDeletePreset.Click += new System.EventHandler(this.btnDeletePreset_Click);
+            // 
+            // btnSavePreset
+            // 
+            this.btnSavePreset.Image = ((System.Drawing.Image)(resources.GetObject("btnSavePreset.Image")));
+            this.btnSavePreset.Location = new System.Drawing.Point(214, 4);
+            this.btnSavePreset.Name = "btnSavePreset";
+            this.btnSavePreset.Size = new System.Drawing.Size(30, 27);
+            this.btnSavePreset.TabIndex = 3;
+            this.btnSavePreset.UseVisualStyleBackColor = true;
+            this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
             // 
             // HostControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnSavePreset);
+            this.Controls.Add(this.btnDeletePreset);
+            this.Controls.Add(this.cboPresetName);
             this.Controls.Add(this.grpCodeLaunch);
             this.Controls.Add(this.btnGenHostCode);
             this.Controls.Add(this.txtHostIP);
@@ -212,7 +250,7 @@
             this.Controls.Add(this.lblGuestIP);
             this.Controls.Add(this.numDelay);
             this.Name = "HostControl";
-            this.Size = new System.Drawing.Size(290, 271);
+            this.Size = new System.Drawing.Size(290, 297);
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             this.grpCodeLaunch.ResumeLayout(false);
             this.grpCodeLaunch.PerformLayout();
@@ -238,5 +276,8 @@
         private System.Windows.Forms.Button btnLaunchGame;
         private System.Windows.Forms.Button btnCopy;
         private System.Windows.Forms.TextBox txtHostCode;
+        private System.Windows.Forms.ComboBox cboPresetName;
+        private System.Windows.Forms.Button btnDeletePreset;
+        private System.Windows.Forms.Button btnSavePreset;
     }
 }
