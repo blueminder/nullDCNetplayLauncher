@@ -45,12 +45,12 @@ namespace nullDCNetplayLauncher
         {
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
-                isHost: true,
+                isHost: false,
                 hostAddress: txtHostIP.Text,
                 hostPort: txtHostPort.Text,
                 frameDelay: Convert.ToInt32(numDelay.Value)
                                    .ToString());
-            Launcher.LaunchNullDC(Launcher.SelectedGame, isHost: true);
+            Launcher.LaunchNullDC(Launcher.SelectedGame, isHost: false);
         }
 
         private void btnPaste_Click(object sender, EventArgs e)
