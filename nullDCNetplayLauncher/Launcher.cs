@@ -122,7 +122,7 @@ namespace nullDCNetplayLauncher
 
             // if host, enable audio frame sync
             // if guest, disable audio frame sync
-            string limitfpscfg = "LimitFPS=" + (isHost ? 2 : 0).ToString();
+            string limitfpscfg = "LimitFPS=" + (isHost || !netplayEnabled ? 2 : 0).ToString();
 
             string[] lines = File.ReadAllLines(CfgPath);
 
