@@ -54,6 +54,7 @@ namespace nullDCNetplayLauncher
             Application.Run(new NetplayLaunchForm());
         }
 
+        [STAThread]
         static void Main(string[] args)
         {
             if (args.Length > 0 && args[0].StartsWith("--"))
