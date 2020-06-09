@@ -56,7 +56,7 @@ namespace nullDCNetplayLauncher
 
         public static string GetRomPathFromGameId(string gameid)
         {
-            string RomDir = rootDir + "nulldc-1-0-4-en-win\\roms\\";
+            string RomDir = "nulldc-1-0-4-en-win\\roms\\";
             string GameJsonPath = rootDir + "games.json";
 
             JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
@@ -95,11 +95,11 @@ namespace nullDCNetplayLauncher
         public static void LaunchNullDC(string RomPath, bool isHost = false)
         {
             string WorkDir = rootDir + "nulldc_rom_launcher\\";
-            //string RomDir = rootDir + "nulldc-1-0-4-en-win\\roms\\";
-            string launchArgs = "\"" + WorkDir + "nulldc_rom_launcher.ahk" + "\" " + "\"" + Path.GetFullPath(RomPath) + "\"";
+
+            string launchArgs = "\"" + WorkDir + "nulldc_rom_launcher.ahk" + "\" " + "\"" + rootDir + RomPath + "\"";
             if (isHost == true)
                 launchArgs += " host";
-            Console.WriteLine("\"" + WorkDir + "AutoHotkeyU32.exe" + "\" " + launchArgs);
+
             Process.Start("\"" + WorkDir + "AutoHotkeyU32.exe" + "\"", launchArgs);
         }
 

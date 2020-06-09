@@ -135,8 +135,6 @@ namespace nullDCNetplayLauncher
                     offline = arguments["offline"] == "1";
                     hosting = false;
 
-                    Console.WriteLine(arguments.Keys.ToString());
-
                     Launcher.UpdateCFGFile(
                         netplayEnabled: !offline,
                         isHost: hosting);
@@ -182,8 +180,6 @@ namespace nullDCNetplayLauncher
                             Console.WriteLine($"Generated Host Code: {genHost}");
                         }
                     }
-
-                    Console.WriteLine(arguments.Keys.ToString());
 
                     Launcher.UpdateCFGFile(
                         netplayEnabled: !offline,
