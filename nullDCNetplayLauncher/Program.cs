@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -65,6 +66,7 @@ namespace nullDCNetplayLauncher
                 bool offline = false;
                 string hostCode;
                 Launcher.HostInfo hostInfo = new Launcher.HostInfo();
+                hostInfo.Method = "0";
                 string romPath = "";
 
                 if (args.Length == 1 && args[0] == "--help")
@@ -93,12 +95,18 @@ namespace nullDCNetplayLauncher
                     Console.WriteLine("--lst-path <path to lst file>");
                     Console.WriteLine("--gameid <game id according to games.json>");
                     Console.WriteLine("");
+                    Console.WriteLine("--host-fps <max fps, 0 for uncapped>");
+                    Console.WriteLine("--guest-fps <max fps, 0 for uncapped>");
+                    Console.WriteLine("");
                     Console.WriteLine("--offline <0/1>");
                     Console.WriteLine("--delay <frame delay>");
                     Console.WriteLine("--host-code <code>");
                     Console.WriteLine("--hosting <0/1>");
                     Console.WriteLine("--ip <ip address>");
                     Console.WriteLine("--port <port number>");
+                    Console.WriteLine("");
+                    Console.WriteLine("--audio-sync (only for host)");
+                    Console.WriteLine("--frame-limit (only for host)");
                     return;
                 }
 
@@ -130,6 +138,31 @@ namespace nullDCNetplayLauncher
                     return;
                 }
 
+                if (arguments.ContainsKey("host-fps") || arguments.ContainsKey("guest-fps"))
+                {
+                    string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+                    var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+                    
+                    var host_fps_old = launcherCfgLines.Where(s => s.Contains("host_fps=")).ToList().First();
+                    var guest_fps_old = launcherCfgLines.Where(s => s.Contains("guest_fps=")).ToList().First();
+
+                    var hostFpsEntry = host_fps_old.Split('=')[1];
+                    var guestFpsEntry = guest_fps_old.Split('=')[1];
+
+                    int host_fps = Convert.ToInt32(hostFpsEntry);
+                    int guest_fps = Convert.ToInt32(guestFpsEntry);
+                    if (arguments.ContainsKey("host-fps"))
+                    {
+                        host_fps = Convert.ToInt32(arguments["host-fps"]);
+                    }
+
+                    if (arguments.ContainsKey("guest-fps"))
+                    {
+                        guest_fps = Convert.ToInt32(arguments["guest-fps"]);
+                    }
+                    Launcher.SaveFpsSettings(host_fps, guest_fps);
+                }
+
                 if (arguments.ContainsKey("offline"))
                 {
                     offline = arguments["offline"] == "1";
@@ -150,6 +183,12 @@ namespace nullDCNetplayLauncher
                         hosting = arguments["hosting"] == "1";
                     }
 
+                    if (arguments.ContainsKey("audio-sync"))
+                    {
+                        hostInfo.Method = "1";
+                        Console.WriteLine("audio sync");
+                    }
+
                     if (arguments.ContainsKey("guess-ip"))
                     {
                         hostInfo.Delay = Launcher.GuessDelay(arguments["guess-ip"]).ToString();
@@ -159,26 +198,27 @@ namespace nullDCNetplayLauncher
                     {
                         hostInfo.Delay = arguments["delay"];
                     }
+                    else if (arguments.ContainsKey("host-code"))
+                    {
+                        hostCode = arguments["host-code"];
+                        hostInfo = Launcher.DecodeHostCode(hostCode);
+                        Console.WriteLine($"Delay is set to {hostInfo.Delay}");
+                    }
                     else
                     {
                         Console.WriteLine("No delay entered.");
                         return;
                     }
 
-                    if (arguments.ContainsKey("host-code"))
-                    {
-                        hostCode = arguments["host-code"];
-                        hostInfo = Launcher.DecodeHostCode(hostCode);
-                    }
-                    else
-                    {
+                    if (arguments.ContainsKey("ip"))
                         hostInfo.IP = arguments["ip"];
+                    if (arguments.ContainsKey("port"))
                         hostInfo.Port = arguments["port"];
-                        if (hosting)
-                        {
-                            var genHost = Launcher.GenerateHostCode(hostInfo.IP, hostInfo.Port, hostInfo.Delay);
-                            Console.WriteLine($"Generated Host Code: {genHost}");
-                        }
+
+                    if (hosting)
+                    {
+                        var genHost = Launcher.GenerateHostCode(hostInfo.IP, hostInfo.Port, hostInfo.Delay, hostInfo.Method);
+                        Console.WriteLine($"Generated Host Code: {genHost}");
                     }
 
                     Launcher.UpdateCFGFile(
@@ -186,7 +226,8 @@ namespace nullDCNetplayLauncher
                         isHost: hosting,
                         hostAddress: hostInfo.IP,
                         hostPort: hostInfo.Port,
-                        frameDelay: hostInfo.Delay);
+                        frameDelay: hostInfo.Delay,
+                        frameMethod: hostInfo.Method);
 
                     Launcher.LaunchNullDC(
                         RomPath: romPath,

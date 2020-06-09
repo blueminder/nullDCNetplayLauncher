@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace nullDCNetplayLauncher
@@ -16,8 +17,13 @@ namespace nullDCNetplayLauncher
     {
         public static string rootDir = GetDistributionRootDirectoryName() + "\\";
         public static string SelectedGame;
+
+        public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
+
         public Launcher()
         {
+            MethodOptions["Frame Limit"] = 0;
+            MethodOptions["Audio Sync"] = 1;
         }
 
         public static int GuessDelay(string IP)
@@ -107,12 +113,15 @@ namespace nullDCNetplayLauncher
         // this fork mostly revolves around abusing this method
         public static void UpdateCFGFile(bool netplayEnabled = true,
             bool isHost = false,
-            string hostAddress = "0.0.0.0",
+            string hostAddress = "127.0.0.1",
             string hostPort = "27886",
-            string frameDelay = "1")
+            string frameDelay = "1",
+            string frameMethod = "0")
         {
             string EmuDir = rootDir + "nulldc-1-0-4-en-win\\";
+            string LauncherCfgPath = rootDir + "nullDCNetplayLauncher\\launcher.cfg";
             string CfgPath = EmuDir + "nullDC.cfg";
+            string AntilagPath = EmuDir + "antilag.cfg";
 
             string enabled = "Enabled=" + (netplayEnabled ? 1 : 0).ToString();
             string hosting = "Hosting=" + (isHost ? 1 : 0).ToString();
@@ -120,22 +129,59 @@ namespace nullDCNetplayLauncher
             string portcfg = "Port=" + hostPort;
             string delaycfg = "Delay=" + frameDelay;
 
-            // if host, enable audio frame sync
-            // if guest, disable audio frame sync
-            string limitfpscfg = "LimitFPS=" + (isHost || !netplayEnabled ? 2 : 0).ToString();
+            //for nullDC cfg
+            string limitfpscfg = "LimitFPS=0";
+            if (isHost)
+            {
+                //audio sync
+                if (frameMethod == "1")
+                {
+                    limitfpscfg = "LimitFPS=2";
+                }
+            }
 
+            string[] launchercfglines = File.ReadAllLines(LauncherCfgPath);
+            string[] fpslines = File.ReadAllLines(AntilagPath);
             string[] lines = File.ReadAllLines(CfgPath);
 
+            var host_fps_line = launchercfglines.Where(s => s.Contains("host_fps=")).ToList().First();
+            var guest_fps_line = launchercfglines.Where(s => s.Contains("guest_fps=")).ToList().First();
+
+            var hostFpsEntry = host_fps_line.Split('=')[1];
+            var guestFpsEntry = guest_fps_line.Split('=')[1];
+
+            string fpslimitcfg = "FPSlimit=" + (isHost || !netplayEnabled ? hostFpsEntry : guestFpsEntry).ToString();
+            Console.WriteLine(fpslimitcfg);
+
+            // write to frame limiter
+            using (StreamWriter writer = new StreamWriter(AntilagPath))
+            {
+                for (int i = 0; i < fpslines.Length; i++)
+                {
+                    if (fpslines[i].StartsWith("FPSlimit"))
+                    {
+                        writer.WriteLine(fpslimitcfg);
+                    }
+                    else
+                    {
+                        writer.WriteLine(fpslines[i]);
+                    }
+                }
+            }
+
+            // write to nullDC.cfg
             using (StreamWriter writer = new StreamWriter(CfgPath))
             {
                 for (int i = 0; i < lines.Length; i++)
                 {
+                    //section fps limiter
                     if (lines[i].Contains("LimitFPS"))
                     {
-                            writer.WriteLine(limitfpscfg);
+                        writer.WriteLine(limitfpscfg);
+                        i = i + 1;
                     }
                     //section netplay                   
-                    else if (lines[i].Contains("[Netplay]"))
+                    if (lines[i].Contains("[Netplay]"))
                     {
                         writer.WriteLine("[Netplay]");
                         //rewriting all the lines in this section
@@ -177,9 +223,18 @@ namespace nullDCNetplayLauncher
             return String.Join("\\", Enumerable.Reverse(splitPath).Take(4).Reverse().ToList<string>());
         }
 
-        public static string GenerateHostCode(string ip, string port, string delay)
+        public static string GenerateHostCode(string ip, string port, string delay, string method="0")
         {
-            string combinedHostInfo = ip + "|" + port + "|" + delay;
+            string combinedHostInfo;
+            if (method == "0")
+            {
+                combinedHostInfo = ip + "|" + port + "|" + delay;
+            }
+            else
+            {
+                combinedHostInfo = ip + "|" + port + "|" + delay + "|" + method;
+            }
+            
             var infoBytes = System.Text.Encoding.UTF8.GetBytes(combinedHostInfo);
             return System.Convert.ToBase64String(infoBytes);
         }
@@ -189,6 +244,7 @@ namespace nullDCNetplayLauncher
             public string IP { get; set; }
             public string Port { get; set; }
             public string Delay { get; set; }
+            public string Method { get; set; }
         }
 
         public static HostInfo DecodeHostCode(string hostCode)
@@ -202,6 +258,14 @@ namespace nullDCNetplayLauncher
                 decodedHostInfo.IP = hostInfoArray[0];
                 decodedHostInfo.Port = hostInfoArray[1];
                 decodedHostInfo.Delay = hostInfoArray[2];
+                decodedHostInfo.Method = "0";
+            }
+            if (hostInfoArray.Length == 4)
+            {
+                decodedHostInfo.IP = hostInfoArray[0];
+                decodedHostInfo.Port = hostInfoArray[1];
+                decodedHostInfo.Delay = hostInfoArray[2];
+                decodedHostInfo.Method = hostInfoArray[3];
             }
             return decodedHostInfo;
         }
@@ -251,6 +315,20 @@ namespace nullDCNetplayLauncher
             var ndcWinY = ndcWindowDim.Bottom - ndcWindowDim.Top;
 
             return new Point(ndcWinX, ndcWinY);
+        }
+
+        public static void SaveFpsSettings(int host_fps, int guest_fps)
+        {
+            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string lcText = File.ReadAllText(launcherCfgPath);
+            string result = "";
+            var host_regex = new Regex(@"^.*host_fps=.*$", RegexOptions.Multiline);
+            result = host_regex.Replace(lcText, $"host_fps={host_fps}");
+
+            var guest_regex = new Regex(@"^.*guest_fps=.*$", RegexOptions.Multiline);
+            result = guest_regex.Replace(result, $"guest_fps={guest_fps}");
+
+            File.WriteAllText(launcherCfgPath, result);
         }
 
     }

@@ -32,9 +32,7 @@
             this.btnGuess = new System.Windows.Forms.Button();
             this.txtHostPort = new System.Windows.Forms.TextBox();
             this.lblDelay = new System.Windows.Forms.Label();
-            this.txtGuestIP = new System.Windows.Forms.TextBox();
             this.lblHostPort = new System.Windows.Forms.Label();
-            this.lblGuestIP = new System.Windows.Forms.Label();
             this.numDelay = new System.Windows.Forms.NumericUpDown();
             this.txtHostIP = new System.Windows.Forms.TextBox();
             this.lblHostIP = new System.Windows.Forms.Label();
@@ -46,13 +44,15 @@
             this.btnSavePreset = new System.Windows.Forms.Button();
             this.btnDeletePreset = new System.Windows.Forms.Button();
             this.cboPresetName = new System.Windows.Forms.ComboBox();
+            this.lblMethod = new System.Windows.Forms.Label();
+            this.cboMethod = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             this.grpCodeLaunch.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(171, 233);
+            this.btnGuess.Location = new System.Drawing.Point(169, 204);
             this.btnGuess.Margin = new System.Windows.Forms.Padding(4);
             this.btnGuess.Name = "btnGuess";
             this.btnGuess.Size = new System.Drawing.Size(75, 25);
@@ -72,19 +72,11 @@
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(44, 237);
+            this.lblDelay.Location = new System.Drawing.Point(44, 207);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(44, 17);
             this.lblDelay.TabIndex = 42;
             this.lblDelay.Text = "Delay";
-            // 
-            // txtGuestIP
-            // 
-            this.txtGuestIP.Location = new System.Drawing.Point(120, 204);
-            this.txtGuestIP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtGuestIP.Name = "txtGuestIP";
-            this.txtGuestIP.Size = new System.Drawing.Size(124, 22);
-            this.txtGuestIP.TabIndex = 3;
             // 
             // lblHostPort
             // 
@@ -95,18 +87,9 @@
             this.lblHostPort.TabIndex = 39;
             this.lblHostPort.Text = "Host Port";
             // 
-            // lblGuestIP
-            // 
-            this.lblGuestIP.AutoSize = true;
-            this.lblGuestIP.Location = new System.Drawing.Point(44, 209);
-            this.lblGuestIP.Name = "lblGuestIP";
-            this.lblGuestIP.Size = new System.Drawing.Size(62, 17);
-            this.lblGuestIP.TabIndex = 41;
-            this.lblGuestIP.Text = "Guest IP";
-            // 
             // numDelay
             // 
-            this.numDelay.Location = new System.Drawing.Point(120, 233);
+            this.numDelay.Location = new System.Drawing.Point(120, 204);
             this.numDelay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numDelay.Name = "numDelay";
             this.numDelay.Size = new System.Drawing.Size(44, 22);
@@ -217,10 +200,29 @@
             this.cboPresetName.SelectedIndexChanged += new System.EventHandler(this.cboPresetName_SelectedIndexChanged);
             this.cboPresetName.TextChanged += new System.EventHandler(this.cboPresetName_TextChanged);
             // 
+            // lblMethod
+            // 
+            this.lblMethod.AutoSize = true;
+            this.lblMethod.Location = new System.Drawing.Point(44, 235);
+            this.lblMethod.Name = "lblMethod";
+            this.lblMethod.Size = new System.Drawing.Size(55, 17);
+            this.lblMethod.TabIndex = 54;
+            this.lblMethod.Text = "Method";
+            // 
+            // cboMethod
+            // 
+            this.cboMethod.FormattingEnabled = true;
+            this.cboMethod.Location = new System.Drawing.Point(120, 232);
+            this.cboMethod.Name = "cboMethod";
+            this.cboMethod.Size = new System.Drawing.Size(124, 24);
+            this.cboMethod.TabIndex = 55;
+            // 
             // JoinControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cboMethod);
+            this.Controls.Add(this.lblMethod);
             this.Controls.Add(this.btnSavePreset);
             this.Controls.Add(this.btnDeletePreset);
             this.Controls.Add(this.cboPresetName);
@@ -230,12 +232,11 @@
             this.Controls.Add(this.btnGuess);
             this.Controls.Add(this.txtHostPort);
             this.Controls.Add(this.lblDelay);
-            this.Controls.Add(this.txtGuestIP);
             this.Controls.Add(this.lblHostPort);
-            this.Controls.Add(this.lblGuestIP);
             this.Controls.Add(this.numDelay);
             this.Name = "JoinControl";
             this.Size = new System.Drawing.Size(290, 275);
+            this.Load += new System.EventHandler(this.JoinControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             this.grpCodeLaunch.ResumeLayout(false);
             this.grpCodeLaunch.PerformLayout();
@@ -249,9 +250,7 @@
         private System.Windows.Forms.Button btnGuess;
         private System.Windows.Forms.TextBox txtHostPort;
         private System.Windows.Forms.Label lblDelay;
-        private System.Windows.Forms.TextBox txtGuestIP;
         private System.Windows.Forms.Label lblHostPort;
-        private System.Windows.Forms.Label lblGuestIP;
         private System.Windows.Forms.NumericUpDown numDelay;
         private System.Windows.Forms.TextBox txtHostIP;
         private System.Windows.Forms.Label lblHostIP;
@@ -263,5 +262,7 @@
         private System.Windows.Forms.Button btnSavePreset;
         private System.Windows.Forms.Button btnDeletePreset;
         private System.Windows.Forms.ComboBox cboPresetName;
+        private System.Windows.Forms.Label lblMethod;
+        private System.Windows.Forms.ComboBox cboMethod;
     }
 }

@@ -26,9 +26,16 @@ namespace nullDCNetplayLauncher
             btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
         }
 
+        private void JoinControl_Load(object sender, EventArgs e)
+        {
+            cboMethod.DataSource = new BindingSource(Launcher.MethodOptions, null);
+            cboMethod.DisplayMember = "Key";
+            cboMethod.ValueMember = "Value";
+        }
+
         private void btnGuess_Click(object sender, EventArgs e)
         {
-            long guessedDelay = Launcher.GuessDelay(txtGuestIP.Text);
+            long guessedDelay = Launcher.GuessDelay(txtHostIP.Text);
             if (guessedDelay >= 0)
             {
                 numDelay.BackColor = Color.White;
@@ -94,10 +101,13 @@ namespace nullDCNetplayLauncher
                     txtHostIP.BackColor = Color.LemonChiffon;
                     txtHostPort.BackColor = Color.LemonChiffon;
                     numDelay.BackColor = Color.LemonChiffon;
+                    cboMethod.BackColor = Color.LemonChiffon;
 
                     txtHostIP.Text = hostInfo.IP;
                     txtHostPort.Text = hostInfo.Port;
                     numDelay.Value = Convert.ToInt32(hostInfo.Delay);
+
+                    cboMethod.SelectedValue = Convert.ToInt32(hostInfo.Method);
                 }
             }
         }
@@ -110,6 +120,7 @@ namespace nullDCNetplayLauncher
                 toEdit.IP = txtHostIP.Text;
                 toEdit.Port = txtHostPort.Text;
                 toEdit.Delay = numDelay.Value;
+                toEdit.Method = Convert.ToInt32(cboMethod.SelectedValue);
             }
             else
             {
@@ -118,6 +129,7 @@ namespace nullDCNetplayLauncher
                 toAdd.IP = txtHostIP.Text;
                 toAdd.Port = txtHostPort.Text;
                 toAdd.Delay = numDelay.Value;
+                toAdd.Method = Convert.ToInt32(cboMethod.SelectedValue);
                 presets.ConnectionPresets.Add(toAdd);
             }
 
@@ -168,6 +180,7 @@ namespace nullDCNetplayLauncher
                 txtHostIP.Text = toLoad.IP;
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
+                cboMethod.SelectedValue = toLoad.Method;
             }
         }
 

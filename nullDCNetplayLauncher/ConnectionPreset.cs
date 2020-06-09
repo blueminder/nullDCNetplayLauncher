@@ -15,6 +15,7 @@ namespace nullDCNetplayLauncher
         public string IP;
         public string Port;
         public decimal Delay;
+        public int Method;
 
         public override string ToString()
         {
@@ -38,9 +39,10 @@ namespace nullDCNetplayLauncher
             {
                 ConnectionPreset defaultPreset = new ConnectionPreset();
                 defaultPreset.Name = "Default";
-                defaultPreset.IP = "0.0.0.0";
+                defaultPreset.IP = "127.0.0.1";
                 defaultPreset.Port = "27886";
                 defaultPreset.Delay = 1;
+                defaultPreset.Method = 0;
                 readPresetList = new ConnectionPresetList();
                 readPresetList.ConnectionPresets.Add(defaultPreset);
             }
