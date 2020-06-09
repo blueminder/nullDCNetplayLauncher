@@ -9,11 +9,20 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using WindowsInput;
+using WindowsInput.Native;
 
 namespace nullDCNetplayLauncher
 {
     public class Launcher
     {
+        private static int WM_COMMAND = 0x111;
+        private static int NORMALBOOT_ID = 0x17;
+        private static int WINDOW_POPUP = 6; //get the official name for this one
+        private static int PATHNAME_ENTRY_ID = 0x47C;
+
+
+        
         public static string rootDir = GetDistributionRootDirectoryName() + "\\";
         public static string SelectedGame;
         public Launcher()
@@ -83,24 +92,103 @@ namespace nullDCNetplayLauncher
 
         public static void LaunchAntiMicro(bool hidden=false)
         {
-            string hiddenArg = "";
-            KillAntiMicro();
+            List<string> arglist = new List<string>();
             if (hidden)
             {
-                hiddenArg = " --hidden";
+                arglist.Add("--hidden");
             }
-            Process.Start(Launcher.rootDir + "antimicro\\antimicro.exe", $"{hiddenArg} --profile {Launcher.rootDir}\\antimicro\\profiles\\nulldc.gamecontroller.amgp");
+            arglist.Add("--profile");
+            arglist.Add("\"" + Path.Combine(Launcher.rootDir, @"antimicro\profiles\nulldc.gamecontroller.amgp") + "\"");
+            KillAntiMicro();
+            ProcessStartInfo psi = new ProcessStartInfo("\"" + Path.Combine(Launcher.rootDir, @"antimicro\antimicro.exe" + "\""));
+            psi.Arguments = string.Join(" ", arglist);
+            Process.Start(psi);
+                 
         }
 
+        [DllImport("user32.dll")]
+        public static extern IntPtr PostMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr GetWindow(IntPtr hWnd, int uCmd);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetDlgItem(IntPtr hDlg, int nIDDlgItem);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SetFocus(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        //Written by Labryz (Github: labreezy)
+        //Replaces the ahk rom launcher in favor of user32 P/Invoke Methods
         public static void LaunchNullDC(string RomPath, bool isHost = false)
         {
-            string WorkDir = rootDir + "nulldc_rom_launcher\\";
-
-            string launchArgs = "\"" + WorkDir + "nulldc_rom_launcher.ahk" + "\" " + "\"" + rootDir + RomPath + "\"";
-            if (isHost == true)
-                launchArgs += " host";
-
-            Process.Start("\"" + WorkDir + "AutoHotkeyU32.exe" + "\"", launchArgs);
+            Process[] ndc = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            Process[] fpslimit = Process.GetProcessesByName("FPS_Limiter");
+            if (fpslimit.Length > 0)
+            {
+                foreach (Process fProc in fpslimit)
+                {
+                    fProc.Kill();
+                    fProc.WaitForExit();
+                    fProc.Dispose();
+                }
+            }
+            if(ndc.Length > 0)
+            {
+                foreach (Process nProc in ndc)
+                {
+                    nProc.Kill();
+                    nProc.WaitForExit();
+                    nProc.Dispose();
+                }
+            }
+            string ndcPath = "\"" + Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\nullDC_Win323_Release-NoTrace.exe") + "\"";
+            string fpsLimPath = "\"" + Path.Combine(Launcher.rootDir, @"FPS_Limiter_0.2_Remake_GUI\FPS_Limiter.exe") + "\"";
+            ProcessStartInfo fpsStartInfo = new ProcessStartInfo(fpsLimPath);
+            List<string> arglist = new List<string>();
+            arglist.Add("/r:d3d9");
+            arglist.Add("/f:60");
+            arglist.Add("/x:OFF");
+            arglist.Add("/l:OFF");
+            arglist.Add(ndcPath);
+            fpsStartInfo.Arguments = string.Join(" ", arglist);
+            Process.Start(fpsStartInfo);
+            bool ndcStart = false;
+            for(var i = 0; i < 5; i++)
+            {
+                System.Threading.Thread.Sleep(400); //wait a bit, 2s total, 5 checks
+                ndc = Process.GetProcessesByName("nullDC_Win323_Release-NoTrace");
+                if(ndc.Length > 0)
+                {
+                    ndcStart = true;
+                    break;
+                }
+              
+            }
+            if (!ndcStart)
+            {
+                throw new Exception("nullDC failed to start from rom launcher."); //It might happen...
+            }
+            Process p = ndc[0];
+            IntPtr hWndPtr = p.MainWindowHandle;
+            PostMessage(hWndPtr, WM_COMMAND, NORMALBOOT_ID, 0); //Equivalent to File -> Normal Boot
+            System.Threading.Thread.Sleep(1000); //safety measure
+            IntPtr hPopup = GetWindow(hWndPtr, WINDOW_POPUP);
+            IntPtr hEdit = GetDlgItem(hPopup, PATHNAME_ENTRY_ID);
+            SetFocus(hEdit); //Sets focus to path text box so we type there
+            KeyboardSimulator keyboardSimulator = (KeyboardSimulator)(new InputSimulator().Keyboard);
+            keyboardSimulator.TextEntry(RomPath); //types in the rom path for you :D
+            if (isHost) //as host i'd assume you'd want to normal boot as fast as possible, not as client though
+            {
+                keyboardSimulator.KeyPress(VirtualKeyCode.TAB);
+                keyboardSimulator.KeyPress(VirtualKeyCode.TAB);
+                keyboardSimulator.KeyPress(VirtualKeyCode.RETURN); //tabs over to open and hits enter, starting boot
+            }
+            SetForegroundWindow(hWndPtr); //as a client, you're left to just click "open" to normal boot when host is ready
         }
 
         // written by MarioBrotha
@@ -156,8 +244,8 @@ namespace nullDCNetplayLauncher
 
         public static string GetDistributionRootDirectoryName()
         {
-            var LauncherPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            return Directory.GetParent(LauncherPath).ToString();
+            var LauncherPath = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
+            return Path.GetDirectoryName(LauncherPath);
         }
 
         public static string GetApplicationConfigurationDirectoryName()
