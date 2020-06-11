@@ -89,6 +89,17 @@ namespace nullDCNetplayLauncher
             {
                 chkEnableMapper.Checked = false;
             }
+
+            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var host_fps_old = launcherCfgLines.Where(s => s.Contains("host_fps=")).ToList().First();
+            var guest_fps_old = launcherCfgLines.Where(s => s.Contains("guest_fps=")).ToList().First();
+
+            var hostFpsEntry = host_fps_old.Split('=')[1];
+            var guestFpsEntry = guest_fps_old.Split('=')[1];
+
+            numHostFPS.Value = Convert.ToInt32(hostFpsEntry);
+            numGuestFPS.Value = Convert.ToInt32(guestFpsEntry);
         }
 
         private void btnLaunchAntiMicro_Click(object sender, EventArgs e)
@@ -178,5 +189,14 @@ namespace nullDCNetplayLauncher
             txtWindowX.Text = ndcWin.X.ToString();
             txtWindowY.Text = ndcWin.Y.ToString();
         }
+
+        private void btnSaveFPS_Click(object sender, EventArgs e)
+        {
+            Launcher.SaveFpsSettings(Convert.ToInt32(numHostFPS.Value),
+                            Convert.ToInt32(numGuestFPS.Value));
+            MessageBox.Show("FPS Limits Successfully Saved");
+        }
+
+        
     }
 }

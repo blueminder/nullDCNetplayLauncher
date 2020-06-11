@@ -26,6 +26,13 @@ namespace nullDCNetplayLauncher
             btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
         }
 
+        private void HostControl_Load(object sender, EventArgs e)
+        {
+            cboMethod.DataSource = new BindingSource(Launcher.MethodOptions, null);
+            cboMethod.DisplayMember = "Key";
+            cboMethod.ValueMember = "Value";
+        }
+
         public void SavePreset(string presetName)
         {
             var toEdit = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
@@ -34,6 +41,7 @@ namespace nullDCNetplayLauncher
                 toEdit.IP = txtHostIP.Text;
                 toEdit.Port = txtHostPort.Text;
                 toEdit.Delay = numDelay.Value;
+                toEdit.Method = Convert.ToInt32(cboMethod.SelectedValue);
             }
             else
             {
@@ -42,6 +50,7 @@ namespace nullDCNetplayLauncher
                 toAdd.IP = txtHostIP.Text;
                 toAdd.Port = txtHostPort.Text;
                 toAdd.Delay = numDelay.Value;
+                toAdd.Method = Convert.ToInt32(cboMethod.SelectedValue);
                 presets.ConnectionPresets.Add(toAdd);
             }
 
@@ -92,6 +101,7 @@ namespace nullDCNetplayLauncher
                 txtHostIP.Text = toLoad.IP;
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
+                cboMethod.SelectedValue = toLoad.Method;
             }
         }
 
@@ -114,7 +124,8 @@ namespace nullDCNetplayLauncher
         {
             var hostCode = Launcher.GenerateHostCode(txtHostIP.Text,
                                                      txtHostPort.Text,
-                                                     Convert.ToInt32(numDelay.Value).ToString());
+                                                     Convert.ToInt32(numDelay.Value).ToString(),
+                                                     Convert.ToInt32(cboMethod.SelectedValue).ToString());
             txtHostCode.Text = hostCode;
         }
 
@@ -126,7 +137,8 @@ namespace nullDCNetplayLauncher
                 hostAddress: txtHostIP.Text,
                 hostPort: txtHostPort.Text,
                 frameDelay: Convert.ToInt32(numDelay.Value)
-                                   .ToString());
+                                   .ToString(),
+                frameMethod: cboMethod.SelectedValue.ToString());
             Launcher.LaunchNullDC(Launcher.SelectedGame, isHost: true);
         }
 
@@ -184,6 +196,7 @@ namespace nullDCNetplayLauncher
             txtHostIP.BackColor = Color.White;
             txtHostPort.BackColor = Color.White;
             numDelay.BackColor = Color.White;
+            cboMethod.BackColor = Color.White;
             LoadPreset(cboPresetName.Text);
         }
     }

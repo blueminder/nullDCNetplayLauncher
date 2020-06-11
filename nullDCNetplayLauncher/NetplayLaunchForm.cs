@@ -27,7 +27,7 @@ namespace nullDCNetplayLauncher
             {
                 launcherCfgText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
             }
-            catch(System.IO.DirectoryNotFoundException e)
+            catch(System.IO.DirectoryNotFoundException)
             {
                 MessageBox.Show("launcher.cfg not found. Please enter a valid root directory.");
                 System.Environment.Exit(1);

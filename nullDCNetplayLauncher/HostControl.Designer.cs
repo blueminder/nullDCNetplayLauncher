@@ -47,16 +47,18 @@
             this.cboPresetName = new System.Windows.Forms.ComboBox();
             this.btnDeletePreset = new System.Windows.Forms.Button();
             this.btnSavePreset = new System.Windows.Forms.Button();
+            this.cboMethod = new System.Windows.Forms.ComboBox();
+            this.lblMethod = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             this.grpCodeLaunch.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(171, 125);
+            this.btnGuess.Location = new System.Drawing.Point(169, 116);
             this.btnGuess.Margin = new System.Windows.Forms.Padding(4);
             this.btnGuess.Name = "btnGuess";
-            this.btnGuess.Size = new System.Drawing.Size(75, 25);
+            this.btnGuess.Size = new System.Drawing.Size(77, 25);
             this.btnGuess.TabIndex = 5;
             this.btnGuess.Text = "Guess";
             this.btnGuess.UseVisualStyleBackColor = true;
@@ -64,17 +66,17 @@
             // 
             // txtHostPort
             // 
-            this.txtHostPort.Location = new System.Drawing.Point(120, 68);
+            this.txtHostPort.Location = new System.Drawing.Point(120, 66);
             this.txtHostPort.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtHostPort.Name = "txtHostPort";
-            this.txtHostPort.Size = new System.Drawing.Size(124, 22);
+            this.txtHostPort.Size = new System.Drawing.Size(126, 22);
             this.txtHostPort.TabIndex = 2;
             this.txtHostPort.Text = "27886";
             // 
             // lblDelay
             // 
             this.lblDelay.AutoSize = true;
-            this.lblDelay.Location = new System.Drawing.Point(44, 129);
+            this.lblDelay.Location = new System.Drawing.Point(44, 121);
             this.lblDelay.Name = "lblDelay";
             this.lblDelay.Size = new System.Drawing.Size(44, 17);
             this.lblDelay.TabIndex = 42;
@@ -82,16 +84,16 @@
             // 
             // txtGuestIP
             // 
-            this.txtGuestIP.Location = new System.Drawing.Point(120, 96);
+            this.txtGuestIP.Location = new System.Drawing.Point(120, 92);
             this.txtGuestIP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtGuestIP.Name = "txtGuestIP";
-            this.txtGuestIP.Size = new System.Drawing.Size(124, 22);
+            this.txtGuestIP.Size = new System.Drawing.Size(126, 22);
             this.txtGuestIP.TabIndex = 3;
             // 
             // lblHostPort
             // 
             this.lblHostPort.AutoSize = true;
-            this.lblHostPort.Location = new System.Drawing.Point(44, 71);
+            this.lblHostPort.Location = new System.Drawing.Point(44, 69);
             this.lblHostPort.Name = "lblHostPort";
             this.lblHostPort.Size = new System.Drawing.Size(67, 17);
             this.lblHostPort.TabIndex = 39;
@@ -100,7 +102,8 @@
             // lblGuestIP
             // 
             this.lblGuestIP.AutoSize = true;
-            this.lblGuestIP.Location = new System.Drawing.Point(44, 101);
+            this.lblGuestIP.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lblGuestIP.Location = new System.Drawing.Point(44, 95);
             this.lblGuestIP.Name = "lblGuestIP";
             this.lblGuestIP.Size = new System.Drawing.Size(62, 17);
             this.lblGuestIP.TabIndex = 41;
@@ -108,7 +111,7 @@
             // 
             // numDelay
             // 
-            this.numDelay.Location = new System.Drawing.Point(120, 125);
+            this.numDelay.Location = new System.Drawing.Point(120, 118);
             this.numDelay.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numDelay.Name = "numDelay";
             this.numDelay.Size = new System.Drawing.Size(44, 22);
@@ -125,9 +128,9 @@
             this.txtHostIP.Location = new System.Drawing.Point(120, 40);
             this.txtHostIP.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtHostIP.Name = "txtHostIP";
-            this.txtHostIP.Size = new System.Drawing.Size(124, 22);
+            this.txtHostIP.Size = new System.Drawing.Size(126, 22);
             this.txtHostIP.TabIndex = 1;
-            this.txtHostIP.Text = "0.0.0.0";
+            this.txtHostIP.Text = "127.0.0.1";
             // 
             // lblHostIP
             // 
@@ -140,7 +143,7 @@
             // 
             // btnGenHostCode
             // 
-            this.btnGenHostCode.Location = new System.Drawing.Point(10, 158);
+            this.btnGenHostCode.Location = new System.Drawing.Point(10, 182);
             this.btnGenHostCode.Name = "btnGenHostCode";
             this.btnGenHostCode.Size = new System.Drawing.Size(273, 23);
             this.btnGenHostCode.TabIndex = 6;
@@ -154,7 +157,7 @@
             this.grpCodeLaunch.Controls.Add(this.btnLaunchGame);
             this.grpCodeLaunch.Controls.Add(this.btnCopy);
             this.grpCodeLaunch.Controls.Add(this.txtHostCode);
-            this.grpCodeLaunch.Location = new System.Drawing.Point(5, 187);
+            this.grpCodeLaunch.Location = new System.Drawing.Point(3, 211);
             this.grpCodeLaunch.Name = "grpCodeLaunch";
             this.grpCodeLaunch.Size = new System.Drawing.Size(280, 104);
             this.grpCodeLaunch.TabIndex = 50;
@@ -209,12 +212,11 @@
             this.cboPresetName.TabIndex = 1;
             this.cboPresetName.SelectedIndexChanged += new System.EventHandler(this.cboPresetName_SelectedIndexChanged);
             this.cboPresetName.GotFocus += new System.EventHandler(this.cboPresetName_GotFocus);
-
             // 
             // btnDeletePreset
             // 
             this.btnDeletePreset.Image = ((System.Drawing.Image)(resources.GetObject("btnDeletePreset.Image")));
-            this.btnDeletePreset.Location = new System.Drawing.Point(184, 4);
+            this.btnDeletePreset.Location = new System.Drawing.Point(188, 4);
             this.btnDeletePreset.Name = "btnDeletePreset";
             this.btnDeletePreset.Size = new System.Drawing.Size(30, 27);
             this.btnDeletePreset.TabIndex = 2;
@@ -224,17 +226,36 @@
             // btnSavePreset
             // 
             this.btnSavePreset.Image = ((System.Drawing.Image)(resources.GetObject("btnSavePreset.Image")));
-            this.btnSavePreset.Location = new System.Drawing.Point(214, 4);
+            this.btnSavePreset.Location = new System.Drawing.Point(216, 4);
             this.btnSavePreset.Name = "btnSavePreset";
             this.btnSavePreset.Size = new System.Drawing.Size(30, 27);
             this.btnSavePreset.TabIndex = 3;
             this.btnSavePreset.UseVisualStyleBackColor = true;
             this.btnSavePreset.Click += new System.EventHandler(this.btnSavePreset_Click);
             // 
+            // cboMethod
+            // 
+            this.cboMethod.FormattingEnabled = true;
+            this.cboMethod.Location = new System.Drawing.Point(120, 144);
+            this.cboMethod.Name = "cboMethod";
+            this.cboMethod.Size = new System.Drawing.Size(126, 24);
+            this.cboMethod.TabIndex = 57;
+            // 
+            // lblMethod
+            // 
+            this.lblMethod.AutoSize = true;
+            this.lblMethod.Location = new System.Drawing.Point(44, 147);
+            this.lblMethod.Name = "lblMethod";
+            this.lblMethod.Size = new System.Drawing.Size(55, 17);
+            this.lblMethod.TabIndex = 56;
+            this.lblMethod.Text = "Method";
+            // 
             // HostControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.cboMethod);
+            this.Controls.Add(this.lblMethod);
             this.Controls.Add(this.btnSavePreset);
             this.Controls.Add(this.btnDeletePreset);
             this.Controls.Add(this.cboPresetName);
@@ -250,7 +271,8 @@
             this.Controls.Add(this.lblGuestIP);
             this.Controls.Add(this.numDelay);
             this.Name = "HostControl";
-            this.Size = new System.Drawing.Size(290, 297);
+            this.Size = new System.Drawing.Size(290, 318);
+            this.Load += new System.EventHandler(this.HostControl_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             this.grpCodeLaunch.ResumeLayout(false);
             this.grpCodeLaunch.PerformLayout();
@@ -279,5 +301,7 @@
         private System.Windows.Forms.ComboBox cboPresetName;
         private System.Windows.Forms.Button btnDeletePreset;
         private System.Windows.Forms.Button btnSavePreset;
+        private System.Windows.Forms.ComboBox cboMethod;
+        private System.Windows.Forms.Label lblMethod;
     }
 }
