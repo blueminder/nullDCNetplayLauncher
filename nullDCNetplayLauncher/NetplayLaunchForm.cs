@@ -17,11 +17,17 @@ namespace nullDCNetplayLauncher
         ConnectionPresetList presets;
         UserControl sc = new SettingsControl();
 
+        ControllerEngine controller;
+        GamePadMapper gpm;
+
         public NetplayLaunchForm()
         {
+            controller = new ControllerEngine();
+
             launcher = new Launcher();
             romDict = ScanRoms();
             presets = ConnectionPreset.ReadPresetsFile();
+            
             string launcherCfgText = "";
             try
             {
@@ -44,6 +50,9 @@ namespace nullDCNetplayLauncher
 
             InitializeComponent();
 
+            gpm = new GamePadMapper(controller);
+            this.Shown += gpm.initializeController;
+
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
             cboGameSelect.ValueMember = "Value";
@@ -59,6 +68,8 @@ namespace nullDCNetplayLauncher
             {
                 Launcher.SelectedGame = romDict.First().Value;
             }
+
+            
         }
 
         private void btnOffline_Click(object sender, EventArgs e)
