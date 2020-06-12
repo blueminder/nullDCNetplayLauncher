@@ -10,24 +10,16 @@ using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WindowsInput;
-using WindowsInput.Native;
 
 namespace nullDCNetplayLauncher
 {
     public class Launcher
     {
-        private static int WM_COMMAND = 0x111;
-        private static int NORMALBOOT_ID = 0x17;
-        private static int WINDOW_POPUP = 6; //get the official name for this one
-        private static int PATHNAME_ENTRY_ID = 0x47C;
-
-
-        
         public static string rootDir = GetDistributionRootDirectoryName() + "\\";
         public static string SelectedGame;
 
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
+
 
         public Launcher()
         {
@@ -121,6 +113,13 @@ namespace nullDCNetplayLauncher
         [DllImport("user32.dll")]
         static extern IntPtr GetDlgItem(IntPtr hDlg, int nIDDlgItem);
 
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, uint Msg, IntPtr wParam, string lParam);
+        public const uint WM_SETTEXT = 0x000C;
+
+        [DllImport("user32.dll")]
+        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
+
         [DllImport("user32.dll")]
         static extern IntPtr SetFocus(IntPtr hWnd);
 
@@ -128,22 +127,18 @@ namespace nullDCNetplayLauncher
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool SetForegroundWindow(IntPtr hWnd);
 
-        //Written by Labryz (Github: labreezy)
-        //Replaces the ahk rom launcher in favor of user32 P/Invoke Methods
+        private static int WM_COMMAND = 0x111;
+        private static int NORMALBOOT_ID = 0x17;
+        private static int WINDOW_POPUP = 6; //get the official name for this one
+        private static int PATHNAME_ENTRY_ID = 0x47C;
+
         public static void LaunchNullDC(string RomPath, bool isHost = false)
         {
+            //Credit to Labryz (GitHub: labreezy) for initial work
+            //replacing the AHK rom launcher in favor of user32 P/Invoke Methods
             Process[] ndc = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            Process[] fpslimit = Process.GetProcessesByName("FPS_Limiter");
-            if (fpslimit.Length > 0)
-            {
-                foreach (Process fProc in fpslimit)
-                {
-                    fProc.Kill();
-                    fProc.WaitForExit();
-                    fProc.Dispose();
-                }
-            }
-            if(ndc.Length > 0)
+
+            if (ndc.Length > 0)
             {
                 foreach (Process nProc in ndc)
                 {
@@ -152,49 +147,61 @@ namespace nullDCNetplayLauncher
                     nProc.Dispose();
                 }
             }
-            string ndcPath = "\"" + Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\nullDC_Win323_Release-NoTrace.exe") + "\"";
-            string fpsLimPath = "\"" + Path.Combine(Launcher.rootDir, @"FPS_Limiter_0.2_Remake_GUI\FPS_Limiter.exe") + "\"";
-            ProcessStartInfo fpsStartInfo = new ProcessStartInfo(fpsLimPath);
+            string ndcPath = "\"" + Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\nullDC_Win32_Release-NoTrace.exe") + "\"";
+            string FullRomPath = "\"" + Path.Combine(Launcher.rootDir, RomPath) + "\"";
+            ProcessStartInfo ndcStartInfo = new ProcessStartInfo(ndcPath);
             List<string> arglist = new List<string>();
-            arglist.Add("/r:d3d9");
-            arglist.Add("/f:60");
-            arglist.Add("/x:OFF");
-            arglist.Add("/l:OFF");
             arglist.Add(ndcPath);
-            fpsStartInfo.Arguments = string.Join(" ", arglist);
-            Process.Start(fpsStartInfo);
+            ndcStartInfo.Arguments = string.Join(" ", arglist);
+            _ = Process.Start(ndcStartInfo);
             bool ndcStart = false;
-            for(var i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
-                System.Threading.Thread.Sleep(400); //wait a bit, 2s total, 5 checks
-                ndc = Process.GetProcessesByName("nullDC_Win323_Release-NoTrace");
-                if(ndc.Length > 0)
+                System.Threading.Thread.Sleep(1000); //wait a bit, 2s total, 5 checks
+                ndc = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+                if (ndc.Length > 0)
                 {
                     ndcStart = true;
                     break;
                 }
-              
             }
+
             if (!ndcStart)
             {
                 throw new Exception("nullDC failed to start from rom launcher."); //It might happen...
             }
             Process p = ndc[0];
             IntPtr hWndPtr = p.MainWindowHandle;
+            
+            var windowSettings = LoadWindowSettings();
+            System.Threading.Thread.Sleep(1000);
+            if (windowSettings[0] == 1)
+            {
+                MoveWindow(hWndPtr,
+                       NullDCWindowPosition().X,
+                       NullDCWindowPosition().Y,
+                       windowSettings[1],
+                       windowSettings[2],
+                       true);
+            }
+            else if (windowSettings[3] == 1)
+            {
+                ShowWindow(hWndPtr, 3);
+            }
+
             PostMessage(hWndPtr, WM_COMMAND, NORMALBOOT_ID, 0); //Equivalent to File -> Normal Boot
-            System.Threading.Thread.Sleep(1000); //safety measure
+            System.Threading.Thread.Sleep(2000); //safety measure
             IntPtr hPopup = GetWindow(hWndPtr, WINDOW_POPUP);
             IntPtr hEdit = GetDlgItem(hPopup, PATHNAME_ENTRY_ID);
-            SetFocus(hEdit); //Sets focus to path text box so we type there
-            KeyboardSimulator keyboardSimulator = (KeyboardSimulator)(new InputSimulator().Keyboard);
-            keyboardSimulator.TextEntry(RomPath); //types in the rom path for you :D
-            if (isHost) //as host i'd assume you'd want to normal boot as fast as possible, not as client though
-            {
-                keyboardSimulator.KeyPress(VirtualKeyCode.TAB);
-                keyboardSimulator.KeyPress(VirtualKeyCode.TAB);
-                keyboardSimulator.KeyPress(VirtualKeyCode.RETURN); //tabs over to open and hits enter, starting boot
-            }
-            SetForegroundWindow(hWndPtr); //as a client, you're left to just click "open" to normal boot when host is ready
+            HandleRef hrefHWndTarget = new HandleRef(null, hEdit);
+
+            SendMessage(hrefHWndTarget, WM_SETTEXT, IntPtr.Zero, FullRomPath);
+
+            SetFocus(hEdit);
+            const byte VK_RETURN = 0x0D;
+            const uint KEYEVENTF_KEYUP = 0x0002;
+            keybd_event(VK_RETURN, 0, 0, 0);
+            keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);
         }
 
         // written by MarioBrotha
@@ -290,8 +297,9 @@ namespace nullDCNetplayLauncher
 
         public static string GetDistributionRootDirectoryName()
         {
-            var LauncherPath = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
-            return Path.GetDirectoryName(LauncherPath);
+            var LauncherPath = new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
+            var DistroPath = new DirectoryInfo(LauncherPath).Parent.Parent.FullName;
+            return DistroPath;
         }
 
         public static string GetApplicationConfigurationDirectoryName()
@@ -368,6 +376,12 @@ namespace nullDCNetplayLauncher
         [DllImport("dwmapi.dll")]
         public static extern int DwmGetWindowAttribute(IntPtr hWnd, int dwAttribute, out Rect lpRect, int cbAttribute);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
         public struct Rect
         {
             public int Left { get; set; }
@@ -405,6 +419,27 @@ namespace nullDCNetplayLauncher
             return new Point(ndcWinX, ndcWinY);
         }
 
+        public static Point NullDCWindowPosition()
+        {
+            Rect ndcWindowDim = new Rect();
+            if (Environment.OSVersion.Version.Major < 6)
+            {
+                GetWindowRect(NullDCWindowHandle(), ref ndcWindowDim);
+            }
+            else
+            {
+                if ((DwmGetWindowAttribute(NullDCWindowHandle(), DWMWA_EXTENDED_FRAME_BOUNDS, out ndcWindowDim, Marshal.SizeOf(ndcWindowDim)) != 0))
+                {
+                    //GetWindowRect(Launcher.NullDCWindowHandle(), ref ndcWindowDim);
+                }
+            }
+
+            var ndcWinX = ndcWindowDim.Left;
+            var ndcWinY = ndcWindowDim.Top;
+
+            return new Point(ndcWinX, ndcWinY);
+        }
+
         public static void SaveFpsSettings(int host_fps, int guest_fps)
         {
             string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
@@ -417,6 +452,51 @@ namespace nullDCNetplayLauncher
             result = guest_regex.Replace(result, $"guest_fps={guest_fps}");
 
             File.WriteAllText(launcherCfgPath, result);
+        }
+
+        public static void SaveWindowSettings(int custom_size, int width, int height, int windowMax=0)
+        {
+            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string lcText = File.ReadAllText(launcherCfgPath);
+            string result = "";
+
+            var custom_size_regex = new Regex(@"^.*custom_size=.*$", RegexOptions.Multiline);
+            result = custom_size_regex.Replace(lcText, $"custom_size={custom_size}");
+
+            var width_regex = new Regex(@"^.*width=.*$", RegexOptions.Multiline);
+            result = width_regex.Replace(result, $"width={width}");
+
+            var height_regex = new Regex(@"^.*height=.*$", RegexOptions.Multiline);
+            result = height_regex.Replace(result, $"height={height}");
+
+            var max_regex = new Regex(@"^.*maximized=.*$", RegexOptions.Multiline);
+            result = max_regex.Replace(result, $"maximized={windowMax}");
+
+            File.WriteAllText(launcherCfgPath, result);
+        }
+
+        public static int[] LoadWindowSettings()
+        {
+            int[] windowSettings = new int[4];
+
+            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var custom_size_cfg = launcherCfgLines.Where(s => s.Contains("custom_size=")).ToList().First();
+            var width_cfg = launcherCfgLines.Where(s => s.Contains("width=")).ToList().First();
+            var height_cfg = launcherCfgLines.Where(s => s.Contains("height=")).ToList().First();
+            var maximized_cfg = launcherCfgLines.Where(s => s.Contains("maximized=")).ToList().First();
+
+            var customSizeEntry = custom_size_cfg.Split('=')[1];
+            var widthEntry = width_cfg.Split('=')[1];
+            var heightEntry = height_cfg.Split('=')[1];
+            var maximizedEntry = maximized_cfg.Split('=')[1];
+
+            windowSettings[0] = Convert.ToInt32(customSizeEntry);
+            windowSettings[1] = Convert.ToInt32(widthEntry);
+            windowSettings[2] = Convert.ToInt32(heightEntry);
+            windowSettings[3] = Convert.ToInt32(maximizedEntry);
+
+            return windowSettings;
         }
 
     }

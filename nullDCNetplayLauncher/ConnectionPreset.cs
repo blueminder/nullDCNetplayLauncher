@@ -37,12 +37,14 @@ namespace nullDCNetplayLauncher
             }
             catch (Exception)
             {
-                ConnectionPreset defaultPreset = new ConnectionPreset();
-                defaultPreset.Name = "Default";
-                defaultPreset.IP = "127.0.0.1";
-                defaultPreset.Port = "27886";
-                defaultPreset.Delay = 1;
-                defaultPreset.Method = 0;
+                ConnectionPreset defaultPreset = new ConnectionPreset
+                {
+                    Name = "Default",
+                    IP = "127.0.0.1",
+                    Port = "27886",
+                    Delay = 1,
+                    Method = 0
+                };
                 readPresetList = new ConnectionPresetList();
                 readPresetList.ConnectionPresets.Add(defaultPreset);
             }

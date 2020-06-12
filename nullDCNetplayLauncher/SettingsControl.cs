@@ -22,7 +22,6 @@ namespace nullDCNetplayLauncher
         }
 
         string[] cfgLines;
-        string[] rlLines;
 
         string player1_old;
         string backup_old;
@@ -65,20 +64,22 @@ namespace nullDCNetplayLauncher
             cboBackup.SelectedValue = backupEntry;
             cboPlayer2.SelectedValue = p2Entry;
 
-            rlLines = File.ReadAllLines(Launcher.rootDir + "nulldc_rom_launcher\\nulldc_rom_launcher.ahk");
-            var window_old = rlLines.Where(s => s.Contains("; apply window settings")).ToList().First();
-            if (window_old.Contains("WinMaximize"))
+            var windowSettings = Launcher.LoadWindowSettings();
+            if (windowSettings[3] == 1)
             {
                 rdoStartMax.Checked = true;
             }
-            else if (window_old.Contains("WinMove"))
+            else if(windowSettings[0] == 1)
             {
                 rdoCustomSize.Checked = true;
             }
-            else 
+            else
             {
                 rdoDefault.Checked = true;
             }
+
+            txtWindowX.Text = windowSettings[1].ToString();
+            txtWindowY.Text = windowSettings[2].ToString();
 
             string launcherText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
             if (launcherText.Contains("launch_antimicro=1"))
@@ -169,16 +170,15 @@ namespace nullDCNetplayLauncher
 
         private void btnSaveWindow_Click(object sender, EventArgs e)
         {
-            string rlText = File.ReadAllText(Launcher.rootDir + "nulldc_rom_launcher\\nulldc_rom_launcher.ahk");
-            string result = "";
-            var regex = new Regex(@"^.*; apply window settings.*$", RegexOptions.Multiline);
+            var width = Convert.ToInt32(txtWindowX.Text);
+            var height = Convert.ToInt32(txtWindowY.Text);
+
             if (rdoStartMax.Checked)
-                result = regex.Replace(rlText, "\tWinMaximize, ahk_class ndc_main_window ; apply window settings ");
+                Launcher.SaveWindowSettings(0, width, height, 1);
             else if (rdoCustomSize.Checked)
-                result = regex.Replace(rlText, $"\tWinMove, ahk_class ndc_main_window,,,, {txtWindowX.Text}, {txtWindowY.Text} ; apply window settings ");
+                Launcher.SaveWindowSettings(1, width, height);
             else
-                result = regex.Replace(rlText, "\t; apply window settings ");
-            File.WriteAllText(Launcher.rootDir + "nulldc_rom_launcher\\nulldc_rom_launcher.ahk", result);
+                Launcher.SaveWindowSettings(0, width, height);
             MessageBox.Show("Window Settings Successfully Saved");
         }
 
@@ -197,6 +197,14 @@ namespace nullDCNetplayLauncher
             MessageBox.Show("FPS Limits Successfully Saved");
         }
 
-        
+        private void txtWindowX_GotFocus(object sender, EventArgs e)
+        {
+            rdoCustomSize.Checked = true;
+        }
+
+        private void txtWindowY_GotFocus(object sender, EventArgs e)
+        {
+            rdoCustomSize.Checked = true;
+        }
     }
 }
