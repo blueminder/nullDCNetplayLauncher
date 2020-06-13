@@ -20,6 +20,7 @@ namespace nullDCNetplayLauncher
 
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
 
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
@@ -89,24 +90,118 @@ namespace nullDCNetplayLauncher
 
         public static void LaunchAntiMicro(bool hidden=false)
         {
-            string hiddenArg = "";
-            KillAntiMicro();
+            List<string> arglist = new List<string>();
             if (hidden)
             {
-                hiddenArg = " --hidden";
+                arglist.Add("--hidden");
             }
-            Process.Start(Launcher.rootDir + "antimicro\\antimicro.exe", $"{hiddenArg} --profile {Launcher.rootDir}\\antimicro\\profiles\\nulldc.gamecontroller.amgp");
+            arglist.Add("--profile");
+            arglist.Add("\"" + Path.Combine(Launcher.rootDir, @"antimicro\profiles\nulldc.gamecontroller.amgp") + "\"");
+            KillAntiMicro();
+            ProcessStartInfo psi = new ProcessStartInfo("\"" + Path.Combine(Launcher.rootDir, @"antimicro\antimicro.exe" + "\""));
+            psi.Arguments = string.Join(" ", arglist);
+            Process.Start(psi);
+                 
         }
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr PostMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern IntPtr GetWindow(IntPtr hWnd, int uCmd);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr GetDlgItem(IntPtr hDlg, int nIDDlgItem);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = false)]
+        public static extern IntPtr SendMessage(HandleRef hWnd, uint Msg, IntPtr wParam, string lParam);
+        public const uint WM_SETTEXT = 0x000C;
+
+        [DllImport("user32.dll")]
+        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, int dwExtraInfo);
+
+        [DllImport("user32.dll")]
+        static extern IntPtr SetFocus(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        private static int WM_COMMAND = 0x111;
+        private static int NORMALBOOT_ID = 0x17;
+        private static int WINDOW_POPUP = 6; //get the official name for this one
+        private static int PATHNAME_ENTRY_ID = 0x47C;
 
         public static void LaunchNullDC(string RomPath, bool isHost = false)
         {
-            string WorkDir = rootDir + "nulldc_rom_launcher\\";
+            //Credit to Labryz (GitHub: labreezy) for initial work
+            //replacing the AHK rom launcher in favor of user32 P/Invoke Methods
+            Process[] ndc = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
 
-            string launchArgs = "\"" + WorkDir + "nulldc_rom_launcher.ahk" + "\" " + "\"" + rootDir + RomPath + "\"";
-            if (isHost == true)
-                launchArgs += " host";
+            if (ndc.Length > 0)
+            {
+                foreach (Process nProc in ndc)
+                {
+                    nProc.Kill();
+                    nProc.WaitForExit();
+                    nProc.Dispose();
+                }
+            }
+            string ndcPath = "\"" + Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\nullDC_Win32_Release-NoTrace.exe") + "\"";
+            string FullRomPath = "\"" + Path.Combine(Launcher.rootDir, RomPath) + "\"";
+            ProcessStartInfo ndcStartInfo = new ProcessStartInfo(ndcPath);
+            List<string> arglist = new List<string>();
+            arglist.Add(ndcPath);
+            ndcStartInfo.Arguments = string.Join(" ", arglist);
+            _ = Process.Start(ndcStartInfo);
+            bool ndcStart = false;
+            for (var i = 0; i < 5; i++)
+            {
+                System.Threading.Thread.Sleep(1000); //wait a bit, 2s total, 5 checks
+                ndc = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+                if (ndc.Length > 0)
+                {
+                    ndcStart = true;
+                    break;
+                }
+            }
 
-            Process.Start("\"" + WorkDir + "AutoHotkeyU32.exe" + "\"", launchArgs);
+            if (!ndcStart)
+            {
+                throw new Exception("nullDC failed to start from rom launcher."); //It might happen...
+            }
+            Process p = ndc[0];
+            IntPtr hWndPtr = p.MainWindowHandle;
+            
+            var windowSettings = LoadWindowSettings();
+            System.Threading.Thread.Sleep(1000);
+            if (windowSettings[0] == 1)
+            {
+                MoveWindow(hWndPtr,
+                       NullDCWindowPosition().X,
+                       NullDCWindowPosition().Y,
+                       windowSettings[1],
+                       windowSettings[2],
+                       true);
+            }
+            else if (windowSettings[3] == 1)
+            {
+                ShowWindow(hWndPtr, 3);
+            }
+
+            PostMessage(hWndPtr, WM_COMMAND, NORMALBOOT_ID, 0); //Equivalent to File -> Normal Boot
+            System.Threading.Thread.Sleep(2000); //safety measure
+            IntPtr hPopup = GetWindow(hWndPtr, WINDOW_POPUP);
+            IntPtr hEdit = GetDlgItem(hPopup, PATHNAME_ENTRY_ID);
+            HandleRef hrefHWndTarget = new HandleRef(null, hEdit);
+
+            SendMessage(hrefHWndTarget, WM_SETTEXT, IntPtr.Zero, FullRomPath);
+
+            SetFocus(hEdit);
+            const byte VK_RETURN = 0x0D;
+            const uint KEYEVENTF_KEYUP = 0x0002;
+            keybd_event(VK_RETURN, 0, 0, 0);
+            keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);
         }
 
         // written by MarioBrotha
@@ -202,8 +297,9 @@ namespace nullDCNetplayLauncher
 
         public static string GetDistributionRootDirectoryName()
         {
-            var LauncherPath = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            return Directory.GetParent(LauncherPath).ToString();
+            var LauncherPath = new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
+            var DistroPath = new DirectoryInfo(LauncherPath).Parent.Parent.FullName;
+            return DistroPath;
         }
 
         public static string GetApplicationConfigurationDirectoryName()
@@ -280,6 +376,12 @@ namespace nullDCNetplayLauncher
         [DllImport("dwmapi.dll")]
         public static extern int DwmGetWindowAttribute(IntPtr hWnd, int dwAttribute, out Rect lpRect, int cbAttribute);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        internal static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
         public struct Rect
         {
             public int Left { get; set; }
@@ -317,6 +419,27 @@ namespace nullDCNetplayLauncher
             return new Point(ndcWinX, ndcWinY);
         }
 
+        public static Point NullDCWindowPosition()
+        {
+            Rect ndcWindowDim = new Rect();
+            if (Environment.OSVersion.Version.Major < 6)
+            {
+                GetWindowRect(NullDCWindowHandle(), ref ndcWindowDim);
+            }
+            else
+            {
+                if ((DwmGetWindowAttribute(NullDCWindowHandle(), DWMWA_EXTENDED_FRAME_BOUNDS, out ndcWindowDim, Marshal.SizeOf(ndcWindowDim)) != 0))
+                {
+                    //GetWindowRect(Launcher.NullDCWindowHandle(), ref ndcWindowDim);
+                }
+            }
+
+            var ndcWinX = ndcWindowDim.Left;
+            var ndcWinY = ndcWindowDim.Top;
+
+            return new Point(ndcWinX, ndcWinY);
+        }
+
         public static void SaveFpsSettings(int host_fps, int guest_fps)
         {
             string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
@@ -329,6 +452,51 @@ namespace nullDCNetplayLauncher
             result = guest_regex.Replace(result, $"guest_fps={guest_fps}");
 
             File.WriteAllText(launcherCfgPath, result);
+        }
+
+        public static void SaveWindowSettings(int custom_size, int width, int height, int windowMax=0)
+        {
+            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string lcText = File.ReadAllText(launcherCfgPath);
+            string result = "";
+
+            var custom_size_regex = new Regex(@"^.*custom_size=.*$", RegexOptions.Multiline);
+            result = custom_size_regex.Replace(lcText, $"custom_size={custom_size}");
+
+            var width_regex = new Regex(@"^.*width=.*$", RegexOptions.Multiline);
+            result = width_regex.Replace(result, $"width={width}");
+
+            var height_regex = new Regex(@"^.*height=.*$", RegexOptions.Multiline);
+            result = height_regex.Replace(result, $"height={height}");
+
+            var max_regex = new Regex(@"^.*maximized=.*$", RegexOptions.Multiline);
+            result = max_regex.Replace(result, $"maximized={windowMax}");
+
+            File.WriteAllText(launcherCfgPath, result);
+        }
+
+        public static int[] LoadWindowSettings()
+        {
+            int[] windowSettings = new int[4];
+
+            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var custom_size_cfg = launcherCfgLines.Where(s => s.Contains("custom_size=")).ToList().First();
+            var width_cfg = launcherCfgLines.Where(s => s.Contains("width=")).ToList().First();
+            var height_cfg = launcherCfgLines.Where(s => s.Contains("height=")).ToList().First();
+            var maximized_cfg = launcherCfgLines.Where(s => s.Contains("maximized=")).ToList().First();
+
+            var customSizeEntry = custom_size_cfg.Split('=')[1];
+            var widthEntry = width_cfg.Split('=')[1];
+            var heightEntry = height_cfg.Split('=')[1];
+            var maximizedEntry = maximized_cfg.Split('=')[1];
+
+            windowSettings[0] = Convert.ToInt32(customSizeEntry);
+            windowSettings[1] = Convert.ToInt32(widthEntry);
+            windowSettings[2] = Convert.ToInt32(heightEntry);
+            windowSettings[3] = Convert.ToInt32(maximizedEntry);
+
+            return windowSettings;
         }
 
     }

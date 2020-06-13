@@ -48,22 +48,22 @@
             this.tabWindow = new System.Windows.Forms.TabPage();
             this.btnSaveWindow = new System.Windows.Forms.Button();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.numHostFPS = new System.Windows.Forms.NumericUpDown();
-            this.numGuestFPS = new System.Windows.Forms.NumericUpDown();
-            this.btnSaveFPS = new System.Windows.Forms.Button();
-            this.btnJoyCpl = new System.Windows.Forms.Button();
-            this.btnOpenQKO = new System.Windows.Forms.Button();
             this.grpShortcuts = new System.Windows.Forms.GroupBox();
             this.btnLaunchAntiMicro = new System.Windows.Forms.Button();
+            this.btnOpenQKO = new System.Windows.Forms.Button();
+            this.btnJoyCpl = new System.Windows.Forms.Button();
+            this.btnSaveFPS = new System.Windows.Forms.Button();
+            this.numGuestFPS = new System.Windows.Forms.NumericUpDown();
+            this.numHostFPS = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
             this.tabWindow.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numGuestFPS)).BeginInit();
             this.grpShortcuts.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numGuestFPS)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
             this.SuspendLayout();
             // 
             // chkEnableMapper
@@ -182,6 +182,7 @@
             this.txtWindowX.Size = new System.Drawing.Size(40, 22);
             this.txtWindowX.TabIndex = 3;
             this.txtWindowX.Text = "800";
+            this.txtWindowX.GotFocus += new System.EventHandler(this.txtWindowX_GotFocus);
             // 
             // txtWindowY
             // 
@@ -190,6 +191,7 @@
             this.txtWindowY.Size = new System.Drawing.Size(40, 22);
             this.txtWindowY.TabIndex = 4;
             this.txtWindowY.Text = "600";
+            this.txtWindowY.GotFocus += new System.EventHandler(this.txtWindowY_GotFocus);
             // 
             // btnGrabWindowSize
             // 
@@ -294,68 +296,6 @@
             this.tabAdvanced.Text = "Advanced";
             this.tabAdvanced.UseVisualStyleBackColor = true;
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(15, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(100, 17);
-            this.label1.TabIndex = 7;
-            this.label1.Text = "Host FPS Limit";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 38);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 17);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Guest FPS Limit";
-            // 
-            // numHostFPS
-            // 
-            this.numHostFPS.Location = new System.Drawing.Point(144, 8);
-            this.numHostFPS.Name = "numHostFPS";
-            this.numHostFPS.Size = new System.Drawing.Size(47, 22);
-            this.numHostFPS.TabIndex = 9;
-            // 
-            // numGuestFPS
-            // 
-            this.numGuestFPS.Location = new System.Drawing.Point(144, 36);
-            this.numGuestFPS.Name = "numGuestFPS";
-            this.numGuestFPS.Size = new System.Drawing.Size(47, 22);
-            this.numGuestFPS.TabIndex = 10;
-            // 
-            // btnSaveFPS
-            // 
-            this.btnSaveFPS.Location = new System.Drawing.Point(18, 64);
-            this.btnSaveFPS.Name = "btnSaveFPS";
-            this.btnSaveFPS.Size = new System.Drawing.Size(173, 23);
-            this.btnSaveFPS.TabIndex = 11;
-            this.btnSaveFPS.Text = "Save FPS Limits";
-            this.btnSaveFPS.UseVisualStyleBackColor = true;
-            this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
-            // 
-            // btnJoyCpl
-            // 
-            this.btnJoyCpl.Location = new System.Drawing.Point(9, 102);
-            this.btnJoyCpl.Name = "btnJoyCpl";
-            this.btnJoyCpl.Size = new System.Drawing.Size(190, 25);
-            this.btnJoyCpl.TabIndex = 6;
-            this.btnJoyCpl.Text = "Windows Game Controllers";
-            this.btnJoyCpl.UseVisualStyleBackColor = true;
-            this.btnJoyCpl.Click += new System.EventHandler(this.btnJoyCpl_Click);
-            // 
-            // btnOpenQKO
-            // 
-            this.btnOpenQKO.Location = new System.Drawing.Point(9, 75);
-            this.btnOpenQKO.Name = "btnOpenQKO";
-            this.btnOpenQKO.Size = new System.Drawing.Size(190, 25);
-            this.btnOpenQKO.TabIndex = 5;
-            this.btnOpenQKO.Text = "Open qkoJAMMA Folder";
-            this.btnOpenQKO.UseVisualStyleBackColor = true;
-            this.btnOpenQKO.Click += new System.EventHandler(this.btnOpenQKO_Click);
-            // 
             // grpShortcuts
             // 
             this.grpShortcuts.Controls.Add(this.btnLaunchAntiMicro);
@@ -378,6 +318,68 @@
             this.btnLaunchAntiMicro.Text = "Launch AntiMicro";
             this.btnLaunchAntiMicro.UseVisualStyleBackColor = true;
             // 
+            // btnOpenQKO
+            // 
+            this.btnOpenQKO.Location = new System.Drawing.Point(9, 75);
+            this.btnOpenQKO.Name = "btnOpenQKO";
+            this.btnOpenQKO.Size = new System.Drawing.Size(190, 25);
+            this.btnOpenQKO.TabIndex = 5;
+            this.btnOpenQKO.Text = "Open qkoJAMMA Folder";
+            this.btnOpenQKO.UseVisualStyleBackColor = true;
+            this.btnOpenQKO.Click += new System.EventHandler(this.btnOpenQKO_Click);
+            // 
+            // btnJoyCpl
+            // 
+            this.btnJoyCpl.Location = new System.Drawing.Point(9, 102);
+            this.btnJoyCpl.Name = "btnJoyCpl";
+            this.btnJoyCpl.Size = new System.Drawing.Size(190, 25);
+            this.btnJoyCpl.TabIndex = 6;
+            this.btnJoyCpl.Text = "Windows Game Controllers";
+            this.btnJoyCpl.UseVisualStyleBackColor = true;
+            this.btnJoyCpl.Click += new System.EventHandler(this.btnJoyCpl_Click);
+            // 
+            // btnSaveFPS
+            // 
+            this.btnSaveFPS.Location = new System.Drawing.Point(18, 64);
+            this.btnSaveFPS.Name = "btnSaveFPS";
+            this.btnSaveFPS.Size = new System.Drawing.Size(173, 23);
+            this.btnSaveFPS.TabIndex = 11;
+            this.btnSaveFPS.Text = "Save FPS Limits";
+            this.btnSaveFPS.UseVisualStyleBackColor = true;
+            this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
+            // 
+            // numGuestFPS
+            // 
+            this.numGuestFPS.Location = new System.Drawing.Point(144, 36);
+            this.numGuestFPS.Name = "numGuestFPS";
+            this.numGuestFPS.Size = new System.Drawing.Size(47, 22);
+            this.numGuestFPS.TabIndex = 10;
+            // 
+            // numHostFPS
+            // 
+            this.numHostFPS.Location = new System.Drawing.Point(144, 8);
+            this.numHostFPS.Name = "numHostFPS";
+            this.numHostFPS.Size = new System.Drawing.Size(47, 22);
+            this.numHostFPS.TabIndex = 9;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 38);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(109, 17);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "Guest FPS Limit";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(15, 10);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(100, 17);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Host FPS Limit";
+            // 
             // SettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -393,9 +395,9 @@
             this.tabWindow.PerformLayout();
             this.tabAdvanced.ResumeLayout(false);
             this.tabAdvanced.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numGuestFPS)).EndInit();
             this.grpShortcuts.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numGuestFPS)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
             this.ResumeLayout(false);
 
         }
