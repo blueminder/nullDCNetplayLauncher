@@ -98,7 +98,7 @@ namespace nullDCNetplayLauncher
             arglist.Add("--profile");
             arglist.Add("\"" + Path.Combine(Launcher.rootDir, @"antimicro\profiles\nulldc.gamecontroller.amgp") + "\"");
             KillAntiMicro();
-            ProcessStartInfo psi = new ProcessStartInfo("\"" + Path.Combine(Launcher.rootDir, @"antimicro\antimicro.exe" + "\""));
+            ProcessStartInfo psi = new ProcessStartInfo("\"" + Path.Combine(Launcher.rootDir, @"antimicro\antimicro.exe") + "\"");
             psi.Arguments = string.Join(" ", arglist);
             Process.Start(psi);
                  
