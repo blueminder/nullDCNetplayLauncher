@@ -144,7 +144,8 @@ namespace nullDCNetplayLauncher
 
         private void CallButtonMapping(string button, bool push)
         {
-            System.Diagnostics.Debug.WriteLine($"Button {button} Called");
+            String called = push ? "Pushed" : "Released";
+            System.Diagnostics.Debug.WriteLine($"Button {button} {called}");
 
             Dictionary<string, byte> ButtonMapping = new Dictionary<string, byte>()
             {
