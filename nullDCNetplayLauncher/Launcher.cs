@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
@@ -20,11 +21,12 @@ namespace nullDCNetplayLauncher
 
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
 
-
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
             MethodOptions["Audio Sync"] = 1;
+
+            RestoreFgcaNvram();
         }
 
         public static int GuessDelay(string IP)
@@ -497,6 +499,20 @@ namespace nullDCNetplayLauncher
             windowSettings[3] = Convert.ToInt32(maximizedEntry);
 
             return windowSettings;
+        }
+
+        public static void RestoreFgcaNvram()
+        {
+            var NvramDataPath = Launcher.rootDir + @"mvc2andAllSettings\data.zip";
+            var NullDcDataPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\data\";
+            if (File.Exists(NvramDataPath))
+            {
+                ZipArchive archive = ZipFile.OpenRead(NvramDataPath);
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    entry.ExtractToFile(Path.Combine(NullDcDataPath, entry.FullName), true);
+                }
+            }
         }
 
     }
