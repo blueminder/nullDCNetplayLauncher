@@ -20,6 +20,8 @@ namespace nullDCNetplayLauncher
         ControllerEngine controller;
         GamePadMapper gpm;
 
+        public static Boolean EnableMapper = true;
+
         public NetplayLaunchForm()
         {
             controller = new ControllerEngine();
@@ -50,9 +52,12 @@ namespace nullDCNetplayLauncher
 
             InitializeComponent();
 
-            gpm = new GamePadMapper(controller);
-            this.Shown += gpm.initializeController;
-
+            if(EnableMapper)
+            {
+                gpm = new GamePadMapper(controller);
+                this.Shown += gpm.initializeController;
+            }
+            
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
             cboGameSelect.ValueMember = "Value";
@@ -68,8 +73,6 @@ namespace nullDCNetplayLauncher
             {
                 Launcher.SelectedGame = romDict.First().Value;
             }
-
-            
         }
 
         private void btnOffline_Click(object sender, EventArgs e)
@@ -160,7 +163,7 @@ namespace nullDCNetplayLauncher
 
         private void btnController_Click(object sender, EventArgs e)
         {
-            UserControl cc = new ControllerControl();
+            UserControl cc = new ControllerControl(controller);
             Form window = new Form
             {
                 Text = "Controller Setup",

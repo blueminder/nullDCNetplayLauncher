@@ -21,6 +21,23 @@ namespace nullDCNetplayLauncher
 
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
 
+        public static Dictionary<string, string> ButtonMapping = new Dictionary<string, string>()
+            {
+                { "Y", "1" },
+                { "A", "2" },
+                { "Back", "3" },
+                { "X", "4" },
+                { "B", "5" },
+                { "Start", "6" },
+                { "RightStick", "Start" },
+                { "LeftShoulder", "Coin" },
+                { "RightShoulder", "Test" },
+                { "IsUp", "Up" },
+                { "IsDown", "Down" },
+                { "IsLeft", "Left" },
+                { "IsRight", "Right" },
+            };
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;

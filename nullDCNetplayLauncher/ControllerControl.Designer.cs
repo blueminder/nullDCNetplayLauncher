@@ -206,6 +206,7 @@
             this.Name = "ControllerControl";
             this.Size = new System.Drawing.Size(331, 318);
             this.Load += new System.EventHandler(this.ControllerControl_Load);
+            this.HandleDestroyed += new System.EventHandler(this.ControllerControl_Close);
             ((System.ComponentModel.ISupportInitialize)(this.picArcadeStick)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

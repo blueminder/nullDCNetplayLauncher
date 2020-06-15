@@ -13,12 +13,14 @@ using System.Resources;
 using System.IO;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
+using OpenTK.Input;
 
 namespace nullDCNetplayLauncher
 {
     public partial class ControllerControl : UserControl
     {
-        Joystick joystick;
+        SharpDX.DirectInput.Joystick joystick;
         Dictionary<string, List<JoystickUpdate>> ButtonAssignments;
         string ButtonAssignmentText;
         string JoystickName;
@@ -27,6 +29,10 @@ namespace nullDCNetplayLauncher
         bool ZDetected;
         bool Skip;
 
+
+        private ControllerEngine controller;
+        private GamePadState OldState;
+
         string[] directionalButtons;
         string[] faceButtons;
         string[] optionButtons;
@@ -34,10 +40,14 @@ namespace nullDCNetplayLauncher
         string[] buttonNames;
         readonly ResourceManager rm;
 
-        public ControllerControl()
+        string CurrentButtonAssignment;
+        Boolean CurrentlyAssigned = false;
+
+        public ControllerControl(ControllerEngine controllerEngine)
         {
             InitializeComponent();
 
+            controller = controllerEngine;
             rm = Properties.Resources.ResourceManager;
             AnalogSet = false;
             Skip = false;
@@ -55,6 +65,16 @@ namespace nullDCNetplayLauncher
 
         private void ControllerControl_Load(object sender, EventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine("FOO " + controller.CapabilitiesGamePad.ToString());
+            controller.GamePadAction += controller_GamePadAction;
+        }
+
+        private void ControllerControl_Close(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine("BAR " + controller.CapabilitiesGamePad.ToString());
+
+            controller.GamePadAction -= controller_GamePadAction;
+            //controller.Dispose();
         }
 
         private void InitializeJoystick()
@@ -97,7 +117,7 @@ namespace nullDCNetplayLauncher
                 RestoreArcadeStick();
 
                 // Instantiate the joystick
-                joystick = new Joystick(directInput, joystickGuid);
+                joystick = new SharpDX.DirectInput.Joystick(directInput, joystickGuid);
                 JoystickName = joystickName;
 
                 Console.WriteLine("Found Controller: {0}", joystickName);
@@ -161,7 +181,7 @@ namespace nullDCNetplayLauncher
         }
 
         // special thanks to MarioBrotha's joystick input code for analog detection
-        private string SetJoystickAnalog(Joystick joystick)
+        private string SetJoystickAnalog(SharpDX.DirectInput.Joystick joystick)
         {
             int LEFT_UP = 0;
             int RIGHT_DOWN = 65535;
@@ -196,7 +216,106 @@ namespace nullDCNetplayLauncher
             return null;
         }
 
-        private List<JoystickUpdate> SetJoystickButton(Joystick joystick, string button)
+        private void controller_GamePadAction(object sender, ActionEventArgs e)
+        {
+            var State = e.GamePadState;
+            var Capabilities = controller.CapabilitiesGamePad;
+
+            PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
+                p =>
+                {
+                    return p.Name != "IsAnyButtonPressed";
+                }).ToArray();
+
+            PropertyInfo[] AvailableDPadProperties = typeof(GamePadDPad).GetProperties().Where(
+                p =>
+                {
+                    return p.PropertyType == typeof(Boolean);
+                }).ToArray();
+
+            foreach (PropertyInfo buttonProperty in AvailableButtonProperties)
+            {
+                var CurrentButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
+                var OldButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
+                if (!Object.ReferenceEquals(OldState, null))
+                {
+                    OldButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(OldState.Buttons);
+                }
+
+                if (CurrentButtonState == OpenTK.Input.ButtonState.Pressed &&
+                (Object.ReferenceEquals(OldState, null) || OldButtonState == OpenTK.Input.ButtonState.Released))
+                {
+                    //CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
+                    Launcher.ButtonMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                }
+                if (CurrentButtonState == OpenTK.Input.ButtonState.Released &&
+                    (!Object.ReferenceEquals(OldState, null) && OldButtonState == OpenTK.Input.ButtonState.Pressed))
+                {
+                    //CallButtonMapping(buttonProperty.Name, false);
+                   // System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
+                    CurrentlyAssigned = true;
+                }
+            }
+
+            foreach (PropertyInfo buttonProperty in AvailableDPadProperties)
+            {
+                Boolean CurrentDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
+                Boolean OldDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
+                if (!Object.ReferenceEquals(OldState, null))
+                {
+                    OldDPadState = (Boolean)buttonProperty.GetValue(OldState.DPad);
+                }
+
+                if (CurrentDPadState == true &&
+                (Object.ReferenceEquals(OldState, null) || OldDPadState == false))
+                {
+                    //CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
+                    Launcher.ButtonMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    CurrentlyAssigned = true;
+                }
+                if (CurrentDPadState == false &&
+                    (!Object.ReferenceEquals(OldState, null) && OldDPadState == true))
+                {
+                    //CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
+                    CurrentlyAssigned = true;
+                }
+            }
+
+            PropertyInfo[] AvailableTriggerProperties = typeof(GamePadTriggers).GetProperties().ToArray();
+
+            foreach (PropertyInfo buttonProperty in AvailableTriggerProperties)
+            {
+                float CurrentTriggerState = (float)buttonProperty.GetValue(State.Triggers);
+                float OldTriggerState = (float)buttonProperty.GetValue(State.Triggers);
+                if (!Object.ReferenceEquals(OldState, null))
+                {
+                    OldTriggerState = (float)buttonProperty.GetValue(OldState.Triggers);
+                }
+
+                if (CurrentTriggerState == 1 &&
+                (Object.ReferenceEquals(OldState, null) || OldTriggerState == 0))
+                {
+                    //CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Pressed");
+                    Launcher.ButtonMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                }
+                if (CurrentTriggerState == 0 &&
+                    (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))
+                {
+                    //CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Released");
+                    CurrentlyAssigned = true;
+                }
+            }
+
+            OldState = State;
+        }
+
+        private List<JoystickUpdate> SetJoystickButton(SharpDX.DirectInput.Joystick joystick, string button)
         {
             //var ButtonAssignments = new Dictionary<string, JoystickUpdate[]>;
 
@@ -294,52 +413,68 @@ namespace nullDCNetplayLauncher
             foreach (string button in buttonNames)
             {
                 worker.ReportProgress(button_index);
+                CurrentButtonAssignment = button;
+                CurrentlyAssigned = false;
 
-                var isNumeric = int.TryParse(button, out _);
-                var buttonName = button;
+                ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
+                OldState = args.GamePadState;
 
-                if (isNumeric)
-                    buttonName = "Button_" + button;
-
-                if (IsDirection(button) && AnalogSet)
+                while (CurrentlyAssigned == false)
                 {
-                    String analogAssignment = null;
-                    while (analogAssignment is null)
-                    {
-                        analogAssignment = SetJoystickAnalog(joystick);
-                    }
-                    ButtonAssignmentText += $"{analogAssignment}={buttonName}\n";
+                    Thread.Sleep(600);
                 }
-                else
-                {
-                    var joystickUpdate = SetJoystickButton(joystick, button);
 
-                    if (ZDetected)
-                    {
-                        break;
-                    }
+                    /*
+                    var isNumeric = int.TryParse(button, out _);
+                    var buttonName = button;
 
-                    if (joystickUpdate.Count > 0)
+                    if (isNumeric)
+                        buttonName = "Button_" + button;
+
+                    if (IsDirection(button) && AnalogSet)
                     {
-                        var buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
-                        while (buttonAssignment == null)
+                        String analogAssignment = null;
+                        while (analogAssignment is null)
                         {
-                            buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
+                            analogAssignment = SetJoystickAnalog(joystick);
                         }
-                        ButtonAssignmentText += $"{buttonAssignment}={buttonName}\n";
-                        ButtonAssignments.Add(button, joystickUpdate);
+                        ButtonAssignmentText += $"{analogAssignment}={buttonName}\n";
                     }
                     else
                     {
-                        ButtonAssignmentText += $"none={buttonName}\n";
-                        ButtonAssignments.Add(button, joystickUpdate);
+                        var joystickUpdate = SetJoystickButton(joystick, button);
+
+                        //AssignGamePadButton(button);
+
+                        if (ZDetected)
+                        {
+                            break;
+                        }
+
+                        if (joystickUpdate.Count > 0)
+                        {
+                            var buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
+                            while (buttonAssignment == null)
+                            {
+                                buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
+                            }
+                            ButtonAssignmentText += $"{buttonAssignment}={buttonName}\n";
+                            ButtonAssignments.Add(button, joystickUpdate);
+                        }
+                        else
+                        {
+                            ButtonAssignmentText += $"none={buttonName}\n";
+                            ButtonAssignments.Add(button, joystickUpdate);
+                        }
                     }
-                }
-                button_index++;
+                    */
+                    button_index++;
+                /*
                 if (directionalButtons.Any(button.Contains) && AnalogSet)
                 {
                     Thread.Sleep(500);
                 }
+                */
             }
         }
 
