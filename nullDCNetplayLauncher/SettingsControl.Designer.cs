@@ -53,16 +53,13 @@
             this.btnOpenQKO = new System.Windows.Forms.Button();
             this.btnJoyCpl = new System.Windows.Forms.Button();
             this.btnSaveFPS = new System.Windows.Forms.Button();
-            this.numGuestFPS = new System.Windows.Forms.NumericUpDown();
             this.numHostFPS = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
             this.tabWindow.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
             this.grpShortcuts.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numGuestFPS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
             this.SuspendLayout();
             // 
@@ -206,9 +203,9 @@
             // 
             // btnEditCFG
             // 
-            this.btnEditCFG.Location = new System.Drawing.Point(9, 48);
+            this.btnEditCFG.Location = new System.Drawing.Point(8, 58);
             this.btnEditCFG.Name = "btnEditCFG";
-            this.btnEditCFG.Size = new System.Drawing.Size(190, 25);
+            this.btnEditCFG.Size = new System.Drawing.Size(190, 28);
             this.btnEditCFG.TabIndex = 4;
             this.btnEditCFG.Text = "Edit nullDC.cfg";
             this.btnEditCFG.UseVisualStyleBackColor = true;
@@ -284,9 +281,7 @@
             // 
             this.tabAdvanced.Controls.Add(this.grpShortcuts);
             this.tabAdvanced.Controls.Add(this.btnSaveFPS);
-            this.tabAdvanced.Controls.Add(this.numGuestFPS);
             this.tabAdvanced.Controls.Add(this.numHostFPS);
-            this.tabAdvanced.Controls.Add(this.label2);
             this.tabAdvanced.Controls.Add(this.label1);
             this.tabAdvanced.Location = new System.Drawing.Point(4, 25);
             this.tabAdvanced.Name = "tabAdvanced";
@@ -302,27 +297,27 @@
             this.grpShortcuts.Controls.Add(this.btnEditCFG);
             this.grpShortcuts.Controls.Add(this.btnOpenQKO);
             this.grpShortcuts.Controls.Add(this.btnJoyCpl);
-            this.grpShortcuts.Location = new System.Drawing.Point(3, 105);
+            this.grpShortcuts.Location = new System.Drawing.Point(3, 84);
             this.grpShortcuts.Name = "grpShortcuts";
-            this.grpShortcuts.Size = new System.Drawing.Size(200, 135);
+            this.grpShortcuts.Size = new System.Drawing.Size(200, 156);
             this.grpShortcuts.TabIndex = 12;
             this.grpShortcuts.TabStop = false;
             this.grpShortcuts.Text = "Shortcuts";
             // 
             // btnLaunchAntiMicro
             // 
-            this.btnLaunchAntiMicro.Location = new System.Drawing.Point(9, 21);
+            this.btnLaunchAntiMicro.Location = new System.Drawing.Point(8, 24);
             this.btnLaunchAntiMicro.Name = "btnLaunchAntiMicro";
-            this.btnLaunchAntiMicro.Size = new System.Drawing.Size(190, 25);
+            this.btnLaunchAntiMicro.Size = new System.Drawing.Size(190, 28);
             this.btnLaunchAntiMicro.TabIndex = 8;
             this.btnLaunchAntiMicro.Text = "Launch AntiMicro";
             this.btnLaunchAntiMicro.UseVisualStyleBackColor = true;
             // 
             // btnOpenQKO
             // 
-            this.btnOpenQKO.Location = new System.Drawing.Point(9, 75);
+            this.btnOpenQKO.Location = new System.Drawing.Point(8, 92);
             this.btnOpenQKO.Name = "btnOpenQKO";
-            this.btnOpenQKO.Size = new System.Drawing.Size(190, 25);
+            this.btnOpenQKO.Size = new System.Drawing.Size(190, 28);
             this.btnOpenQKO.TabIndex = 5;
             this.btnOpenQKO.Text = "Open qkoJAMMA Folder";
             this.btnOpenQKO.UseVisualStyleBackColor = true;
@@ -330,9 +325,9 @@
             // 
             // btnJoyCpl
             // 
-            this.btnJoyCpl.Location = new System.Drawing.Point(9, 102);
+            this.btnJoyCpl.Location = new System.Drawing.Point(8, 125);
             this.btnJoyCpl.Name = "btnJoyCpl";
-            this.btnJoyCpl.Size = new System.Drawing.Size(190, 25);
+            this.btnJoyCpl.Size = new System.Drawing.Size(190, 28);
             this.btnJoyCpl.TabIndex = 6;
             this.btnJoyCpl.Text = "Windows Game Controllers";
             this.btnJoyCpl.UseVisualStyleBackColor = true;
@@ -340,20 +335,13 @@
             // 
             // btnSaveFPS
             // 
-            this.btnSaveFPS.Location = new System.Drawing.Point(18, 64);
+            this.btnSaveFPS.Location = new System.Drawing.Point(18, 42);
             this.btnSaveFPS.Name = "btnSaveFPS";
-            this.btnSaveFPS.Size = new System.Drawing.Size(173, 23);
+            this.btnSaveFPS.Size = new System.Drawing.Size(173, 26);
             this.btnSaveFPS.TabIndex = 11;
             this.btnSaveFPS.Text = "Save FPS Limits";
             this.btnSaveFPS.UseVisualStyleBackColor = true;
             this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
-            // 
-            // numGuestFPS
-            // 
-            this.numGuestFPS.Location = new System.Drawing.Point(144, 36);
-            this.numGuestFPS.Name = "numGuestFPS";
-            this.numGuestFPS.Size = new System.Drawing.Size(47, 22);
-            this.numGuestFPS.TabIndex = 10;
             // 
             // numHostFPS
             // 
@@ -361,15 +349,6 @@
             this.numHostFPS.Name = "numHostFPS";
             this.numHostFPS.Size = new System.Drawing.Size(47, 22);
             this.numHostFPS.TabIndex = 9;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(15, 38);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 17);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Guest FPS Limit";
             // 
             // label1
             // 
@@ -396,7 +375,6 @@
             this.tabAdvanced.ResumeLayout(false);
             this.tabAdvanced.PerformLayout();
             this.grpShortcuts.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numGuestFPS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
             this.ResumeLayout(false);
 
@@ -428,9 +406,7 @@
         private System.Windows.Forms.Button btnOpenQKO;
         private System.Windows.Forms.Button btnJoyCpl;
         private System.Windows.Forms.Button btnSaveFPS;
-        private System.Windows.Forms.NumericUpDown numGuestFPS;
         private System.Windows.Forms.NumericUpDown numHostFPS;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
     }
 }

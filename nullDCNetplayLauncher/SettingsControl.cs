@@ -100,7 +100,6 @@ namespace nullDCNetplayLauncher
             var guestFpsEntry = guest_fps_old.Split('=')[1];
 
             numHostFPS.Value = Convert.ToInt32(hostFpsEntry);
-            numGuestFPS.Value = Convert.ToInt32(guestFpsEntry);
         }
 
         private void btnLaunchAntiMicro_Click(object sender, EventArgs e)
@@ -203,8 +202,7 @@ namespace nullDCNetplayLauncher
 
         private void btnSaveFPS_Click(object sender, EventArgs e)
         {
-            Launcher.SaveFpsSettings(Convert.ToInt32(numHostFPS.Value),
-                            Convert.ToInt32(numGuestFPS.Value));
+            Launcher.SaveFpsSettings(Convert.ToInt32(numHostFPS.Value), 90);
             MessageBox.Show("FPS Limits Successfully Saved");
         }
 
@@ -217,5 +215,6 @@ namespace nullDCNetplayLauncher
         {
             rdoCustomSize.Checked = true;
         }
+
     }
 }
