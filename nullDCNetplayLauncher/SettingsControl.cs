@@ -136,9 +136,20 @@ namespace nullDCNetplayLauncher
             File.WriteAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg", launcherText);
 
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            cfgText = cfgText.Replace(player1_old, "player1=" + cboPlayer1.SelectedValue);
-            cfgText = cfgText.Replace(backup_old, "backup=" + cboBackup.SelectedValue);
-            cfgText = cfgText.Replace(player2_old, "player2=" + cboPlayer2.SelectedValue);
+            String p1_val = $"{cboPlayer1.SelectedValue}";
+            String bak_val = $"{cboBackup.SelectedValue}";
+            String p2_val = $"{cboPlayer2.SelectedValue}";
+
+            if (p1_val.Length == 0)
+                p1_val = "NULL";
+            if (bak_val.Length == 0)
+                bak_val = "NULL";
+            if (p2_val.Length == 0)
+                p2_val = "NULL";
+
+            cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
+            cfgText = cfgText.Replace(backup_old, "backup=" + bak_val);
+            cfgText = cfgText.Replace(player2_old, "player2=" + p2_val);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
 
             // reload from file

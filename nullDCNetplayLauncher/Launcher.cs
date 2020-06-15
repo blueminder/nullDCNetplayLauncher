@@ -194,7 +194,7 @@ namespace nullDCNetplayLauncher
             IntPtr hPopup = GetWindow(hWndPtr, WINDOW_POPUP);
             IntPtr hEdit = GetDlgItem(hPopup, PATHNAME_ENTRY_ID);
             HandleRef hrefHWndTarget = new HandleRef(null, hEdit);
-
+            System.Threading.Thread.Sleep(500);
             SendMessage(hrefHWndTarget, WM_SETTEXT, IntPtr.Zero, FullRomPath);
 
             SetFocus(hEdit);
