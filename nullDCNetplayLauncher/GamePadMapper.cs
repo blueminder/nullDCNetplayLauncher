@@ -147,30 +147,47 @@ namespace nullDCNetplayLauncher
             String called = push ? "Pushed" : "Released";
             System.Diagnostics.Debug.WriteLine($"Button {button} {called}");
 
-            Dictionary<string, byte> ButtonMapping = new Dictionary<string, byte>()
+            Dictionary<string, byte> VirtualMapping = new Dictionary<string, byte>()
             {
-                { "Y", KEY_8 },
-                { "A", KEY_9 },
-                { "Back", KEY_0 },
-                { "X", KEY_U },
-                { "B", KEY_I },
-                { "Start", KEY_O },
-                { "RightStick", KEY_5 },
-                { "LeftShoulder", KEY_1 },
-                { "RightShoulder", KEY_3 },
-                { "IsUp", KEY_W },
-                { "IsDown", KEY_S },
-                { "IsLeft", KEY_A },
-                { "IsRight", KEY_D },
+                { "1", KEY_8 },
+                { "2", KEY_9 },
+                { "3", KEY_0 },
+                { "4", KEY_U },
+                { "5", KEY_I },
+                { "6", KEY_O },
+                { "Start", KEY_5 },
+                { "Coin", KEY_1 },
+                { "Test", KEY_3 },
+                { "Up", KEY_W },
+                { "Down", KEY_S },
+                { "Left", KEY_A },
+                { "Right", KEY_D },
+            };
+
+            Dictionary<string, string> ButtonMapping = new Dictionary<string, string>()
+            {
+                { "Y", "1" },
+                { "A", "2" },
+                { "Back", "3" },
+                { "X", "4" },
+                { "B", "5" },
+                { "Start", "6" },
+                { "RightStick", "Start" },
+                { "LeftShoulder", "Coin" },
+                { "RightShoulder", "Test" },
+                { "IsUp", "Up" },
+                { "IsDown", "Down" },
+                { "IsLeft", "Left" },
+                { "IsRight", "Right" },
             };
 
             if(push)
             {
-                PushKey(ButtonMapping[button]);
+                PushKey(VirtualMapping[ButtonMapping[button]]);
             }
             else
             {
-                ReleaseKey(ButtonMapping[button]);
+                ReleaseKey(VirtualMapping[ButtonMapping[button]]);
             }
         }
 
