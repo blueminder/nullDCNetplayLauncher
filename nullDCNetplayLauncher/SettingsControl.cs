@@ -81,7 +81,7 @@ namespace nullDCNetplayLauncher
             txtWindowX.Text = windowSettings[1].ToString();
             txtWindowY.Text = windowSettings[2].ToString();
 
-            string launcherText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             if (launcherText.Contains("launch_antimicro=1"))
             {
                 chkEnableMapper.Checked = true;
@@ -91,7 +91,7 @@ namespace nullDCNetplayLauncher
                 chkEnableMapper.Checked = false;
             }
 
-            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
             var host_fps_old = launcherCfgLines.Where(s => s.Contains("host_fps=")).ToList().First();
             var guest_fps_old = launcherCfgLines.Where(s => s.Contains("guest_fps=")).ToList().First();
@@ -120,7 +120,7 @@ namespace nullDCNetplayLauncher
 
         private void btnSaveInput_Click(object sender, EventArgs e)
         {
-            string launcherText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
@@ -133,7 +133,7 @@ namespace nullDCNetplayLauncher
             {
                 launcherText = launcherText.Replace("launch_antimicro=1", "launch_antimicro=0");
             }
-            File.WriteAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg", launcherText);
+            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             String p1_val = $"{cboPlayer1.SelectedValue}";

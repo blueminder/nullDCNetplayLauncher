@@ -25,7 +25,7 @@ namespace nullDCNetplayLauncher
             string launcherCfgText = "";
             try
             {
-                var launcherCfgUri = new System.Uri(Path.Combine(Launcher.rootDir, @"nullDCNetplayLauncher\launcher.cfg"));
+                var launcherCfgUri = new System.Uri(Path.Combine(Launcher.rootDir, @"launcher.cfg"));
                 launcherCfgText = File.ReadAllText(launcherCfgUri.LocalPath);
             }
             catch(System.IO.DirectoryNotFoundException)

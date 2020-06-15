@@ -216,7 +216,7 @@ namespace nullDCNetplayLauncher
             string frameMethod = "0")
         {
             string EmuDir = rootDir + "nulldc-1-0-4-en-win\\";
-            string LauncherCfgPath = rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string LauncherCfgPath = rootDir + "launcher.cfg";
             string CfgPath = EmuDir + "nullDC.cfg";
             string AntilagPath = EmuDir + "antilag.cfg";
 
@@ -300,7 +300,7 @@ namespace nullDCNetplayLauncher
         public static string GetDistributionRootDirectoryName()
         {
             var LauncherPath = new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
-            var DistroPath = new DirectoryInfo(LauncherPath).Parent.Parent.FullName;
+            var DistroPath = new DirectoryInfo(LauncherPath).Parent.FullName;
             return DistroPath;
         }
 
@@ -444,7 +444,7 @@ namespace nullDCNetplayLauncher
 
         public static void SaveFpsSettings(int host_fps, int guest_fps)
         {
-            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             string lcText = File.ReadAllText(launcherCfgPath);
             string result = "";
             var host_regex = new Regex(@"^.*host_fps=.*$", RegexOptions.Multiline);
@@ -458,7 +458,7 @@ namespace nullDCNetplayLauncher
 
         public static void SaveWindowSettings(int custom_size, int width, int height, int windowMax=0)
         {
-            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             string lcText = File.ReadAllText(launcherCfgPath);
             string result = "";
 
@@ -481,7 +481,7 @@ namespace nullDCNetplayLauncher
         {
             int[] windowSettings = new int[4];
 
-            string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
             var custom_size_cfg = launcherCfgLines.Where(s => s.Contains("custom_size=")).ToList().First();
             var width_cfg = launcherCfgLines.Where(s => s.Contains("width=")).ToList().First();

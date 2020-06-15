@@ -246,7 +246,7 @@ namespace nullDCNetplayLauncher
         private void joystickBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             //ui update
-            string launcherText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
@@ -277,7 +277,7 @@ namespace nullDCNetplayLauncher
                 btnCancel.Enabled = false;
                 btnSetup.Enabled = true;
             }
-            File.WriteAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg", launcherText);
+            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
         }
 
@@ -487,14 +487,14 @@ namespace nullDCNetplayLauncher
 
         private void btnEnableGamepadMapper_Click(object sender, EventArgs e)
         {
-            string launcherText = File.ReadAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg");
+            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
             launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
             cfgText = cfgText.Replace(player1_old, "player1=keyboard");
             Launcher.LaunchAntiMicro();
-            File.WriteAllText(Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg", launcherText);
+            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
         }
     }

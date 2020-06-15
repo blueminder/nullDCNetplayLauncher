@@ -140,7 +140,7 @@ namespace nullDCNetplayLauncher
 
                 if (arguments.ContainsKey("host-fps") || arguments.ContainsKey("guest-fps"))
                 {
-                    string launcherCfgPath = Launcher.rootDir + "nullDCNetplayLauncher\\launcher.cfg";
+                    string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
                     var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
                     
                     var host_fps_old = launcherCfgLines.Where(s => s.Contains("host_fps=")).ToList().First();
