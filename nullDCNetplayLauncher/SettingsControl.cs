@@ -85,7 +85,7 @@ namespace nullDCNetplayLauncher
             txtWindowY.Text = windowSettings[2].ToString();
 
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
-            if (launcherText.Contains("launch_antimicro=1"))
+            if (launcherText.Contains("enable_mapper=1"))
             {
                 chkEnableMapper.Checked = true;
             }
@@ -109,11 +109,6 @@ namespace nullDCNetplayLauncher
             cboGamePadMappings.DisplayMember = Launcher.ActiveGamePadMapping.Name;
         }
 
-        private void btnLaunchAntiMicro_Click(object sender, EventArgs e)
-        {
-            Launcher.LaunchAntiMicro();
-        }
-
         private void btnEditCFG_Click(object sender, EventArgs e)
         {
             Process.Start("notepad.exe", Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
@@ -129,11 +124,11 @@ namespace nullDCNetplayLauncher
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             if (chkEnableMapper.Checked)
             {
-                launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
+                launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
             }
             else
             {
-                launcherText = launcherText.Replace("launch_antimicro=1", "launch_antimicro=0");
+                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
             }
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 

@@ -28,6 +28,7 @@ namespace nullDCNetplayLauncher
         bool AnalogSet;
         bool ZDetected;
         bool Skip;
+        bool IsUnnamed;
 
         GamePadMapping WorkingMapping;
 
@@ -105,20 +106,34 @@ namespace nullDCNetplayLauncher
                     joystickName = deviceInstance.InstanceName;
                 }
 
-            // If Joystick not found, throws an error
+            RestoreArcadeStick();
+
+            // If Joystick not found, renamed generic gamepad for mapper to take over
             if (joystickGuid == Guid.Empty)
             {
+                /*
                 hideAllButtons();
                 ClearArcadeStick();
                 Console.WriteLine("No Controller Found");
                 lblController.Text = "No Controller Found\n\nIf it is plugged in, then NullDC does not natively support your controller. To use it, you will have to enable the Gamepad Mapper to continue.\n\nSet your controls in AntiMicro to match the current keyboard mapping and minimize. Click \"Play Offline\" to test your controls.";
                 showDetectControllerButton();
                 showEnableGamepadMapperButtons();
+                */
+                var unnamedMappings = Launcher.mappings.GamePadMappings.Where(g => g.Name.StartsWith("Gamepad ")).ToList();
+                var numUM = unnamedMappings.Count;
+
+                IsUnnamed = true;
+                JoystickName = $"Gamepad #{numUM + 1}";
+
+                btnSetup.Enabled = true;
+                btnSkip.Enabled = false;
+                btnCancel.Enabled = false;
+
+                hideAllButtons();
+                showSetupButtons();
             }
             else
             {
-                RestoreArcadeStick();
-
                 // Instantiate the joystick
                 joystick = new SharpDX.DirectInput.Joystick(directInput, joystickGuid);
                 JoystickName = joystickName;
@@ -367,29 +382,30 @@ namespace nullDCNetplayLauncher
 
         private void joystickBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //ui update
+            // ui update
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            if (ZDetected)
-            {
-                launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
-                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
-                Launcher.LaunchAntiMicro(hidden: true);
-
-                ClearArcadeStick();
-                lblController.Text = "Z-Axis Trigger Detected. Gamepad Mapper Enabled.\n\nSet your controls in AntiMicro to match the current keyboard mapping and minimize.\n\nClick \"Play Offline\" to test your controls.";
-                hideAllButtons();
-                showLaunchAntimicroButtons();
-            }
-            else
+            if (ZDetected || IsUnnamed)
             {
                 SaveMapping(JoystickName);
 
-                launcherText = launcherText.Replace("launch_antimicro=1", "launch_antimicro=0");
+                launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+
+                picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
+                lblController.Size = new System.Drawing.Size(286, 114);
+                lblController.Text = $"\nNew Gamepad Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+                hideAllButtons();
+                btnSkip.Enabled = false;
+                btnCancel.Enabled = false;
+                btnSetup.Enabled = true;
+            }
+            else
+            {
+                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
-                Launcher.KillAntiMicro();
 
                 File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc", ButtonAssignmentText);
 
@@ -424,12 +440,8 @@ namespace nullDCNetplayLauncher
                 ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
                 OldState = args.GamePadState;
 
-                while (CurrentlyAssigned == false)
+                if (!IsUnnamed)
                 {
-                    Thread.Sleep(600);
-                }
-
-                    /*
                     var isNumeric = int.TryParse(button, out _);
                     var buttonName = button;
 
@@ -449,37 +461,36 @@ namespace nullDCNetplayLauncher
                     {
                         var joystickUpdate = SetJoystickButton(joystick, button);
 
-                        //AssignGamePadButton(button);
-
-                        if (ZDetected)
+                        if (!ZDetected)
                         {
-                            break;
-                        }
-
-                        if (joystickUpdate.Count > 0)
-                        {
-                            var buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
-                            while (buttonAssignment == null)
+                            if (joystickUpdate.Count > 0)
                             {
-                                buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
+                                var buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
+                                while (buttonAssignment == null)
+                                {
+                                    buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
+                                }
+                                ButtonAssignmentText += $"{buttonAssignment}={buttonName}\n";
+                                ButtonAssignments.Add(button, joystickUpdate);
                             }
-                            ButtonAssignmentText += $"{buttonAssignment}={buttonName}\n";
-                            ButtonAssignments.Add(button, joystickUpdate);
-                        }
-                        else
-                        {
-                            ButtonAssignmentText += $"none={buttonName}\n";
-                            ButtonAssignments.Add(button, joystickUpdate);
+                            else
+                            {
+                                ButtonAssignmentText += $"none={buttonName}\n";
+                                ButtonAssignments.Add(button, joystickUpdate);
+                            }
+
+                            if (directionalButtons.Any(button.Contains) && AnalogSet)
+                            {
+                                Thread.Sleep(500);
+                            }
                         }
                     }
-                    */
-                    button_index++;
-                /*
-                if (directionalButtons.Any(button.Contains) && AnalogSet)
-                {
-                    Thread.Sleep(500);
                 }
-                */
+                while (CurrentlyAssigned == false)
+                {
+                    Thread.Sleep(600);
+                }
+                button_index++;
             }
         }
 
@@ -554,12 +565,6 @@ namespace nullDCNetplayLauncher
             lblController.Text = "Digital or Analog Input?";
         }
 
-        private void showLaunchAntimicroButtons()
-        {
-            btnLaunchAntimicro.Visible = true;
-            btnShowKeyboard.Visible = true;
-        }
-
         private void showEnableGamepadMapperButtons()
         {
             btnEnableGamepadMapper.Visible = true;
@@ -580,7 +585,6 @@ namespace nullDCNetplayLauncher
 
         private void hideAllButtons()
         {
-            btnLaunchAntimicro.Visible = false;
             btnShowKeyboard.Visible = false;
             btnDetectController.Visible = false;
             btnSetup.Visible = false;
@@ -589,11 +593,6 @@ namespace nullDCNetplayLauncher
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
             btnEnableGamepadMapper.Visible = false;
-        }
-
-        private void btnLaunchAntimicro_Click(object sender, EventArgs e)
-        {
-            Launcher.LaunchAntiMicro();
         }
 
         private void btnDetectController_Click(object sender, EventArgs e)
@@ -631,9 +630,9 @@ namespace nullDCNetplayLauncher
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
+            launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
             cfgText = cfgText.Replace(player1_old, "player1=keyboard");
-            //Launcher.LaunchAntiMicro();
+
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
         }
@@ -661,11 +660,6 @@ namespace nullDCNetplayLauncher
             serializer.Serialize(writer.BaseStream, mappings);
             writer.Close();
             Launcher.mappings = GamePadMapping.ReadMappingsFile();
-            //if (mappings.GamePadMappings.Count > 1)
-            //{
-                //btnDeleteMapping.Enabled = true;
-            //}
-            //cboMappingName.BackColor = Color.LemonChiffon;
         }
     }
 }

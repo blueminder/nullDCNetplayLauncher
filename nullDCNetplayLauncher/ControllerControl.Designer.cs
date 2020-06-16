@@ -102,20 +102,6 @@
             this.btnSkip.UseVisualStyleBackColor = true;
             this.btnSkip.Click += new System.EventHandler(this.btnSkip_Click);
             // 
-            // btnLaunchAntimicro
-            // 
-            this.btnLaunchAntimicro.AutoSize = true;
-            this.btnLaunchAntimicro.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnLaunchAntimicro.Location = new System.Drawing.Point(115, 240);
-            this.btnLaunchAntimicro.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.btnLaunchAntimicro.Name = "btnLaunchAntimicro";
-            this.btnLaunchAntimicro.Size = new System.Drawing.Size(100, 23);
-            this.btnLaunchAntimicro.TabIndex = 5;
-            this.btnLaunchAntimicro.Text = "Launch AntiMicro";
-            this.btnLaunchAntimicro.UseVisualStyleBackColor = true;
-            this.btnLaunchAntimicro.Visible = false;
-            this.btnLaunchAntimicro.Click += new System.EventHandler(this.btnLaunchAntimicro_Click);
-            // 
             // btnDetectController
             // 
             this.btnDetectController.AutoSize = true;

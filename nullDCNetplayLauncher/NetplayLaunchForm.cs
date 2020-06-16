@@ -43,7 +43,7 @@ namespace nullDCNetplayLauncher
                 System.Environment.Exit(1);
             }
 
-            if (launcherCfgText.Contains("launch_antimicro=1"))
+            if (launcherCfgText.Contains("enable_mapper=1"))
             {
                 EnableMapper = true;
             }

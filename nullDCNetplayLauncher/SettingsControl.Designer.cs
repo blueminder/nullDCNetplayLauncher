@@ -52,7 +52,6 @@
             this.btnSaveWindow = new System.Windows.Forms.Button();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
             this.grpShortcuts = new System.Windows.Forms.GroupBox();
-            this.btnLaunchAntiMicro = new System.Windows.Forms.Button();
             this.btnOpenQKO = new System.Windows.Forms.Button();
             this.btnJoyCpl = new System.Windows.Forms.Button();
             this.btnSaveFPS = new System.Windows.Forms.Button();
@@ -206,7 +205,7 @@
             // 
             // btnEditCFG
             // 
-            this.btnEditCFG.Location = new System.Drawing.Point(8, 58);
+            this.btnEditCFG.Location = new System.Drawing.Point(5, 30);
             this.btnEditCFG.Name = "btnEditCFG";
             this.btnEditCFG.Size = new System.Drawing.Size(190, 28);
             this.btnEditCFG.TabIndex = 4;
@@ -318,7 +317,6 @@
             // 
             // grpShortcuts
             // 
-            this.grpShortcuts.Controls.Add(this.btnLaunchAntiMicro);
             this.grpShortcuts.Controls.Add(this.btnEditCFG);
             this.grpShortcuts.Controls.Add(this.btnOpenQKO);
             this.grpShortcuts.Controls.Add(this.btnJoyCpl);
@@ -329,18 +327,9 @@
             this.grpShortcuts.TabStop = false;
             this.grpShortcuts.Text = "Shortcuts";
             // 
-            // btnLaunchAntiMicro
-            // 
-            this.btnLaunchAntiMicro.Location = new System.Drawing.Point(8, 24);
-            this.btnLaunchAntiMicro.Name = "btnLaunchAntiMicro";
-            this.btnLaunchAntiMicro.Size = new System.Drawing.Size(190, 28);
-            this.btnLaunchAntiMicro.TabIndex = 8;
-            this.btnLaunchAntiMicro.Text = "Launch AntiMicro";
-            this.btnLaunchAntiMicro.UseVisualStyleBackColor = true;
-            // 
             // btnOpenQKO
             // 
-            this.btnOpenQKO.Location = new System.Drawing.Point(8, 92);
+            this.btnOpenQKO.Location = new System.Drawing.Point(5, 64);
             this.btnOpenQKO.Name = "btnOpenQKO";
             this.btnOpenQKO.Size = new System.Drawing.Size(190, 28);
             this.btnOpenQKO.TabIndex = 5;
@@ -350,7 +339,7 @@
             // 
             // btnJoyCpl
             // 
-            this.btnJoyCpl.Location = new System.Drawing.Point(8, 125);
+            this.btnJoyCpl.Location = new System.Drawing.Point(5, 98);
             this.btnJoyCpl.Name = "btnJoyCpl";
             this.btnJoyCpl.Size = new System.Drawing.Size(190, 28);
             this.btnJoyCpl.TabIndex = 6;
@@ -364,7 +353,7 @@
             this.btnSaveFPS.Name = "btnSaveFPS";
             this.btnSaveFPS.Size = new System.Drawing.Size(173, 26);
             this.btnSaveFPS.TabIndex = 11;
-            this.btnSaveFPS.Text = "Save FPS Limits";
+            this.btnSaveFPS.Text = "Save FPS Limit";
             this.btnSaveFPS.UseVisualStyleBackColor = true;
             this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
             // 
@@ -427,7 +416,6 @@
         private System.Windows.Forms.Button btnSaveWindow;
         private System.Windows.Forms.TabPage tabAdvanced;
         private System.Windows.Forms.GroupBox grpShortcuts;
-        private System.Windows.Forms.Button btnLaunchAntiMicro;
         private System.Windows.Forms.Button btnOpenQKO;
         private System.Windows.Forms.Button btnJoyCpl;
         private System.Windows.Forms.Button btnSaveFPS;

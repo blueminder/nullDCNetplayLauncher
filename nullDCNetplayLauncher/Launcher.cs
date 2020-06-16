@@ -100,36 +100,6 @@ namespace nullDCNetplayLauncher
             return path;
         }
 
-        public static void KillAntiMicro()
-        {
-            var amInstances = Process.GetProcessesByName("antimicro");
-            if (amInstances.Length > 0)
-            {
-                foreach (Process amInstance in amInstances)
-                {
-                    amInstance.Kill();
-                    amInstance.WaitForExit();
-                    amInstance.Dispose();
-                }
-            }
-        }
-
-        public static void LaunchAntiMicro(bool hidden=false)
-        {
-            List<string> arglist = new List<string>();
-            if (hidden)
-            {
-                arglist.Add("--hidden");
-            }
-            arglist.Add("--profile");
-            arglist.Add("\"" + Path.Combine(Launcher.rootDir, @"antimicro\profiles\nulldc.gamecontroller.amgp") + "\"");
-            KillAntiMicro();
-            ProcessStartInfo psi = new ProcessStartInfo("\"" + Path.Combine(Launcher.rootDir, @"antimicro\antimicro.exe") + "\"");
-            psi.Arguments = string.Join(" ", arglist);
-            Process.Start(psi);
-                 
-        }
-
         [DllImport("user32.dll")]
         public static extern IntPtr PostMessage(IntPtr hWnd, int msg, int wParam, int lParam);
 
