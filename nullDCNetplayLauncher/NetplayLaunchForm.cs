@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Resources;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace nullDCNetplayLauncher
@@ -45,16 +46,10 @@ namespace nullDCNetplayLauncher
 
             if (launcherCfgText.Contains("enable_mapper=1"))
             {
-                EnableMapper = true;
+                StartMapper();
             }
 
             InitializeComponent();
-
-            if(EnableMapper)
-            {
-                gpm = new GamePadMapper(controller);
-                this.Shown += gpm.initializeController;
-            }
             
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
@@ -71,6 +66,19 @@ namespace nullDCNetplayLauncher
             {
                 Launcher.SelectedGame = romDict.First().Value;
             }
+        }
+
+        public static void StartMapper()
+        {
+            EnableMapper = true;
+            gpm = new GamePadMapper(controller);
+            gpm.initializeController(NetplayLaunchForm.ActiveForm, null);
+        }
+
+        public static void StopMapper()
+        {
+            EnableMapper = false;
+            controller.clock.Stop();
         }
 
         private void btnOffline_Click(object sender, EventArgs e)

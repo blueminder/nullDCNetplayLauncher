@@ -86,8 +86,6 @@ namespace nullDCNetplayLauncher
             {
                 NetplayLaunchForm.controller.clock.Stop();
             }
-
-            //controller.GamePadAction -= controller_GamePadAction;
         }
 
         int ExtractNumberFromText(string text)
@@ -473,9 +471,7 @@ namespace nullDCNetplayLauncher
 
                 if (!NetplayLaunchForm.EnableMapper)
                 {
-                    NetplayLaunchForm.EnableMapper = true;
-                    NetplayLaunchForm.gpm = new GamePadMapper(NetplayLaunchForm.controller);
-                    NetplayLaunchForm.controller.clock.Start();
+                    NetplayLaunchForm.StartMapper();
                 }
 
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
@@ -493,8 +489,7 @@ namespace nullDCNetplayLauncher
             {
                 if (NetplayLaunchForm.EnableMapper)
                 {
-                    NetplayLaunchForm.EnableMapper = false;
-                    NetplayLaunchForm.controller.clock.Stop();
+                    NetplayLaunchForm.StopMapper();
                 }
 
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");

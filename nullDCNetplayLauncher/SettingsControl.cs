@@ -151,17 +151,12 @@ namespace nullDCNetplayLauncher
                 serializer.Serialize(writer.BaseStream, Launcher.mappings);
                 writer.Close();
 
-                NetplayLaunchForm.EnableMapper = true;
-
-                NetplayLaunchForm.gpm = new GamePadMapper(NetplayLaunchForm.controller);
-                NetplayLaunchForm.gpm.initializeController(this, null);
-                NetplayLaunchForm.controller.clock.Start();
+                NetplayLaunchForm.StartMapper();
             }
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                NetplayLaunchForm.EnableMapper = false;
-                NetplayLaunchForm.controller.clock.Stop();
+                NetplayLaunchForm.StopMapper();
             }
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
