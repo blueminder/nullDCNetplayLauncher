@@ -24,7 +24,7 @@ namespace nullDCNetplayLauncher
 
         public static ConnectionPresetList ReadPresetsFile()
         {
-            string path = Launcher.GetApplicationConfigurationDirectoryName() + "//ConnectionPresetList.xml";
+            string path = Launcher.GetDistributionRootDirectoryName() + "//ConnectionPresetList.xml";
             ConnectionPresetList readPresetList;
             try
             {
@@ -47,6 +47,13 @@ namespace nullDCNetplayLauncher
                 };
                 readPresetList = new ConnectionPresetList();
                 readPresetList.ConnectionPresets.Add(defaultPreset);
+
+                // generates a new file if it does not exist
+                System.Xml.Serialization.XmlSerializer serializer =
+                    new System.Xml.Serialization.XmlSerializer(typeof(ConnectionPresetList));
+                StreamWriter writer = new StreamWriter(path);
+                serializer.Serialize(writer.BaseStream, readPresetList);
+                writer.Close();
             }
             return readPresetList;
         }

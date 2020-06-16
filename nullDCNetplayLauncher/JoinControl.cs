@@ -156,7 +156,7 @@ namespace nullDCNetplayLauncher
                 var toDelete = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
                 presets.ConnectionPresets.Remove(toDelete);
 
-                var path = Launcher.GetApplicationConfigurationDirectoryName() + "//ConnectionPresetList.xml";
+                var path = Launcher.rootDir + "\\ConnectionPresetList.xml";
                 System.Xml.Serialization.XmlSerializer serializer =
                     new System.Xml.Serialization.XmlSerializer(typeof(ConnectionPresetList));
                 StreamWriter writer = new StreamWriter(path);

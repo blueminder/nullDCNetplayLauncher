@@ -45,10 +45,7 @@ namespace nullDCNetplayLauncher
 
             if (launcherCfgText.Contains("launch_antimicro=1"))
             {
-                if (Process.GetProcessesByName("antimicro").Length == 0)
-                {
-                    Process.Start(Launcher.rootDir + "antimicro\\antimicro.exe", " --hidden --profile " + Launcher.rootDir + "\\antimicro\\profiles\\nulldc.gamecontroller.amgp");
-                }
+                EnableMapper = true;
             }
 
             InitializeComponent();

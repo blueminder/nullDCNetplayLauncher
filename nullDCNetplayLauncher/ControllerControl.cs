@@ -29,6 +29,7 @@ namespace nullDCNetplayLauncher
         bool ZDetected;
         bool Skip;
 
+        GamePadMapping WorkingMapping;
 
         private ControllerEngine controller;
         private GamePadState OldState;
@@ -61,6 +62,8 @@ namespace nullDCNetplayLauncher
             optionButtons = new string[] { "Start", "Coin", "Test" };
 
             buttonNames = directionalButtons.Concat(faceButtons).Concat(optionButtons).ToArray();
+
+            WorkingMapping = new GamePadMapping();
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
@@ -247,7 +250,7 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
-                    Launcher.ActiveGamePadMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
                 }
                 if (CurrentButtonState == OpenTK.Input.ButtonState.Released &&
                     (!Object.ReferenceEquals(OldState, null) && OldButtonState == OpenTK.Input.ButtonState.Pressed))
@@ -273,7 +276,7 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
-                    Launcher.ActiveGamePadMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
                     CurrentlyAssigned = true;
                 }
                 if (CurrentDPadState == false &&
@@ -301,7 +304,7 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Pressed");
-                    Launcher.ActiveGamePadMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
                 }
                 if (CurrentTriggerState == 0 &&
                     (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))
@@ -382,6 +385,8 @@ namespace nullDCNetplayLauncher
             }
             else
             {
+                SaveMapping(JoystickName);
+
                 launcherText = launcherText.Replace("launch_antimicro=1", "launch_antimicro=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
                 Launcher.KillAntiMicro();
@@ -628,9 +633,39 @@ namespace nullDCNetplayLauncher
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
             launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
             cfgText = cfgText.Replace(player1_old, "player1=keyboard");
-            Launcher.LaunchAntiMicro();
+            //Launcher.LaunchAntiMicro();
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+        }
+
+        public void SaveMapping(string mappingName)
+        {
+            var mappings = Launcher.mappings;
+            var toEdit = mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
+            if (toEdit != null)
+            {
+                toEdit.Name = mappingName;
+            }
+            else
+            {
+                var toAdd = WorkingMapping;
+                toAdd.Name = mappingName;
+                Launcher.ActiveGamePadMapping = toAdd;
+                mappings.GamePadMappings.Add(toAdd);
+            }
+
+            var path = Launcher.rootDir + "GamePadMappingList.xml";
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
+            StreamWriter writer = new StreamWriter(path);
+            serializer.Serialize(writer.BaseStream, mappings);
+            writer.Close();
+            Launcher.mappings = GamePadMapping.ReadMappingsFile();
+            //if (mappings.GamePadMappings.Count > 1)
+            //{
+                //btnDeleteMapping.Enabled = true;
+            //}
+            //cboMappingName.BackColor = Color.LemonChiffon;
         }
     }
 }

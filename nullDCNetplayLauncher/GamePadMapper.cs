@@ -61,13 +61,13 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldButtonState == ButtonState.Released))
                 {
                     CallButtonMapping(buttonProperty.Name, true);
-                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
                 }
                 if (CurrentButtonState == ButtonState.Released &&
                     (!Object.ReferenceEquals(OldState, null) && OldButtonState == ButtonState.Pressed))
                 {
                     CallButtonMapping(buttonProperty.Name, false);
-                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                 }
             }
             
@@ -84,13 +84,13 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldDPadState == false))
                 {
                     CallButtonMapping(buttonProperty.Name, true);
-                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
                 }
                 if (CurrentDPadState == false &&
                     (!Object.ReferenceEquals(OldState, null) && OldDPadState == true))
                 {
                     CallButtonMapping(buttonProperty.Name, false);
-                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                 }
             }
 
@@ -109,13 +109,13 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldTriggerState == 0))
                 {
                     CallButtonMapping(buttonProperty.Name, true);
-                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
                 }
                 if (CurrentTriggerState == 0 &&
                     (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))
                 {
                     CallButtonMapping(buttonProperty.Name, false);
-                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
                 }
             }
 
@@ -146,6 +146,7 @@ namespace nullDCNetplayLauncher
         {
             String called = push ? "Pushed" : "Released";
             System.Diagnostics.Debug.WriteLine($"Button {button} {called}");
+            Console.WriteLine($"Button {button} {called}");
 
             Dictionary<string, byte> VirtualMapping = new Dictionary<string, byte>()
             {
@@ -165,6 +166,7 @@ namespace nullDCNetplayLauncher
             };
 
             String virtualIndex = (String)Launcher.ActiveGamePadMapping[button];
+            System.Diagnostics.Debug.WriteLine($"Virtual Index {virtualIndex} {called}");
 
             if (push)
             {

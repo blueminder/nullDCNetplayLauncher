@@ -16,13 +16,12 @@ namespace nullDCNetplayLauncher
 {
     public partial class SettingsControl : UserControl
     {
+
+        public GamePadMappingList mappings;
+
         public SettingsControl()
         {
             InitializeComponent();
-
-            var mappings = GamePadMapping.ReadMappingsFile();
-            cboGamePadMappings.DataSource = mappings.GamePadMappings;
-
         }
 
         string[] cfgLines;
@@ -104,6 +103,10 @@ namespace nullDCNetplayLauncher
             var guestFpsEntry = guest_fps_old.Split('=')[1];
 
             numHostFPS.Value = Convert.ToInt32(hostFpsEntry);
+
+            mappings = Launcher.mappings;
+            cboGamePadMappings.DataSource = mappings.GamePadMappings;
+            cboGamePadMappings.DisplayMember = Launcher.ActiveGamePadMapping.Name;
         }
 
         private void btnLaunchAntiMicro_Click(object sender, EventArgs e)
@@ -127,10 +130,6 @@ namespace nullDCNetplayLauncher
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("launch_antimicro=0", "launch_antimicro=1");
-                if (Process.GetProcessesByName("antimicro").Length == 0)
-                {
-                    Process.Start(Launcher.rootDir + "antimicro\\antimicro.exe", " --hidden --profile " + Launcher.rootDir + "\\antimicro\\profiles\\nulldc.gamecontroller.amgp");
-                }
             }
             else
             {
@@ -171,11 +170,16 @@ namespace nullDCNetplayLauncher
                 cboPlayer1.Text = "Keyboard";
                 cboPlayer1.Enabled = false;
                 cboGamePadMappings.Enabled = true;
+                if (Launcher.mappings.GamePadMappings.Count > 1)
+                    btnDeleteMapping.Enabled = true;
+                NetplayLaunchForm.EnableMapper = true;
             }
             else
             {
                 cboPlayer1.Enabled = true;
                 cboGamePadMappings.Enabled = false;
+                btnDeleteMapping.Enabled = false;
+                NetplayLaunchForm.EnableMapper = false;
             }
         }
 
@@ -224,7 +228,33 @@ namespace nullDCNetplayLauncher
 
         private void btnDeleteMapping_Click(object sender, EventArgs e)
         {
+            DeleteMapping(cboGamePadMappings.Text);
+        }
 
+        public void DeleteMapping(string mappingName)
+        {
+            mappings = Launcher.mappings;
+            if (mappings.GamePadMappings.Count > 1)
+            {
+                var toDelete = mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
+                mappings.GamePadMappings.Remove(toDelete);
+
+                var path = Launcher.rootDir + "GamePadMappingList.xml";
+                System.Xml.Serialization.XmlSerializer serializer =
+                    new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
+                StreamWriter writer = new StreamWriter(path);
+                serializer.Serialize(writer.BaseStream, mappings);
+                writer.Close();
+                mappings = GamePadMapping.ReadMappingsFile();
+                Launcher.mappings = GamePadMapping.ReadMappingsFile();
+                cboGamePadMappings.DataSource = Launcher.mappings.GamePadMappings;
+                cboGamePadMappings.SelectedIndex = 0;
+                if (mappings.GamePadMappings.Count == 1)
+                {
+                    btnDeleteMapping.Enabled = false;
+                }
+            }
+            Launcher.mappings = this.mappings;
         }
     }
 }

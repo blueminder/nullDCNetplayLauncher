@@ -21,7 +21,7 @@ namespace nullDCNetplayLauncher
 
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
 
-        GamePadMappingList mappings = GamePadMapping.ReadMappingsFile();
+        public static GamePadMappingList mappings;
         /*
         public static Dictionary<string, string> ButtonMapping = new Dictionary<string, string>()
             {
@@ -49,6 +49,7 @@ namespace nullDCNetplayLauncher
 
             RestoreFgcaNvram();
 
+            mappings = GamePadMapping.ReadMappingsFile(); ;
             ActiveGamePadMapping = mappings.GamePadMappings.First();
         }
 
