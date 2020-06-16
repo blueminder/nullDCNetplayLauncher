@@ -263,6 +263,7 @@
             this.cboGamePadMappings.Name = "cboGamePadMappings";
             this.cboGamePadMappings.Size = new System.Drawing.Size(149, 24);
             this.cboGamePadMappings.TabIndex = 12;
+            this.cboGamePadMappings.SelectedIndexChanged += new System.EventHandler(this.cboGamePadMappings_SelectedIndexChanged);
             // 
             // btnSaveInput
             // 

@@ -106,7 +106,9 @@ namespace nullDCNetplayLauncher
 
             mappings = Launcher.mappings;
             cboGamePadMappings.DataSource = mappings.GamePadMappings;
-            cboGamePadMappings.DisplayMember = Launcher.ActiveGamePadMapping.Name;
+            cboGamePadMappings.DisplayMember = Name;
+
+            cboGamePadMappings.SelectedItem = Launcher.ActiveGamePadMapping;
         }
 
         private void btnEditCFG_Click(object sender, EventArgs e)
@@ -125,6 +127,23 @@ namespace nullDCNetplayLauncher
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+
+                foreach(GamePadMapping mapping in Launcher.mappings.GamePadMappings)
+                {
+                    mapping.Default = false;
+                }
+
+                ((GamePadMapping)cboGamePadMappings.SelectedValue).Default = true;
+
+                Launcher.ActiveGamePadMapping = (GamePadMapping)cboGamePadMappings.SelectedValue;
+
+                var path = Launcher.rootDir + "//GamePadMappingList.xml";
+                System.Xml.Serialization.XmlSerializer serializer =
+                    new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
+                StreamWriter writer = new StreamWriter(path);
+                serializer.Serialize(writer.BaseStream, mappings);
+                writer.Close();
+
                 NetplayLaunchForm.EnableMapper = true;
                 NetplayLaunchForm.gpm = new GamePadMapper(NetplayLaunchForm.controller);
                 NetplayLaunchForm.controller.clock.Start();
@@ -255,6 +274,12 @@ namespace nullDCNetplayLauncher
                 }
             }
             Launcher.mappings = this.mappings;
+        }
+
+        private void cboGamePadMappings_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine(cboGamePadMappings.SelectedValue);
+
         }
     }
 }

@@ -50,23 +50,18 @@ namespace nullDCNetplayLauncher
             RestoreFgcaNvram();
 
             mappings = GamePadMapping.ReadMappingsFile(); ;
-            ActiveGamePadMapping = mappings.GamePadMappings.First();
+            AssignActiveMapping();
 
         }
 
         public void AssignActiveMapping()
         {
-            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
-            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
-            var default_mapping_cfg = launcherCfgLines.Where(s => s.Contains("default_mapping=")).ToList().First();
-
-            string defaultMappingEntry = default_mapping_cfg.Split('=')[1];
-
-            if(defaultMappingEntry.Length > 0)
+            try
             {
-                ActiveGamePadMapping = mappings.GamePadMappings.Where(g => g.Name.Contains(defaultMappingEntry)).ToList().First();
+                ActiveGamePadMapping = mappings.GamePadMappings.Where(g => g.Default == true).ToList().First();
+                System.Diagnostics.Debug.WriteLine("assigned " + ActiveGamePadMapping);
             }
-            else
+            catch
             {
                 ActiveGamePadMapping = mappings.GamePadMappings.First();
             }

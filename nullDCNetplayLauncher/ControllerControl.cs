@@ -338,6 +338,60 @@ namespace nullDCNetplayLauncher
                 }
             }
 
+            var oldLeftX = Math.Round(OldState.ThumbSticks.Left.X);
+            var oldLeftY = Math.Round(OldState.ThumbSticks.Left.Y);
+
+            var newLeftX = Math.Round(State.ThumbSticks.Left.X);
+            var newLeftY = Math.Round(State.ThumbSticks.Left.Y);
+
+            if (oldLeftX == 0 && newLeftX == 1)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Pushed");
+                WorkingMapping["IsRight"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftX == 1 && newLeftX == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Released");
+                CurrentlyAssigned = true;
+            }
+
+            if (oldLeftX == 0 && newLeftX == -1)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Pushed");
+                WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftX == -1 && newLeftX == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Released");
+                CurrentlyAssigned = true;
+            }
+
+            if (oldLeftY == 0 && newLeftY == 1)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Pushed");
+                WorkingMapping["IsUp"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftY == 1 && newLeftY == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Released");
+                CurrentlyAssigned = true;
+            }
+
+            if (oldLeftY == 0 && newLeftY == -1)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Pushed");
+                WorkingMapping["IsDown"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftY == -1 && newLeftY == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Released");
+                CurrentlyAssigned = true;
+            }
+
             OldState = State;
         }
 
@@ -643,7 +697,8 @@ namespace nullDCNetplayLauncher
 
         private void btnAnalog_Click(object sender, EventArgs e)
         {
-            AnalogSet = true;
+            if(!IsUnnamed)
+                AnalogSet = true;
             hideAllButtons();
             BeginSetup();
         }
@@ -678,6 +733,8 @@ namespace nullDCNetplayLauncher
                 {
                     toEdit[button] = WorkingMapping[button];
                 }
+
+                toEdit.Default = true;
             }
             else
             {
