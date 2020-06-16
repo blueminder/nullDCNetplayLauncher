@@ -1,4 +1,5 @@
-﻿using OpenTK.Input;
+﻿using OpenTK;
+using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -119,7 +120,98 @@ namespace nullDCNetplayLauncher
                 }
             }
 
+            var oldLeftX = Math.Round(OldState.ThumbSticks.Left.X);
+            var oldLeftY = Math.Round(OldState.ThumbSticks.Left.Y);
+
+            var newLeftX = Math.Round(State.ThumbSticks.Left.X);
+            var newLeftY = Math.Round(State.ThumbSticks.Left.Y);
+
+            if(oldLeftX == 0 && newLeftX == 1)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Pushed");
+                CallButtonMapping("IsRight", true);
+            }
+
+            if (oldLeftX == 1 && newLeftX == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Released");
+                CallButtonMapping("IsRight", false);
+            }
+
+            if (oldLeftX == 0 && newLeftX == -1)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Pushed");
+                CallButtonMapping("IsLeft", true);
+            }
+
+            if (oldLeftX == -1 && newLeftX == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Released");
+                CallButtonMapping("IsLeft", false);
+            }
+
+            if (oldLeftY == 0 && newLeftY == 1)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Pushed");
+                CallButtonMapping("IsUp", true);
+            }
+
+            if (oldLeftY == 1 && newLeftY == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Released");
+                CallButtonMapping("IsUp", false);
+            }
+
+            if (oldLeftY == 0 && newLeftY == -1)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Pushed");
+                CallButtonMapping("IsDown", true);
+            }
+
+            if (oldLeftY == -1 && newLeftY == 0)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Released");
+                CallButtonMapping("IsDown", false);
+            }
+
             OldState = State;
+        }
+
+        public String GetThumbStickDirection(double X, double Y)
+        {
+            var roundX = Math.Round(X);
+            var roundY = Math.Round(Y);
+
+            if(roundX == 0)
+            {
+                if (roundY == 1)
+                    return "Up";
+                else if (roundY == -1)
+                    return "Down";
+            }
+            else if (roundY == 0)
+            {
+                if (roundX == -1)
+                    return "Left";
+                else if (roundX == 1)
+                    return "Right";
+            }
+            else if (roundX == 1)
+            {
+                if (roundY == -1)
+                    return "DownRight";
+                else if (roundY == 1)
+                    return "UpRight";
+            }
+            else if (roundX == -1)
+            {
+                if (roundY == -1)
+                    return "DownLeft";
+                else if (roundY == 1)
+                    return "UpLeft";
+            }
+            System.Diagnostics.Debug.WriteLine($"{roundX} {roundY}");
+            return "Center";
         }
 
         [DllImport("user32.dll")]

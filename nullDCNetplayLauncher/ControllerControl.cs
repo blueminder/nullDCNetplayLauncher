@@ -77,12 +77,20 @@ namespace nullDCNetplayLauncher
         {
             System.Diagnostics.Debug.WriteLine("BAR " + controller.CapabilitiesGamePad.ToString());
 
-            controller.GamePadAction -= controller_GamePadAction;
-            //controller.Dispose();
+            if (NetplayLaunchForm.EnableMapper == false)
+            {
+                NetplayLaunchForm.controller.clock.Stop();
+            }
+
+            //controller.GamePadAction -= controller_GamePadAction;
         }
 
         private void InitializeJoystick()
         {
+            if (!NetplayLaunchForm.controller.clock.IsEnabled)
+            {
+                NetplayLaunchForm.controller.clock.Start();
+            }
             // Initialize DirectInput
             var directInput = new DirectInput();
 
@@ -493,7 +501,7 @@ namespace nullDCNetplayLauncher
                         }
                     }
                 }
-                while (CurrentlyAssigned == false)
+                while (CurrentlyAssigned == false && Skip == false)
                 {
                     Thread.Sleep(600);
                 }

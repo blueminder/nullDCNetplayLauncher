@@ -33,7 +33,6 @@
             this.btnSetup = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSkip = new System.Windows.Forms.Button();
-            this.btnLaunchAntimicro = new System.Windows.Forms.Button();
             this.btnDetectController = new System.Windows.Forms.Button();
             this.btnShowKeyboard = new System.Windows.Forms.Button();
             this.btnDPad = new System.Windows.Forms.Button();
@@ -44,10 +43,9 @@
             // 
             // lblController
             // 
-            this.lblController.Location = new System.Drawing.Point(22, 188);
-            this.lblController.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblController.Location = new System.Drawing.Point(29, 231);
             this.lblController.Name = "lblController";
-            this.lblController.Size = new System.Drawing.Size(286, 75);
+            this.lblController.Size = new System.Drawing.Size(381, 92);
             this.lblController.TabIndex = 0;
             this.lblController.Text = "Plug in your controller to continue.";
             this.lblController.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -55,10 +53,10 @@
             // picArcadeStick
             // 
             this.picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
-            this.picArcadeStick.Location = new System.Drawing.Point(22, 10);
-            this.picArcadeStick.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.picArcadeStick.Location = new System.Drawing.Point(29, 12);
+            this.picArcadeStick.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.picArcadeStick.Name = "picArcadeStick";
-            this.picArcadeStick.Size = new System.Drawing.Size(286, 176);
+            this.picArcadeStick.Size = new System.Drawing.Size(381, 217);
             this.picArcadeStick.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picArcadeStick.TabIndex = 1;
             this.picArcadeStick.TabStop = false;
@@ -67,10 +65,10 @@
             // 
             this.btnSetup.AutoSize = true;
             this.btnSetup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSetup.Location = new System.Drawing.Point(22, 263);
-            this.btnSetup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnSetup.Location = new System.Drawing.Point(29, 324);
+            this.btnSetup.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSetup.Name = "btnSetup";
-            this.btnSetup.Size = new System.Drawing.Size(45, 23);
+            this.btnSetup.Size = new System.Drawing.Size(55, 27);
             this.btnSetup.TabIndex = 2;
             this.btnSetup.Text = "Setup";
             this.btnSetup.UseVisualStyleBackColor = true;
@@ -80,10 +78,10 @@
             // 
             this.btnCancel.AutoSize = true;
             this.btnCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnCancel.Location = new System.Drawing.Point(262, 263);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnCancel.Location = new System.Drawing.Point(349, 324);
+            this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(50, 23);
+            this.btnCancel.Size = new System.Drawing.Size(61, 27);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
@@ -93,10 +91,10 @@
             // 
             this.btnSkip.AutoSize = true;
             this.btnSkip.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSkip.Location = new System.Drawing.Point(148, 264);
-            this.btnSkip.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnSkip.Location = new System.Drawing.Point(197, 325);
+            this.btnSkip.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnSkip.Name = "btnSkip";
-            this.btnSkip.Size = new System.Drawing.Size(38, 23);
+            this.btnSkip.Size = new System.Drawing.Size(45, 27);
             this.btnSkip.TabIndex = 4;
             this.btnSkip.Text = "Skip";
             this.btnSkip.UseVisualStyleBackColor = true;
@@ -106,10 +104,10 @@
             // 
             this.btnDetectController.AutoSize = true;
             this.btnDetectController.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDetectController.Location = new System.Drawing.Point(117, 214);
-            this.btnDetectController.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnDetectController.Location = new System.Drawing.Point(156, 263);
+            this.btnDetectController.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnDetectController.Name = "btnDetectController";
-            this.btnDetectController.Size = new System.Drawing.Size(96, 23);
+            this.btnDetectController.Size = new System.Drawing.Size(124, 27);
             this.btnDetectController.TabIndex = 6;
             this.btnDetectController.Text = "Detect Controller";
             this.btnDetectController.UseVisualStyleBackColor = true;
@@ -120,10 +118,10 @@
             // 
             this.btnShowKeyboard.AutoSize = true;
             this.btnShowKeyboard.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnShowKeyboard.Location = new System.Drawing.Point(97, 265);
-            this.btnShowKeyboard.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnShowKeyboard.Location = new System.Drawing.Point(129, 326);
+            this.btnShowKeyboard.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnShowKeyboard.Name = "btnShowKeyboard";
-            this.btnShowKeyboard.Size = new System.Drawing.Size(136, 23);
+            this.btnShowKeyboard.Size = new System.Drawing.Size(175, 27);
             this.btnShowKeyboard.TabIndex = 7;
             this.btnShowKeyboard.Text = "Show Keyboard Mapping";
             this.btnShowKeyboard.UseVisualStyleBackColor = true;
@@ -134,10 +132,10 @@
             // 
             this.btnDPad.AutoSize = true;
             this.btnDPad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDPad.Location = new System.Drawing.Point(65, 263);
-            this.btnDPad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDPad.Location = new System.Drawing.Point(87, 324);
+            this.btnDPad.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnDPad.Name = "btnDPad";
-            this.btnDPad.Size = new System.Drawing.Size(46, 23);
+            this.btnDPad.Size = new System.Drawing.Size(57, 27);
             this.btnDPad.TabIndex = 8;
             this.btnDPad.Text = "Digital";
             this.btnDPad.UseVisualStyleBackColor = true;
@@ -149,10 +147,10 @@
             this.btnAnalog.AutoSize = true;
             this.btnAnalog.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnAnalog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.btnAnalog.Location = new System.Drawing.Point(215, 263);
-            this.btnAnalog.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnAnalog.Location = new System.Drawing.Point(287, 324);
+            this.btnAnalog.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAnalog.Name = "btnAnalog";
-            this.btnAnalog.Size = new System.Drawing.Size(50, 23);
+            this.btnAnalog.Size = new System.Drawing.Size(62, 27);
             this.btnAnalog.TabIndex = 9;
             this.btnAnalog.Text = "Analog";
             this.btnAnalog.UseVisualStyleBackColor = true;
@@ -163,10 +161,10 @@
             // 
             this.btnEnableGamepadMapper.AutoSize = true;
             this.btnEnableGamepadMapper.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnEnableGamepadMapper.Location = new System.Drawing.Point(96, 240);
-            this.btnEnableGamepadMapper.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.btnEnableGamepadMapper.Location = new System.Drawing.Point(128, 295);
+            this.btnEnableGamepadMapper.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnEnableGamepadMapper.Name = "btnEnableGamepadMapper";
-            this.btnEnableGamepadMapper.Size = new System.Drawing.Size(138, 23);
+            this.btnEnableGamepadMapper.Size = new System.Drawing.Size(180, 27);
             this.btnEnableGamepadMapper.TabIndex = 10;
             this.btnEnableGamepadMapper.Text = "Enable Gamepad Mapper";
             this.btnEnableGamepadMapper.UseVisualStyleBackColor = true;
@@ -175,7 +173,7 @@
             // 
             // ControllerControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnAnalog);
             this.Controls.Add(this.btnDPad);
@@ -184,13 +182,12 @@
             this.Controls.Add(this.picArcadeStick);
             this.Controls.Add(this.btnSkip);
             this.Controls.Add(this.btnShowKeyboard);
-            this.Controls.Add(this.btnLaunchAntimicro);
             this.Controls.Add(this.btnEnableGamepadMapper);
             this.Controls.Add(this.btnDetectController);
             this.Controls.Add(this.lblController);
-            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "ControllerControl";
-            this.Size = new System.Drawing.Size(331, 318);
+            this.Size = new System.Drawing.Size(441, 391);
             this.Load += new System.EventHandler(this.ControllerControl_Load);
             this.HandleDestroyed += new System.EventHandler(this.ControllerControl_Close);
             ((System.ComponentModel.ISupportInitialize)(this.picArcadeStick)).EndInit();
@@ -206,7 +203,6 @@
         private System.Windows.Forms.Button btnSetup;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSkip;
-        private System.Windows.Forms.Button btnLaunchAntimicro;
         private System.Windows.Forms.Button btnDetectController;
         private System.Windows.Forms.Button btnShowKeyboard;
         private System.Windows.Forms.Button btnDPad;
