@@ -18,8 +18,8 @@ namespace nullDCNetplayLauncher
         
         UserControl sc = new SettingsControl();
 
-        ControllerEngine controller;
-        GamePadMapper gpm;
+        public static ControllerEngine controller;
+        public static GamePadMapper gpm;
 
         public static Boolean EnableMapper = false;
 

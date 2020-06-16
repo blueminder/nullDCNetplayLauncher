@@ -125,10 +125,15 @@ namespace nullDCNetplayLauncher
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+                NetplayLaunchForm.EnableMapper = true;
+                NetplayLaunchForm.gpm = new GamePadMapper(NetplayLaunchForm.controller);
+                NetplayLaunchForm.controller.clock.Start();
             }
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
+                NetplayLaunchForm.EnableMapper = false;
+                NetplayLaunchForm.controller.clock.Stop();
             }
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 

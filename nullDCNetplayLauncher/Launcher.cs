@@ -51,6 +51,25 @@ namespace nullDCNetplayLauncher
 
             mappings = GamePadMapping.ReadMappingsFile(); ;
             ActiveGamePadMapping = mappings.GamePadMappings.First();
+
+        }
+
+        public void AssignActiveMapping()
+        {
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var default_mapping_cfg = launcherCfgLines.Where(s => s.Contains("default_mapping=")).ToList().First();
+
+            string defaultMappingEntry = default_mapping_cfg.Split('=')[1];
+
+            if(defaultMappingEntry.Length > 0)
+            {
+                ActiveGamePadMapping = mappings.GamePadMappings.Where(g => g.Name.Contains(defaultMappingEntry)).ToList().First();
+            }
+            else
+            {
+                ActiveGamePadMapping = mappings.GamePadMappings.First();
+            }
         }
 
         public static int GuessDelay(string IP)

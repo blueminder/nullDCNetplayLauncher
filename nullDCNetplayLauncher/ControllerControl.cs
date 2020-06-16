@@ -391,6 +391,13 @@ namespace nullDCNetplayLauncher
             {
                 SaveMapping(JoystickName);
 
+                if (!NetplayLaunchForm.EnableMapper)
+                {
+                    NetplayLaunchForm.EnableMapper = true;
+                    NetplayLaunchForm.gpm = new GamePadMapper(NetplayLaunchForm.controller);
+                    NetplayLaunchForm.controller.clock.Start();
+                }
+
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
@@ -534,6 +541,15 @@ namespace nullDCNetplayLauncher
 
         private void BeginSetup()
         {
+            // disable gamepad mapper if enabled
+            /*
+            if (NetplayLaunchForm.EnableMapper)
+            {
+                NetplayLaunchForm.EnableMapper = false;
+                NetplayLaunchForm.controller.clock.Stop();
+            }
+            */
+
             showSetupButtons();
             btnSkip.Enabled = true;
             btnCancel.Enabled = true;
@@ -643,7 +659,17 @@ namespace nullDCNetplayLauncher
             var toEdit = mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
             if (toEdit != null)
             {
+                toEdit = WorkingMapping;
                 toEdit.Name = mappingName;
+
+                string[] buttons = { "Y", "A", "Back", "X", "B", "Start", "BigButton", "LeftStick", "RightStick",
+                                     "LeftShoulder", "RightShoulder", "LeftTrigger", "RightTrigger",
+                                     "IsUp", "IsDown", "IsLeft", "IsRight" };
+
+                foreach (string button in buttons)
+                {
+                    toEdit[button] = WorkingMapping[button];
+                }
             }
             else
             {

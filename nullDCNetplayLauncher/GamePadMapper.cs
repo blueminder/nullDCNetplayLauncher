@@ -150,6 +150,7 @@ namespace nullDCNetplayLauncher
 
             Dictionary<string, byte> VirtualMapping = new Dictionary<string, byte>()
             {
+                { "", 0 },
                 { "1", KEY_8 },
                 { "2", KEY_9 },
                 { "3", KEY_0 },
