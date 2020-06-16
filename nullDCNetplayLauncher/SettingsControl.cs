@@ -145,7 +145,9 @@ namespace nullDCNetplayLauncher
                 writer.Close();
 
                 NetplayLaunchForm.EnableMapper = true;
+
                 NetplayLaunchForm.gpm = new GamePadMapper(NetplayLaunchForm.controller);
+                NetplayLaunchForm.gpm.initializeController(this, null);
                 NetplayLaunchForm.controller.clock.Start();
             }
             else

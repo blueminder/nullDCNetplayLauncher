@@ -15,6 +15,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using OpenTK.Input;
+using System.Text.RegularExpressions;
 
 namespace nullDCNetplayLauncher
 {
@@ -85,6 +86,14 @@ namespace nullDCNetplayLauncher
             //controller.GamePadAction -= controller_GamePadAction;
         }
 
+        int ExtractNumberFromText(string text)
+        {
+            Match m = Regex.Match(text, @"\d*");
+            int parsed;
+            Int32.TryParse(m.Groups[0].Value, out parsed);
+            return parsed;
+        }
+
         private void InitializeJoystick()
         {
             if (!NetplayLaunchForm.controller.clock.IsEnabled)
@@ -127,11 +136,12 @@ namespace nullDCNetplayLauncher
                 showDetectControllerButton();
                 showEnableGamepadMapperButtons();
                 */
-                var unnamedMappings = Launcher.mappings.GamePadMappings.Where(g => g.Name.StartsWith("Gamepad ")).ToList();
-                var numUM = unnamedMappings.Count;
+                var unnamedMappings = Launcher.mappings.GamePadMappings.Where(g => g.Name.StartsWith("Gamepad #")).ToList();
+                List<string> gpNums = unnamedMappings.Select(m => m.Name.Replace("Gamepad #","") ).ToList();
+                var maxUM = gpNums.Max(ExtractNumberFromText);
 
                 IsUnnamed = true;
-                JoystickName = $"Gamepad #{numUM + 1}";
+                JoystickName = $"Gamepad #{maxUM + 1}";
 
                 btnSetup.Enabled = true;
                 btnSkip.Enabled = false;
