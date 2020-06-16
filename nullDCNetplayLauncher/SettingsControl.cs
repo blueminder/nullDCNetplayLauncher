@@ -19,6 +19,10 @@ namespace nullDCNetplayLauncher
         public SettingsControl()
         {
             InitializeComponent();
+
+            var mappings = GamePadMapping.ReadMappingsFile();
+            cboGamePadMappings.DataSource = mappings.GamePadMappings;
+
         }
 
         string[] cfgLines;
@@ -166,10 +170,12 @@ namespace nullDCNetplayLauncher
             {
                 cboPlayer1.Text = "Keyboard";
                 cboPlayer1.Enabled = false;
+                cboGamePadMappings.Enabled = true;
             }
             else
             {
                 cboPlayer1.Enabled = true;
+                cboGamePadMappings.Enabled = false;
             }
         }
 
@@ -216,5 +222,9 @@ namespace nullDCNetplayLauncher
             rdoCustomSize.Checked = true;
         }
 
+        private void btnDeleteMapping_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

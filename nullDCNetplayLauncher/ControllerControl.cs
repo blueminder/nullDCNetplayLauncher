@@ -247,7 +247,7 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
-                    Launcher.ButtonMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    Launcher.ActiveGamePadMapping[buttonProperty.Name] = CurrentButtonAssignment;
                 }
                 if (CurrentButtonState == OpenTK.Input.ButtonState.Released &&
                     (!Object.ReferenceEquals(OldState, null) && OldButtonState == OpenTK.Input.ButtonState.Pressed))
@@ -273,7 +273,7 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
-                    Launcher.ButtonMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    Launcher.ActiveGamePadMapping[buttonProperty.Name] = CurrentButtonAssignment;
                     CurrentlyAssigned = true;
                 }
                 if (CurrentDPadState == false &&
@@ -301,7 +301,7 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Pressed");
-                    Launcher.ButtonMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    Launcher.ActiveGamePadMapping[buttonProperty.Name] = CurrentButtonAssignment;
                 }
                 if (CurrentTriggerState == 0 &&
                     (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))

@@ -164,13 +164,15 @@ namespace nullDCNetplayLauncher
                 { "Right", KEY_D },
             };
 
-            if(push)
+            String virtualIndex = (String)Launcher.ActiveGamePadMapping[button];
+
+            if (push)
             {
-                PushKey(VirtualMapping[Launcher.ButtonMapping[button]]);
+                PushKey(VirtualMapping[virtualIndex]);
             }
             else
             {
-                ReleaseKey(VirtualMapping[Launcher.ButtonMapping[button]]);
+                ReleaseKey(VirtualMapping[virtualIndex]);
             }
         }
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsControl));
             this.chkEnableMapper = new System.Windows.Forms.CheckBox();
             this.lblPlayer1 = new System.Windows.Forms.Label();
             this.lblBackup = new System.Windows.Forms.Label();
@@ -44,6 +45,8 @@
             this.btnEditCFG = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabInput = new System.Windows.Forms.TabPage();
+            this.btnDeleteMapping = new System.Windows.Forms.Button();
+            this.cboGamePadMappings = new System.Windows.Forms.ComboBox();
             this.btnSaveInput = new System.Windows.Forms.Button();
             this.tabWindow = new System.Windows.Forms.TabPage();
             this.btnSaveWindow = new System.Windows.Forms.Button();
@@ -66,7 +69,7 @@
             // chkEnableMapper
             // 
             this.chkEnableMapper.AutoSize = true;
-            this.chkEnableMapper.Location = new System.Drawing.Point(9, 6);
+            this.chkEnableMapper.Location = new System.Drawing.Point(6, 101);
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(192, 21);
             this.chkEnableMapper.TabIndex = 4;
@@ -77,7 +80,7 @@
             // lblPlayer1
             // 
             this.lblPlayer1.AutoSize = true;
-            this.lblPlayer1.Location = new System.Drawing.Point(6, 39);
+            this.lblPlayer1.Location = new System.Drawing.Point(6, 14);
             this.lblPlayer1.Name = "lblPlayer1";
             this.lblPlayer1.Size = new System.Drawing.Size(60, 17);
             this.lblPlayer1.TabIndex = 5;
@@ -86,7 +89,7 @@
             // lblBackup
             // 
             this.lblBackup.AutoSize = true;
-            this.lblBackup.Location = new System.Drawing.Point(6, 68);
+            this.lblBackup.Location = new System.Drawing.Point(6, 43);
             this.lblBackup.Name = "lblBackup";
             this.lblBackup.Size = new System.Drawing.Size(55, 17);
             this.lblBackup.TabIndex = 6;
@@ -95,7 +98,7 @@
             // lblPlayer2
             // 
             this.lblPlayer2.AutoSize = true;
-            this.lblPlayer2.Location = new System.Drawing.Point(6, 99);
+            this.lblPlayer2.Location = new System.Drawing.Point(6, 74);
             this.lblPlayer2.Name = "lblPlayer2";
             this.lblPlayer2.Size = new System.Drawing.Size(60, 17);
             this.lblPlayer2.TabIndex = 7;
@@ -109,7 +112,7 @@
             "Keyboard",
             "Joystick 1",
             "Joystick 2"});
-            this.cboPlayer1.Location = new System.Drawing.Point(73, 36);
+            this.cboPlayer1.Location = new System.Drawing.Point(73, 11);
             this.cboPlayer1.Name = "cboPlayer1";
             this.cboPlayer1.Size = new System.Drawing.Size(121, 24);
             this.cboPlayer1.TabIndex = 8;
@@ -122,7 +125,7 @@
             "Keyboard",
             "Joystick 1",
             "Joystick 2"});
-            this.cboBackup.Location = new System.Drawing.Point(73, 65);
+            this.cboBackup.Location = new System.Drawing.Point(73, 41);
             this.cboBackup.Name = "cboBackup";
             this.cboBackup.Size = new System.Drawing.Size(121, 24);
             this.cboBackup.TabIndex = 9;
@@ -135,7 +138,7 @@
             "Keyboard",
             "Joystick 1",
             "Joystick 2"});
-            this.cboPlayer2.Location = new System.Drawing.Point(73, 96);
+            this.cboPlayer2.Location = new System.Drawing.Point(73, 71);
             this.cboPlayer2.Name = "cboPlayer2";
             this.cboPlayer2.Size = new System.Drawing.Size(121, 24);
             this.cboPlayer2.TabIndex = 10;
@@ -224,6 +227,8 @@
             // 
             // tabInput
             // 
+            this.tabInput.Controls.Add(this.btnDeleteMapping);
+            this.tabInput.Controls.Add(this.cboGamePadMappings);
             this.tabInput.Controls.Add(this.btnSaveInput);
             this.tabInput.Controls.Add(this.cboPlayer2);
             this.tabInput.Controls.Add(this.chkEnableMapper);
@@ -239,6 +244,26 @@
             this.tabInput.TabIndex = 0;
             this.tabInput.Text = "Input";
             this.tabInput.UseVisualStyleBackColor = true;
+            // 
+            // btnDeleteMapping
+            // 
+            this.btnDeleteMapping.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteMapping.Image")));
+            this.btnDeleteMapping.Location = new System.Drawing.Point(164, 126);
+            this.btnDeleteMapping.Name = "btnDeleteMapping";
+            this.btnDeleteMapping.Size = new System.Drawing.Size(30, 27);
+            this.btnDeleteMapping.TabIndex = 53;
+            this.btnDeleteMapping.UseVisualStyleBackColor = true;
+            this.btnDeleteMapping.Click += new System.EventHandler(this.btnDeleteMapping_Click);
+            // 
+            // cboGamePadMappings
+            // 
+            this.cboGamePadMappings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboGamePadMappings.Enabled = false;
+            this.cboGamePadMappings.FormattingEnabled = true;
+            this.cboGamePadMappings.Location = new System.Drawing.Point(9, 128);
+            this.cboGamePadMappings.Name = "cboGamePadMappings";
+            this.cboGamePadMappings.Size = new System.Drawing.Size(149, 24);
+            this.cboGamePadMappings.TabIndex = 12;
             // 
             // btnSaveInput
             // 
@@ -408,5 +433,7 @@
         private System.Windows.Forms.Button btnSaveFPS;
         private System.Windows.Forms.NumericUpDown numHostFPS;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cboGamePadMappings;
+        private System.Windows.Forms.Button btnDeleteMapping;
     }
 }

@@ -21,6 +21,8 @@ namespace nullDCNetplayLauncher
 
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
 
+        GamePadMappingList mappings = GamePadMapping.ReadMappingsFile();
+        /*
         public static Dictionary<string, string> ButtonMapping = new Dictionary<string, string>()
             {
                 { "Y", "1" },
@@ -37,13 +39,17 @@ namespace nullDCNetplayLauncher
                 { "IsLeft", "Left" },
                 { "IsRight", "Right" },
             };
+        */
 
+        public static GamePadMapping ActiveGamePadMapping;
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
             MethodOptions["Audio Sync"] = 1;
 
             RestoreFgcaNvram();
+
+            ActiveGamePadMapping = mappings.GamePadMappings.First();
         }
 
         public static int GuessDelay(string IP)

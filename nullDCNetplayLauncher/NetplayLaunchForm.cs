@@ -15,12 +15,13 @@ namespace nullDCNetplayLauncher
         Launcher launcher;
         Dictionary<String, String> romDict;
         ConnectionPresetList presets;
+        
         UserControl sc = new SettingsControl();
 
         ControllerEngine controller;
         GamePadMapper gpm;
 
-        public static Boolean EnableMapper = true;
+        public static Boolean EnableMapper = false;
 
         public NetplayLaunchForm()
         {

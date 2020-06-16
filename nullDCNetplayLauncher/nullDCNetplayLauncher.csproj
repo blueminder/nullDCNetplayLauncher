@@ -90,7 +90,9 @@
     <Compile Include="ControllerControl.Designer.cs">
       <DependentUpon>ControllerControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ControllerEngine.cs" />
     <Compile Include="GamePadMapper.cs" />
+    <Compile Include="GamePadMapping.cs" />
     <Compile Include="JoinControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
