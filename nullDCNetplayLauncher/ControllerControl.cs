@@ -72,6 +72,10 @@ namespace nullDCNetplayLauncher
         {
             System.Diagnostics.Debug.WriteLine("FOO " + controller.CapabilitiesGamePad.ToString());
             controller.GamePadAction += controller_GamePadAction;
+            if(controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
+            {
+                lblController.Text = "Controller Detected";
+            }
         }
 
         private void ControllerControl_Close(object sender, EventArgs e)
@@ -138,7 +142,11 @@ namespace nullDCNetplayLauncher
                 */
                 var unnamedMappings = Launcher.mappings.GamePadMappings.Where(g => g.Name.StartsWith("Gamepad #")).ToList();
                 List<string> gpNums = unnamedMappings.Select(m => m.Name.Replace("Gamepad #","") ).ToList();
-                var maxUM = gpNums.Max(ExtractNumberFromText);
+                int maxUM = 0;
+                if(gpNums.Count > 0)
+                {
+                    maxUM = gpNums.Max(ExtractNumberFromText);
+                }
 
                 IsUnnamed = true;
                 JoystickName = $"Gamepad #{maxUM + 1}";
@@ -483,6 +491,12 @@ namespace nullDCNetplayLauncher
             }
             else
             {
+                if (NetplayLaunchForm.EnableMapper)
+                {
+                    NetplayLaunchForm.EnableMapper = false;
+                    NetplayLaunchForm.controller.clock.Stop();
+                }
+
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
@@ -728,8 +742,13 @@ namespace nullDCNetplayLauncher
 
         public void SaveMapping(string mappingName)
         {
-            var mappings = Launcher.mappings;
-            var toEdit = mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
+
+            foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
+            {
+                mapping.Default = false;
+            }
+
+            var toEdit = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
             if (toEdit != null)
             {
                 toEdit = WorkingMapping;
@@ -750,15 +769,16 @@ namespace nullDCNetplayLauncher
             {
                 var toAdd = WorkingMapping;
                 toAdd.Name = mappingName;
+                toAdd.Default = true;
                 Launcher.ActiveGamePadMapping = toAdd;
-                mappings.GamePadMappings.Add(toAdd);
+                Launcher.mappings.GamePadMappings.Add(toAdd);
             }
 
             var path = Launcher.rootDir + "GamePadMappingList.xml";
             System.Xml.Serialization.XmlSerializer serializer =
                 new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
             StreamWriter writer = new StreamWriter(path);
-            serializer.Serialize(writer.BaseStream, mappings);
+            serializer.Serialize(writer.BaseStream, Launcher.mappings);
             writer.Close();
             Launcher.mappings = GamePadMapping.ReadMappingsFile();
         }

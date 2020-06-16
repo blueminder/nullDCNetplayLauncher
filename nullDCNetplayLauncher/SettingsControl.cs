@@ -17,8 +17,6 @@ namespace nullDCNetplayLauncher
     public partial class SettingsControl : UserControl
     {
 
-        public GamePadMappingList mappings;
-
         public SettingsControl()
         {
             InitializeComponent();
@@ -104,11 +102,20 @@ namespace nullDCNetplayLauncher
 
             numHostFPS.Value = Convert.ToInt32(hostFpsEntry);
 
-            mappings = Launcher.mappings;
-            cboGamePadMappings.DataSource = mappings.GamePadMappings;
+            cboGamePadMappings.DataSource = Launcher.mappings.GamePadMappings;
             cboGamePadMappings.DisplayMember = Name;
 
-            cboGamePadMappings.SelectedItem = Launcher.ActiveGamePadMapping;
+            GamePadMapping defaultMapping;
+            try
+            {
+                defaultMapping = Launcher.mappings.GamePadMappings.Where(g => g.Default == true).ToList().First();
+            }
+            catch
+            {
+                defaultMapping = Launcher.mappings.GamePadMappings.First();
+            }
+
+            cboGamePadMappings.SelectedItem = defaultMapping;
         }
 
         private void btnEditCFG_Click(object sender, EventArgs e)
@@ -141,7 +148,7 @@ namespace nullDCNetplayLauncher
                 System.Xml.Serialization.XmlSerializer serializer =
                     new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
                 StreamWriter writer = new StreamWriter(path);
-                serializer.Serialize(writer.BaseStream, mappings);
+                serializer.Serialize(writer.BaseStream, Launcher.mappings);
                 writer.Close();
 
                 NetplayLaunchForm.EnableMapper = true;
@@ -254,28 +261,25 @@ namespace nullDCNetplayLauncher
 
         public void DeleteMapping(string mappingName)
         {
-            mappings = Launcher.mappings;
-            if (mappings.GamePadMappings.Count > 1)
+            if (Launcher.mappings.GamePadMappings.Count > 1)
             {
-                var toDelete = mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
-                mappings.GamePadMappings.Remove(toDelete);
+                var toDelete = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
+                Launcher.mappings.GamePadMappings.Remove(toDelete);
 
                 var path = Launcher.rootDir + "GamePadMappingList.xml";
                 System.Xml.Serialization.XmlSerializer serializer =
                     new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
                 StreamWriter writer = new StreamWriter(path);
-                serializer.Serialize(writer.BaseStream, mappings);
+                serializer.Serialize(writer.BaseStream, Launcher.mappings);
                 writer.Close();
-                mappings = GamePadMapping.ReadMappingsFile();
                 Launcher.mappings = GamePadMapping.ReadMappingsFile();
                 cboGamePadMappings.DataSource = Launcher.mappings.GamePadMappings;
                 cboGamePadMappings.SelectedIndex = 0;
-                if (mappings.GamePadMappings.Count == 1)
+                if (Launcher.mappings.GamePadMappings.Count == 1)
                 {
                     btnDeleteMapping.Enabled = false;
                 }
             }
-            Launcher.mappings = this.mappings;
         }
 
         private void cboGamePadMappings_SelectedIndexChanged(object sender, EventArgs e)

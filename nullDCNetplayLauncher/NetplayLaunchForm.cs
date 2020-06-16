@@ -143,6 +143,8 @@ namespace nullDCNetplayLauncher
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
+            Launcher.mappings = GamePadMapping.ReadMappingsFile();
+
             Form window = new Form
             {
                 Text = "Settings",
