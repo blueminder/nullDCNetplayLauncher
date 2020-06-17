@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Onova;
+using Onova.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -116,6 +118,8 @@ namespace nullDCNetplayLauncher
             }
 
             cboGamePadMappings.SelectedItem = defaultMapping;
+
+            lblVersion.Text = Application.ProductVersion;
         }
 
         private void btnEditCFG_Click(object sender, EventArgs e)
@@ -282,6 +286,18 @@ namespace nullDCNetplayLauncher
         {
             System.Diagnostics.Debug.WriteLine(cboGamePadMappings.SelectedValue);
 
+        }
+
+        private async Task btnUpdate_ClickAsync(object sender, EventArgs e)
+        {
+            // Configure to look for packages in specified directory and treat them as zips
+            using (var manager = new UpdateManager(
+                new GithubPackageResolver("blueminder", "nullDCNetplayLauncher", "*.zip"),
+                new ZipPackageExtractor()))
+            {
+                // Check for new version and, if available, perform full update and restart
+                await manager.CheckPerformUpdateAsync();
+            }
         }
     }
 }

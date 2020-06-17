@@ -13,7 +13,6 @@ namespace nullDCNetplayLauncher
     public class GamePadMapping
     {
         public string Name;
-
         public string Y { get; set; } = "";
         public string A { get; set; } = "";
         public string Back { get; set; } = "";

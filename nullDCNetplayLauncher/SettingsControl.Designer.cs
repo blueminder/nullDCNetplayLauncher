@@ -51,6 +51,9 @@
             this.tabWindow = new System.Windows.Forms.TabPage();
             this.btnSaveWindow = new System.Windows.Forms.Button();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.lblCurrentVersion = new System.Windows.Forms.Label();
             this.grpShortcuts = new System.Windows.Forms.GroupBox();
             this.btnOpenQKO = new System.Windows.Forms.Button();
             this.btnJoyCpl = new System.Windows.Forms.Button();
@@ -205,7 +208,7 @@
             // 
             // btnEditCFG
             // 
-            this.btnEditCFG.Location = new System.Drawing.Point(5, 30);
+            this.btnEditCFG.Location = new System.Drawing.Point(6, 21);
             this.btnEditCFG.Name = "btnEditCFG";
             this.btnEditCFG.Size = new System.Drawing.Size(190, 28);
             this.btnEditCFG.TabIndex = 4;
@@ -304,6 +307,9 @@
             // 
             // tabAdvanced
             // 
+            this.tabAdvanced.Controls.Add(this.lblVersion);
+            this.tabAdvanced.Controls.Add(this.btnUpdate);
+            this.tabAdvanced.Controls.Add(this.lblCurrentVersion);
             this.tabAdvanced.Controls.Add(this.grpShortcuts);
             this.tabAdvanced.Controls.Add(this.btnSaveFPS);
             this.tabAdvanced.Controls.Add(this.numHostFPS);
@@ -316,21 +322,52 @@
             this.tabAdvanced.Text = "Advanced";
             this.tabAdvanced.UseVisualStyleBackColor = true;
             // 
+            // lblVersion
+            // 
+            this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(135, 63);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(56, 17);
+            this.lblVersion.TabIndex = 15;
+            this.lblVersion.Text = "Version";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Enabled = false;
+            this.btnUpdate.Location = new System.Drawing.Point(18, 85);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(173, 26);
+            this.btnUpdate.TabIndex = 14;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_ClickAsync);
+            // 
+            // lblCurrentVersion
+            // 
+            this.lblCurrentVersion.AutoSize = true;
+            this.lblCurrentVersion.Location = new System.Drawing.Point(15, 63);
+            this.lblCurrentVersion.Name = "lblCurrentVersion";
+            this.lblCurrentVersion.Size = new System.Drawing.Size(111, 17);
+            this.lblCurrentVersion.TabIndex = 13;
+            this.lblCurrentVersion.Text = "Current Version:";
+            // 
             // grpShortcuts
             // 
             this.grpShortcuts.Controls.Add(this.btnEditCFG);
             this.grpShortcuts.Controls.Add(this.btnOpenQKO);
             this.grpShortcuts.Controls.Add(this.btnJoyCpl);
-            this.grpShortcuts.Location = new System.Drawing.Point(3, 84);
+            this.grpShortcuts.Location = new System.Drawing.Point(3, 116);
             this.grpShortcuts.Name = "grpShortcuts";
-            this.grpShortcuts.Size = new System.Drawing.Size(200, 156);
+            this.grpShortcuts.Size = new System.Drawing.Size(200, 124);
             this.grpShortcuts.TabIndex = 12;
             this.grpShortcuts.TabStop = false;
             this.grpShortcuts.Text = "Shortcuts";
             // 
             // btnOpenQKO
             // 
-            this.btnOpenQKO.Location = new System.Drawing.Point(5, 64);
+            this.btnOpenQKO.Location = new System.Drawing.Point(6, 55);
             this.btnOpenQKO.Name = "btnOpenQKO";
             this.btnOpenQKO.Size = new System.Drawing.Size(190, 28);
             this.btnOpenQKO.TabIndex = 5;
@@ -340,7 +377,7 @@
             // 
             // btnJoyCpl
             // 
-            this.btnJoyCpl.Location = new System.Drawing.Point(5, 98);
+            this.btnJoyCpl.Location = new System.Drawing.Point(6, 89);
             this.btnJoyCpl.Name = "btnJoyCpl";
             this.btnJoyCpl.Size = new System.Drawing.Size(190, 28);
             this.btnJoyCpl.TabIndex = 6;
@@ -350,7 +387,7 @@
             // 
             // btnSaveFPS
             // 
-            this.btnSaveFPS.Location = new System.Drawing.Point(18, 42);
+            this.btnSaveFPS.Location = new System.Drawing.Point(18, 32);
             this.btnSaveFPS.Name = "btnSaveFPS";
             this.btnSaveFPS.Size = new System.Drawing.Size(173, 26);
             this.btnSaveFPS.TabIndex = 11;
@@ -424,5 +461,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cboGamePadMappings;
         private System.Windows.Forms.Button btnDeleteMapping;
+        private System.Windows.Forms.Label lblCurrentVersion;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Label lblVersion;
     }
 }
