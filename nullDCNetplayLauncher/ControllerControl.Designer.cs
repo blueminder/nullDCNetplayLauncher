@@ -38,6 +38,7 @@
             this.btnDPad = new System.Windows.Forms.Button();
             this.btnAnalog = new System.Windows.Forms.Button();
             this.btnEnableGamepadMapper = new System.Windows.Forms.Button();
+            this.chkForceMapper = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picArcadeStick)).BeginInit();
             this.SuspendLayout();
             // 
@@ -171,10 +172,22 @@
             this.btnEnableGamepadMapper.Visible = false;
             this.btnEnableGamepadMapper.Click += new System.EventHandler(this.btnEnableGamepadMapper_Click);
             // 
+            // chkForceMapper
+            // 
+            this.chkForceMapper.AutoSize = true;
+            this.chkForceMapper.Location = new System.Drawing.Point(128, 360);
+            this.chkForceMapper.Name = "chkForceMapper";
+            this.chkForceMapper.Size = new System.Drawing.Size(184, 21);
+            this.chkForceMapper.TabIndex = 11;
+            this.chkForceMapper.Text = "Force Gamepad Mapper";
+            this.chkForceMapper.UseVisualStyleBackColor = true;
+            this.chkForceMapper.CheckedChanged += new System.EventHandler(this.chkForceMapper_CheckedChanged);
+            // 
             // ControllerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.chkForceMapper);
             this.Controls.Add(this.btnAnalog);
             this.Controls.Add(this.btnDPad);
             this.Controls.Add(this.btnCancel);
@@ -208,5 +221,6 @@
         private System.Windows.Forms.Button btnDPad;
         private System.Windows.Forms.Button btnAnalog;
         private System.Windows.Forms.Button btnEnableGamepadMapper;
+        private System.Windows.Forms.CheckBox chkForceMapper;
     }
 }

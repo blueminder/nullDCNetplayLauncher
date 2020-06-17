@@ -76,12 +76,12 @@ namespace nullDCNetplayLauncher
             gpm.InitializeController(NetplayLaunchForm.ActiveForm, null);
         }
 
-        public static void StopMapper()
+        public static void StopMapper(bool detach = false)
         {
             EnableMapper = false;
             controller.clock.Stop();
-            gpm.DetachController();
-            gpm.Dispose();
+            if (detach)
+                gpm.DetachController();
         }
 
         private void btnOffline_Click(object sender, EventArgs e)

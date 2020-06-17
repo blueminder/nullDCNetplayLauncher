@@ -514,7 +514,8 @@ namespace nullDCNetplayLauncher
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
             var button_index = 0;
-            ZDetected = false;
+            if(!chkForceMapper.Checked)
+                ZDetected = false;
             foreach (string button in buttonNames)
             {
                 worker.ReportProgress(button_index);
@@ -779,6 +780,14 @@ namespace nullDCNetplayLauncher
 
             NetplayLaunchForm.StartMapper();
 
+        }
+
+        private void chkForceMapper_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkForceMapper.Checked)
+            {
+                ZDetected = true;
+            }
         }
     }
 }
