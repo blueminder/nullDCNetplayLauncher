@@ -71,14 +71,17 @@ namespace nullDCNetplayLauncher
         public static void StartMapper()
         {
             EnableMapper = true;
+            controller.clock.Start();
             gpm = new GamePadMapper(controller);
-            gpm.initializeController(NetplayLaunchForm.ActiveForm, null);
+            gpm.InitializeController(NetplayLaunchForm.ActiveForm, null);
         }
 
         public static void StopMapper()
         {
             EnableMapper = false;
             controller.clock.Stop();
+            gpm.DetachController();
+            gpm.Dispose();
         }
 
         private void btnOffline_Click(object sender, EventArgs e)

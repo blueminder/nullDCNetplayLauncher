@@ -12,8 +12,29 @@ using System.Windows.Threading;
 
 namespace nullDCNetplayLauncher
 {
-    public class GamePadMapper
+    public class GamePadMapper : IDisposable
     {
+        bool disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    //dispose managed resources
+                }
+            }
+            //dispose unmanaged resources
+            disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         private ControllerEngine controller;
         private Dictionary<string, string> KeyboardQkcMapping;
         private GamePadState OldState;
@@ -26,10 +47,15 @@ namespace nullDCNetplayLauncher
             //hWindow = Launcher.NullDCWindowHandle();
         }
 
-        public void initializeController(Object sender, EventArgs e)
+        public void InitializeController(Object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
             controller.GamePadAction += controller_GamePadAction;
+        }
+
+        public void DetachController()
+        {
+            controller.GamePadAction -= controller_GamePadAction;
         }
 
         PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
@@ -39,10 +65,10 @@ namespace nullDCNetplayLauncher
             }).ToArray();
 
         PropertyInfo[] AvailableDPadProperties = typeof(GamePadDPad).GetProperties().Where(
-                p =>
-                {
-                    return p.PropertyType == typeof(Boolean);
-                }).ToArray();
+            p =>
+            {
+                return p.PropertyType == typeof(Boolean);
+            }).ToArray();
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {   
@@ -259,7 +285,11 @@ namespace nullDCNetplayLauncher
             };
 
             String virtualIndex = (String)Launcher.ActiveGamePadMapping[button];
-            System.Diagnostics.Debug.WriteLine($"Virtual Index {virtualIndex} {called}");
+            if (virtualIndex.Equals("Test"))
+            {
+                System.Diagnostics.Debug.WriteLine($"Virtual Index {virtualIndex} {called}");
+                //return;
+            }
 
             if (push)
             {
@@ -273,13 +303,13 @@ namespace nullDCNetplayLauncher
 
         public void PushKey(byte key)
         {
-            Process[] processes = Process.GetProcessesByName("notepad");
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
             if (processes.Length > 0)
             {
-                Process ndc = processes[0];
-                IntPtr ptr = ndc.MainWindowHandle;
+                //Process ndc = processes[0];
+                //IntPtr ptr = ndc.MainWindowHandle;
 
-                SetFocus(ptr);
+                //SetFocus(ptr);
 
                 keybd_event(key, 0, 0, 0);
             }
@@ -287,14 +317,9 @@ namespace nullDCNetplayLauncher
 
         public void ReleaseKey(byte key)
         {
-            Process[] processes = Process.GetProcessesByName("notepad");
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
             if (processes.Length > 0)
             {
-                Process ndc = processes[0];
-                IntPtr ptr = ndc.MainWindowHandle;
-
-                SetFocus(ptr);
-
                 const uint KEYEVENTF_KEYUP = 0x0002;
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
             }

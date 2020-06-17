@@ -151,6 +151,7 @@ namespace nullDCNetplayLauncher
                 serializer.Serialize(writer.BaseStream, Launcher.mappings);
                 writer.Close();
 
+                NetplayLaunchForm.StopMapper();
                 NetplayLaunchForm.StartMapper();
             }
             else

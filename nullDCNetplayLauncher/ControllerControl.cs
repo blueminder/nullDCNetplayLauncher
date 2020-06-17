@@ -465,14 +465,15 @@ namespace nullDCNetplayLauncher
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+
+            
+
             if (ZDetected || IsUnnamed)
             {
                 SaveMapping(JoystickName);
 
-                if (!NetplayLaunchForm.EnableMapper)
-                {
-                    NetplayLaunchForm.StartMapper();
-                }
+                NetplayLaunchForm.StopMapper();
+                NetplayLaunchForm.StartMapper();
 
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
@@ -487,11 +488,6 @@ namespace nullDCNetplayLauncher
             }
             else
             {
-                if (NetplayLaunchForm.EnableMapper)
-                {
-                    NetplayLaunchForm.StopMapper();
-                }
-
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
