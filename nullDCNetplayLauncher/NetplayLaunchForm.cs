@@ -202,7 +202,7 @@ namespace nullDCNetplayLauncher
             UserControl cc = new DragLoadControl();
             Form window = new Form
             {
-                Text = "Drag & Load BIOS && ROMs",
+                Text = "Drag & Load BIN && ROMs",
                 TopLevel = true,
                 FormBorderStyle = FormBorderStyle.Fixed3D,
                 MaximizeBox = false,

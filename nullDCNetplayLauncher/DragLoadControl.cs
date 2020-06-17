@@ -45,7 +45,7 @@ namespace nullDCNetplayLauncher
                     destpath += "data\\" + Path.GetFileName(files[0]);
                     File.Copy(path, destpath, true);
                     File.SetAttributes(destpath, FileAttributes.Normal);
-                    lblDragInfo.Text = $"BIOS copied to {Launcher.ExtractRelativePath(destpath)}";
+                    lblDragInfo.Text = $"BIN copied to {Launcher.ExtractRelativePath(destpath)}";
                 }
                 else if (Path.GetExtension(path).Equals(".zip"))
                 {

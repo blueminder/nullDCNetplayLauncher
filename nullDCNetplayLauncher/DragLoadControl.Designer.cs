@@ -47,11 +47,11 @@
             // lblDragInfo
             // 
             this.lblDragInfo.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblDragInfo.Location = new System.Drawing.Point(12, 150);
+            this.lblDragInfo.Location = new System.Drawing.Point(19, 150);
             this.lblDragInfo.Name = "lblDragInfo";
-            this.lblDragInfo.Size = new System.Drawing.Size(172, 71);
+            this.lblDragInfo.Size = new System.Drawing.Size(161, 71);
             this.lblDragInfo.TabIndex = 1;
-            this.lblDragInfo.Text = "Drag NAOMI ROMs && BIOS Files Here";
+            this.lblDragInfo.Text = "Drag NAOMI ROMs && BIN Files Here";
             this.lblDragInfo.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // DragLoadControl
