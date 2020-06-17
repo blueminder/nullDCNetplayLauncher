@@ -36,6 +36,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnController = new System.Windows.Forms.Button();
+            this.btnDragLoad = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,6 +119,18 @@
             this.btnController.UseVisualStyleBackColor = true;
             this.btnController.Click += new System.EventHandler(this.btnController_Click);
             // 
+            // btnDragLoad
+            // 
+            this.btnDragLoad.BackgroundImage = global::nullDCNetplayLauncher.Properties.Resources.round_publish_black_18dp;
+            this.btnDragLoad.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.btnDragLoad.Location = new System.Drawing.Point(82, 153);
+            this.btnDragLoad.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDragLoad.Name = "btnDragLoad";
+            this.btnDragLoad.Size = new System.Drawing.Size(33, 31);
+            this.btnDragLoad.TabIndex = 44;
+            this.btnDragLoad.UseVisualStyleBackColor = true;
+            this.btnDragLoad.Click += new System.EventHandler(this.btnDragLoad_Click);
+            // 
             // NetplayLaunchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -125,6 +138,7 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(348, 185);
+            this.Controls.Add(this.btnDragLoad);
             this.Controls.Add(this.btnController);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.panel1);
@@ -145,5 +159,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnController;
+        private System.Windows.Forms.Button btnDragLoad;
     }
 }

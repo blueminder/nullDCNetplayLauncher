@@ -168,7 +168,32 @@ namespace nullDCNetplayLauncher
 
         private void cboGameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
+            if (cboGameSelect.SelectedValue != null)
+                Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
+        }
+
+        private void btnDragLoad_Click(object sender, EventArgs e)
+        {
+            UserControl cc = new DragLoadControl();
+            Form window = new Form
+            {
+                Text = "Drag & Load BIOS && ROMs",
+                TopLevel = true,
+                FormBorderStyle = FormBorderStyle.Fixed3D,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ClientSize = cc.Size,
+                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
+            };
+
+            window.Controls.Add(cc);
+            cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            window.ShowDialog();
+            romDict = ScanRoms();
+
+            cboGameSelect.DataSource = new BindingSource(romDict, null);
+            cboGameSelect.DisplayMember = "Key";
+            cboGameSelect.ValueMember = "Value";
         }
     }
 }

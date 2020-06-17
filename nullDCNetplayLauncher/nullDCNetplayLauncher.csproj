@@ -114,6 +114,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DragLoadControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DragLoadControl.Designer.cs">
+      <DependentUpon>DragLoadControl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="ControllerControl.resx">
       <DependentUpon>ControllerControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -138,6 +144,9 @@
     </Compile>
     <EmbeddedResource Include="SettingsControl.resx">
       <DependentUpon>SettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DragLoadControl.resx">
+      <DependentUpon>DragLoadControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -219,6 +228,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="naomi.ico" />
+    <None Include="Resources\outline_highlight_alt_black_48dp.png" />
+    <None Include="Resources\round_publish_black_18dp.png" />
     <None Include="Resources\round_multiple_stop_black_24dp.ico" />
     <None Include="Resources\round_multiple_stop_black_24dp.png" />
   </ItemGroup>

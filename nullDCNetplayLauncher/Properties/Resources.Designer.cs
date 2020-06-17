@@ -193,6 +193,16 @@ namespace nullDCNetplayLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap outline_highlight_alt_black_48dp {
+            get {
+                object obj = ResourceManager.GetObject("outline_highlight_alt_black_48dp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap right {
             get {
                 object obj = ResourceManager.GetObject("right", resourceCulture);
@@ -207,6 +217,16 @@ namespace nullDCNetplayLauncher.Properties {
             get {
                 object obj = ResourceManager.GetObject("round_multiple_stop_black_24dp", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap round_publish_black_18dp {
+            get {
+                object obj = ResourceManager.GetObject("round_publish_black_18dp", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
         

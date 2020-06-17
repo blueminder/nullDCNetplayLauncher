@@ -321,6 +321,12 @@ namespace nullDCNetplayLauncher
             return String.Join("\\", Enumerable.Reverse(splitPath).Take(4).Reverse().ToList<string>());
         }
 
+        public static string ExtractRelativePath(string path)
+        {
+            List<string> splitPath = path.Split(Path.DirectorySeparatorChar).ToList();
+            return String.Join("\\", Enumerable.Reverse(splitPath).Take(3).Reverse().ToList<string>());
+        }
+
         public static string GenerateHostCode(string ip, string port, string delay, string method="0")
         {
             string combinedHostInfo;
