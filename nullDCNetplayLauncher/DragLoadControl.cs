@@ -35,13 +35,12 @@ namespace nullDCNetplayLauncher
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string file in files)
             {
-                
-
                 string path = files[0];
                 string destpath = Launcher.rootDir + "nulldc-1-0-4-en-win\\";
 
                 if (Path.GetExtension(path).Equals(".bin"))
                 {
+                    lblDragInfo.Text = "Copying BIN...";
                     destpath += "data\\" + Path.GetFileName(files[0]);
                     File.Copy(path, destpath, true);
                     File.SetAttributes(destpath, FileAttributes.Normal);
@@ -51,6 +50,7 @@ namespace nullDCNetplayLauncher
                 {
                     destpath += "roms\\" + Path.GetFileNameWithoutExtension(files[0]);
                     Directory.CreateDirectory(destpath);
+                    lblDragInfo.Text = "Extracting ROM...";
                     if (File.Exists(path))
                     {
                         ZipArchive archive = ZipFile.OpenRead(path);
