@@ -771,7 +771,14 @@ namespace nullDCNetplayLauncher
             StreamWriter writer = new StreamWriter(path);
             serializer.Serialize(writer.BaseStream, Launcher.mappings);
             writer.Close();
+
+            NetplayLaunchForm.StopMapper();
+
             Launcher.mappings = GamePadMapping.ReadMappingsFile();
+            Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
+
+            NetplayLaunchForm.StartMapper();
+
         }
     }
 }
