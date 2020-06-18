@@ -71,7 +71,7 @@
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(192, 21);
             this.chkEnableMapper.TabIndex = 4;
-            this.chkEnableMapper.Text = "Enable Gamepad Mapper";
+            this.chkEnableMapper.Text = "Enable Keyboard Mapper";
             this.chkEnableMapper.UseVisualStyleBackColor = true;
             this.chkEnableMapper.CheckedChanged += new System.EventHandler(this.chkEnableMapper_CheckedChanged);
             // 

@@ -135,7 +135,7 @@ namespace nullDCNetplayLauncher
                 hideAllButtons();
                 ClearArcadeStick();
                 Console.WriteLine("No Controller Found");
-                lblController.Text = "No Controller Found\n\nIf it is plugged in, then NullDC does not natively support your controller. To use it, you will have to enable the Gamepad Mapper to continue.\n\nSet your controls in AntiMicro to match the current keyboard mapping and minimize. Click \"Play Offline\" to test your controls.";
+                lblController.Text = "No Controller Found\n\nIf it is plugged in, then NullDC does not natively support your controller. To use it, you will have to enable the Keyboard Mapper to continue.\n\nSet your controls in AntiMicro to match the current keyboard mapping and minimize. Click \"Play Offline\" to test your controls.";
                 showDetectControllerButton();
                 showEnableGamepadMapperButtons();
                 */
@@ -480,7 +480,7 @@ namespace nullDCNetplayLauncher
 
                 picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
                 lblController.Size = new System.Drawing.Size(286, 114);
-                lblController.Text = $"\nNew Gamepad Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+                lblController.Text = $"\nNew Keyboard Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
                 hideAllButtons();
                 btnSkip.Enabled = false;
                 btnCancel.Enabled = false;

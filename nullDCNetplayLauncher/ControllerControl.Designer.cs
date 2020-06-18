@@ -167,7 +167,7 @@
             this.btnEnableGamepadMapper.Name = "btnEnableGamepadMapper";
             this.btnEnableGamepadMapper.Size = new System.Drawing.Size(180, 27);
             this.btnEnableGamepadMapper.TabIndex = 10;
-            this.btnEnableGamepadMapper.Text = "Enable Gamepad Mapper";
+            this.btnEnableGamepadMapper.Text = "Enable Keyboard Mapper";
             this.btnEnableGamepadMapper.UseVisualStyleBackColor = true;
             this.btnEnableGamepadMapper.Visible = false;
             this.btnEnableGamepadMapper.Click += new System.EventHandler(this.btnEnableGamepadMapper_Click);
@@ -179,7 +179,7 @@
             this.chkForceMapper.Name = "chkForceMapper";
             this.chkForceMapper.Size = new System.Drawing.Size(184, 21);
             this.chkForceMapper.TabIndex = 11;
-            this.chkForceMapper.Text = "Force Gamepad Mapper";
+            this.chkForceMapper.Text = "Force Keyboard Mapper";
             this.chkForceMapper.UseVisualStyleBackColor = true;
             this.chkForceMapper.CheckedChanged += new System.EventHandler(this.chkForceMapper_CheckedChanged);
             // 
