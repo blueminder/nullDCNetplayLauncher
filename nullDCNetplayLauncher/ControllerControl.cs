@@ -460,6 +460,8 @@ namespace nullDCNetplayLauncher
             joystickBgWorker.WorkerSupportsCancellation = true;
         }
 
+
+
         private void joystickBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // ui update
@@ -468,9 +470,18 @@ namespace nullDCNetplayLauncher
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
 
-            
+            string successText;
 
-            if (ZDetected || IsUnnamed)
+            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count == 13)
+            {
+                NetplayLaunchForm.EnableMapper = false;
+                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
+                cfgText = cfgText.Replace(player1_old, "player1=joy1");
+
+                File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc", ButtonAssignmentText);
+                successText = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+            }
+            else
             {
                 SaveMapping(JoystickName);
 
@@ -478,30 +489,18 @@ namespace nullDCNetplayLauncher
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
-                picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
-                lblController.Size = new System.Drawing.Size(286, 114);
-                lblController.Text = $"\nNew Keyboard Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
-                hideAllButtons();
-                btnSkip.Enabled = false;
-                btnCancel.Enabled = false;
-                btnSetup.Enabled = true;
+                successText = $"\nNew Keyboard Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
-            else
-            {
-                NetplayLaunchForm.EnableMapper = false;
-                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
-                File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc", ButtonAssignmentText);
+            picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
+            lblController.Size = new System.Drawing.Size(286, 114);
+            lblController.Text = successText;
 
-                picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
-                lblController.Size = new System.Drawing.Size(286, 114);
-                lblController.Text = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
-                hideAllButtons();
-                btnSkip.Enabled = false;
-                btnCancel.Enabled = false;
-                btnSetup.Enabled = true;
-            }
+            hideAllButtons();
+            btnSkip.Enabled = false;
+            btnCancel.Enabled = false;
+            btnSetup.Enabled = true;
+
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
         }
@@ -723,19 +722,24 @@ namespace nullDCNetplayLauncher
 
         private void btnEnableGamepadMapper_Click(object sender, EventArgs e)
         {
-            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
-            string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
-            cfgText = cfgText.Replace(player1_old, "player1=keyboard");
-
-            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
-            File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            ZDetected = true;
         }
 
         public void SaveMapping(string mappingName)
         {
+            try
+            {
+                string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+                string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+                string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+                var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+                launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+
+                File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
+                File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            }
+            catch { }
 
             foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
             {
@@ -758,6 +762,10 @@ namespace nullDCNetplayLauncher
                 }
 
                 toEdit.Default = true;
+
+                GamePadMapping toReplace = Launcher.mappings.GamePadMappings.Where(g => g.Name.Equals(mappingName)).ToList().First();
+                Launcher.mappings.GamePadMappings.Remove(toReplace);
+                Launcher.mappings.GamePadMappings.Add(toEdit);
             }
             else
             {
@@ -774,9 +782,6 @@ namespace nullDCNetplayLauncher
             StreamWriter writer = new StreamWriter(path);
             serializer.Serialize(writer.BaseStream, Launcher.mappings);
             writer.Close();
-
-            Launcher.mappings = GamePadMapping.ReadMappingsFile();
-            Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
         }
 
         private void chkForceMapper_CheckedChanged(object sender, EventArgs e)

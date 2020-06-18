@@ -158,8 +158,6 @@ namespace nullDCNetplayLauncher
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
-            Launcher.mappings = GamePadMapping.ReadMappingsFile();
-
             Form window = new Form
             {
                 Text = "Settings",
@@ -178,7 +176,7 @@ namespace nullDCNetplayLauncher
 
         private void btnController_Click(object sender, EventArgs e)
         {
-            StopMapper();
+            StopMapper(true);
             UserControl cc = new ControllerControl(controller);
             Form window = new Form
             {
@@ -190,14 +188,25 @@ namespace nullDCNetplayLauncher
                 ClientSize = cc.Size,
                 Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
             };
-            if(EnableMapper)
-            {
-                StartMapper();
-            }
-
             window.Controls.Add(cc);
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
+
+            if (EnableMapper)
+            {
+                Launcher.mappings = GamePadMapping.ReadMappingsFile();
+                try
+                {
+                    Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.Where(g => g.Default == true).ToList().First();
+
+                }
+                catch
+                {
+                    Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.First();
+
+                }
+                StartMapper();
+            }
         }
 
         private void cboGameSelect_SelectedIndexChanged(object sender, EventArgs e)

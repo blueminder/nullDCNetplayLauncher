@@ -79,7 +79,7 @@ namespace nullDCNetplayLauncher
             txtWindowY.Text = windowSettings[2].ToString();
 
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
-            if (launcherText.Contains("enable_mapper=1"))
+            if (launcherText.Contains("enable_mapper=1") || NetplayLaunchForm.EnableMapper == true)
             {
                 chkEnableMapper.Checked = true;
             }
@@ -271,7 +271,6 @@ namespace nullDCNetplayLauncher
         private void cboGamePadMappings_SelectedIndexChanged(object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(cboGamePadMappings.SelectedValue);
-
         }
 
         private async void btnUpdate_Click(object sender, EventArgs e)
