@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -275,6 +276,8 @@ namespace nullDCNetplayLauncher
 
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
+            // anyone running on .NET < 4.6, TLS 1.2 needs to be explicitly assigned
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var check = await _updateManager.CheckForUpdatesAsync();
 
             if (!check.CanUpdate)
