@@ -31,11 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsControl));
             this.chkEnableMapper = new System.Windows.Forms.CheckBox();
             this.lblPlayer1 = new System.Windows.Forms.Label();
-            this.lblBackup = new System.Windows.Forms.Label();
-            this.lblPlayer2 = new System.Windows.Forms.Label();
             this.cboPlayer1 = new System.Windows.Forms.ComboBox();
-            this.cboBackup = new System.Windows.Forms.ComboBox();
-            this.cboPlayer2 = new System.Windows.Forms.ComboBox();
             this.rdoDefault = new System.Windows.Forms.RadioButton();
             this.rdoStartMax = new System.Windows.Forms.RadioButton();
             this.rdoCustomSize = new System.Windows.Forms.RadioButton();
@@ -71,7 +67,7 @@
             // chkEnableMapper
             // 
             this.chkEnableMapper.AutoSize = true;
-            this.chkEnableMapper.Location = new System.Drawing.Point(6, 101);
+            this.chkEnableMapper.Location = new System.Drawing.Point(6, 52);
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(192, 21);
             this.chkEnableMapper.TabIndex = 4;
@@ -82,29 +78,11 @@
             // lblPlayer1
             // 
             this.lblPlayer1.AutoSize = true;
-            this.lblPlayer1.Location = new System.Drawing.Point(6, 14);
+            this.lblPlayer1.Location = new System.Drawing.Point(3, 14);
             this.lblPlayer1.Name = "lblPlayer1";
             this.lblPlayer1.Size = new System.Drawing.Size(60, 17);
             this.lblPlayer1.TabIndex = 5;
             this.lblPlayer1.Text = "Player 1";
-            // 
-            // lblBackup
-            // 
-            this.lblBackup.AutoSize = true;
-            this.lblBackup.Location = new System.Drawing.Point(6, 43);
-            this.lblBackup.Name = "lblBackup";
-            this.lblBackup.Size = new System.Drawing.Size(55, 17);
-            this.lblBackup.TabIndex = 6;
-            this.lblBackup.Text = "Backup";
-            // 
-            // lblPlayer2
-            // 
-            this.lblPlayer2.AutoSize = true;
-            this.lblPlayer2.Location = new System.Drawing.Point(6, 74);
-            this.lblPlayer2.Name = "lblPlayer2";
-            this.lblPlayer2.Size = new System.Drawing.Size(60, 17);
-            this.lblPlayer2.TabIndex = 7;
-            this.lblPlayer2.Text = "Player 2";
             // 
             // cboPlayer1
             // 
@@ -118,32 +96,6 @@
             this.cboPlayer1.Name = "cboPlayer1";
             this.cboPlayer1.Size = new System.Drawing.Size(121, 24);
             this.cboPlayer1.TabIndex = 8;
-            // 
-            // cboBackup
-            // 
-            this.cboBackup.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboBackup.FormattingEnabled = true;
-            this.cboBackup.Items.AddRange(new object[] {
-            "Keyboard",
-            "Joystick 1",
-            "Joystick 2"});
-            this.cboBackup.Location = new System.Drawing.Point(73, 41);
-            this.cboBackup.Name = "cboBackup";
-            this.cboBackup.Size = new System.Drawing.Size(121, 24);
-            this.cboBackup.TabIndex = 9;
-            // 
-            // cboPlayer2
-            // 
-            this.cboPlayer2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboPlayer2.FormattingEnabled = true;
-            this.cboPlayer2.Items.AddRange(new object[] {
-            "Keyboard",
-            "Joystick 1",
-            "Joystick 2"});
-            this.cboPlayer2.Location = new System.Drawing.Point(73, 71);
-            this.cboPlayer2.Name = "cboPlayer2";
-            this.cboPlayer2.Size = new System.Drawing.Size(121, 24);
-            this.cboPlayer2.TabIndex = 10;
             // 
             // rdoDefault
             // 
@@ -232,13 +184,9 @@
             this.tabInput.Controls.Add(this.btnDeleteMapping);
             this.tabInput.Controls.Add(this.cboGamePadMappings);
             this.tabInput.Controls.Add(this.btnSaveInput);
-            this.tabInput.Controls.Add(this.cboPlayer2);
             this.tabInput.Controls.Add(this.chkEnableMapper);
-            this.tabInput.Controls.Add(this.cboBackup);
             this.tabInput.Controls.Add(this.lblPlayer1);
             this.tabInput.Controls.Add(this.cboPlayer1);
-            this.tabInput.Controls.Add(this.lblBackup);
-            this.tabInput.Controls.Add(this.lblPlayer2);
             this.tabInput.Location = new System.Drawing.Point(4, 25);
             this.tabInput.Name = "tabInput";
             this.tabInput.Padding = new System.Windows.Forms.Padding(3);
@@ -250,7 +198,7 @@
             // btnDeleteMapping
             // 
             this.btnDeleteMapping.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteMapping.Image")));
-            this.btnDeleteMapping.Location = new System.Drawing.Point(164, 126);
+            this.btnDeleteMapping.Location = new System.Drawing.Point(164, 79);
             this.btnDeleteMapping.Name = "btnDeleteMapping";
             this.btnDeleteMapping.Size = new System.Drawing.Size(30, 27);
             this.btnDeleteMapping.TabIndex = 53;
@@ -262,7 +210,7 @@
             this.cboGamePadMappings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboGamePadMappings.Enabled = false;
             this.cboGamePadMappings.FormattingEnabled = true;
-            this.cboGamePadMappings.Location = new System.Drawing.Point(9, 128);
+            this.cboGamePadMappings.Location = new System.Drawing.Point(10, 81);
             this.cboGamePadMappings.Name = "cboGamePadMappings";
             this.cboGamePadMappings.Size = new System.Drawing.Size(149, 24);
             this.cboGamePadMappings.TabIndex = 12;
@@ -432,11 +380,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox cboPlayer2;
-        private System.Windows.Forms.ComboBox cboBackup;
         private System.Windows.Forms.ComboBox cboPlayer1;
-        private System.Windows.Forms.Label lblPlayer2;
-        private System.Windows.Forms.Label lblBackup;
         private System.Windows.Forms.Label lblPlayer1;
         private System.Windows.Forms.CheckBox chkEnableMapper;
         private System.Windows.Forms.Button btnGrabWindowSize;

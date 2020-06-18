@@ -54,21 +54,11 @@ namespace nullDCNetplayLauncher
             cboPlayer1.DisplayMember = "Key";
             cboPlayer1.ValueMember = "Value";
 
-            cboBackup.DataSource = new BindingSource(InputOptions, null);
-            cboBackup.DisplayMember = "Key";
-            cboBackup.ValueMember = "Value";
-
-            cboPlayer2.DataSource = new BindingSource(InputOptions, null);
-            cboPlayer2.DisplayMember = "Key";
-            cboPlayer2.ValueMember = "Value";
-
             p1Entry = player1_old.Split('=')[1];
             backupEntry = backup_old.Split('=')[1];
             p2Entry = player2_old.Split('=')[1];
 
             cboPlayer1.SelectedValue = p1Entry;
-            cboBackup.SelectedValue = backupEntry;
-            cboPlayer2.SelectedValue = p2Entry;
 
             var windowSettings = Launcher.LoadWindowSettings();
             if (windowSettings[3] == 1)
@@ -170,19 +160,11 @@ namespace nullDCNetplayLauncher
 
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             String p1_val = $"{cboPlayer1.SelectedValue}";
-            String bak_val = $"{cboBackup.SelectedValue}";
-            String p2_val = $"{cboPlayer2.SelectedValue}";
 
             if (p1_val.Length == 0)
                 p1_val = "NULL";
-            if (bak_val.Length == 0)
-                bak_val = "NULL";
-            if (p2_val.Length == 0)
-                p2_val = "NULL";
 
             cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
-            cfgText = cfgText.Replace(backup_old, "backup=" + bak_val);
-            cfgText = cfgText.Replace(player2_old, "player2=" + p2_val);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
 
             // reload from file
