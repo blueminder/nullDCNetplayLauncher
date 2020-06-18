@@ -69,7 +69,7 @@
             this.chkEnableMapper.AutoSize = true;
             this.chkEnableMapper.Location = new System.Drawing.Point(6, 52);
             this.chkEnableMapper.Name = "chkEnableMapper";
-            this.chkEnableMapper.Size = new System.Drawing.Size(192, 21);
+            this.chkEnableMapper.Size = new System.Drawing.Size(191, 21);
             this.chkEnableMapper.TabIndex = 4;
             this.chkEnableMapper.Text = "Enable Keyboard Mapper";
             this.chkEnableMapper.UseVisualStyleBackColor = true;
@@ -80,9 +80,9 @@
             this.lblPlayer1.AutoSize = true;
             this.lblPlayer1.Location = new System.Drawing.Point(3, 14);
             this.lblPlayer1.Name = "lblPlayer1";
-            this.lblPlayer1.Size = new System.Drawing.Size(60, 17);
+            this.lblPlayer1.Size = new System.Drawing.Size(51, 17);
             this.lblPlayer1.TabIndex = 5;
-            this.lblPlayer1.Text = "Player 1";
+            this.lblPlayer1.Text = "Device";
             // 
             // cboPlayer1
             // 
