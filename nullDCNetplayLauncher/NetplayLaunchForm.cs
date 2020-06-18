@@ -220,13 +220,13 @@ namespace nullDCNetplayLauncher
             UserControl cc = new DragLoadControl();
             Form window = new Form
             {
-                Text = "Drag & Load BIN && ROMs",
+                Text = "File Drop",
                 TopLevel = true,
                 FormBorderStyle = FormBorderStyle.Fixed3D,
                 MaximizeBox = false,
                 MinimizeBox = false,
                 ClientSize = cc.Size,
-                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
+                Icon = nullDCNetplayLauncher.Properties.Resources.round_publish_black_18dp1
             };
 
             window.Controls.Add(cc);

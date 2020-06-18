@@ -151,7 +151,6 @@ namespace nullDCNetplayLauncher
                 JoystickName = $"Gamepad #{maxUM + 1}";
 
                 btnSetup.Enabled = true;
-                btnSkip.Enabled = false;
                 btnCancel.Enabled = false;
 
                 hideAllButtons();
@@ -181,7 +180,6 @@ namespace nullDCNetplayLauncher
                 joystick.Acquire();
 
                 btnSetup.Enabled = true;
-                btnSkip.Enabled = false;
                 btnCancel.Enabled = false;
 
                 hideAllButtons();
@@ -415,8 +413,6 @@ namespace nullDCNetplayLauncher
 
         private List<JoystickUpdate> SetJoystickButton(SharpDX.DirectInput.Joystick joystick, string button)
         {
-            //var ButtonAssignments = new Dictionary<string, JoystickUpdate[]>;
-
             List<JoystickUpdate> ButtonPressRelease = new List<JoystickUpdate>();
 
             // Poll events from joystick
@@ -460,8 +456,6 @@ namespace nullDCNetplayLauncher
             joystickBgWorker.WorkerSupportsCancellation = true;
         }
 
-
-
         private void joystickBgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // ui update
@@ -472,7 +466,8 @@ namespace nullDCNetplayLauncher
 
             string successText;
 
-            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count == 13)
+            // only writes qkoJAMMA joystick configuration if 12 buttons minimum are assigned
+            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count >= 12)
             {
                 NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
@@ -497,7 +492,6 @@ namespace nullDCNetplayLauncher
             lblController.Text = successText;
 
             hideAllButtons();
-            btnSkip.Enabled = false;
             btnCancel.Enabled = false;
             btnSetup.Enabled = true;
 
@@ -571,9 +565,9 @@ namespace nullDCNetplayLauncher
                         }
                     }
                 }
-                while (CurrentlyAssigned == false && Skip == false)
+                while (CurrentlyAssigned == false)
                 {
-                    Thread.Sleep(600);
+                    Thread.Sleep(300);
                 }
                 button_index++;
             }
@@ -629,7 +623,6 @@ namespace nullDCNetplayLauncher
             */
 
             showSetupButtons();
-            btnSkip.Enabled = true;
             btnCancel.Enabled = true;
             btnSetup.Enabled = false;
             joystickBgWorker.WorkerSupportsCancellation = true;
@@ -659,34 +652,18 @@ namespace nullDCNetplayLauncher
             lblController.Text = "Digital or Analog Input?";
         }
 
-        private void showEnableGamepadMapperButtons()
-        {
-            btnEnableGamepadMapper.Visible = true;
-            btnShowKeyboard.Visible = true;
-        }
-
-        private void showDetectControllerButton()
-        {
-            btnDetectController.Visible = true;
-        }
-
         private void showSetupButtons()
         {
             btnSetup.Visible = true;
-            btnSkip.Visible = true;
             btnCancel.Visible = true;
         }
 
         private void hideAllButtons()
         {
-            btnShowKeyboard.Visible = false;
-            btnDetectController.Visible = false;
             btnSetup.Visible = false;
-            btnSkip.Visible = false;
             btnCancel.Visible = false;
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
-            btnEnableGamepadMapper.Visible = false;
             chkForceMapper.Visible = false;
         }
 

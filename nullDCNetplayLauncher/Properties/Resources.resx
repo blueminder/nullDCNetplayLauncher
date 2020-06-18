@@ -181,4 +181,7 @@
   <data name="outline_highlight_alt_black_48dp" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\outline_highlight_alt_black_48dp.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="round_publish_black_18dp1" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\round_publish_black_18dp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

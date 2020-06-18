@@ -129,6 +129,7 @@ namespace nullDCNetplayLauncher
         private void btnSaveInput_Click(object sender, EventArgs e)
         {
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
@@ -155,11 +156,15 @@ namespace nullDCNetplayLauncher
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
+                string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+                var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+                cfgText = cfgText.Replace(player1_old, "player1=joy1");
+
                 NetplayLaunchForm.StopMapper();
             }
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
-            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+            
             String p1_val = $"{cboPlayer1.SelectedValue}";
 
             if (p1_val.Length == 0)
@@ -290,5 +295,6 @@ namespace nullDCNetplayLauncher
             _updateManager.LaunchUpdater(check.LastVersion);
             Application.Exit();
         }
+
     }
 }
