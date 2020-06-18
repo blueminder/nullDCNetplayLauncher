@@ -18,7 +18,10 @@ namespace nullDCNetplayLauncher
 {
     public partial class SettingsControl : UserControl
     {
-
+        private readonly IUpdateManager _updateManager = new UpdateManager(
+                new GithubPackageResolver("blueminder", "nullDCNetplayLauncher", "*Update*"),
+                new ZipPackageExtractor());
+        
         public SettingsControl()
         {
             InitializeComponent();
@@ -288,16 +291,20 @@ namespace nullDCNetplayLauncher
 
         }
 
-        private async Task btnUpdate_ClickAsync(object sender, EventArgs e)
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            // Configure to look for packages in specified directory and treat them as zips
-            using (var manager = new UpdateManager(
-                new GithubPackageResolver("blueminder", "nullDCNetplayLauncher", "*.zip"),
-                new ZipPackageExtractor()))
+            var check = await _updateManager.CheckForUpdatesAsync();
+
+            if (!check.CanUpdate)
             {
-                // Check for new version and, if available, perform full update and restart
-                await manager.CheckPerformUpdateAsync();
+                MessageBox.Show("There are no updates available.");
+                return;
             }
+
+            await _updateManager.PrepareUpdateAsync(check.LastVersion);
+
+            _updateManager.LaunchUpdater(check.LastVersion);
+            Application.Exit();
         }
     }
 }

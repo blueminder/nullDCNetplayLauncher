@@ -80,9 +80,12 @@ namespace nullDCNetplayLauncher
         {
             EnableMapper = false;
             controller.clock.Stop();
-            if (detach)
-                gpm.DetachController();
-            gpm.Dispose();
+            if (gpm != null)
+            {
+                if (detach)
+                    gpm.DetachController();
+                gpm.Dispose();
+            }
         }
 
         private void btnOffline_Click(object sender, EventArgs e)
