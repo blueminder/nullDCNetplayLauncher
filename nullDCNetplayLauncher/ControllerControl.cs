@@ -76,6 +76,7 @@ namespace nullDCNetplayLauncher
             {
                 lblController.Text = "Controller Detected";
             }
+            chkForceMapper.Visible = true;
         }
 
         private void ControllerControl_Close(object sender, EventArgs e)
@@ -185,6 +186,7 @@ namespace nullDCNetplayLauncher
 
                 hideAllButtons();
                 showSetupButtons();
+                chkForceMapper.Visible = true;
             }
         }
 
@@ -472,9 +474,7 @@ namespace nullDCNetplayLauncher
             {
                 SaveMapping(JoystickName);
 
-                NetplayLaunchForm.StopMapper();
-                NetplayLaunchForm.StartMapper();
-
+                NetplayLaunchForm.EnableMapper = true;
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
@@ -488,6 +488,7 @@ namespace nullDCNetplayLauncher
             }
             else
             {
+                NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
@@ -687,6 +688,7 @@ namespace nullDCNetplayLauncher
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
             btnEnableGamepadMapper.Visible = false;
+            chkForceMapper.Visible = false;
         }
 
         private void btnDetectController_Click(object sender, EventArgs e)
@@ -773,13 +775,8 @@ namespace nullDCNetplayLauncher
             serializer.Serialize(writer.BaseStream, Launcher.mappings);
             writer.Close();
 
-            NetplayLaunchForm.StopMapper();
-
             Launcher.mappings = GamePadMapping.ReadMappingsFile();
             Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == mappingName);
-
-            NetplayLaunchForm.StartMapper();
-
         }
 
         private void chkForceMapper_CheckedChanged(object sender, EventArgs e)

@@ -82,6 +82,7 @@ namespace nullDCNetplayLauncher
             controller.clock.Stop();
             if (detach)
                 gpm.DetachController();
+            gpm.Dispose();
         }
 
         private void btnOffline_Click(object sender, EventArgs e)
@@ -174,6 +175,7 @@ namespace nullDCNetplayLauncher
 
         private void btnController_Click(object sender, EventArgs e)
         {
+            StopMapper();
             UserControl cc = new ControllerControl(controller);
             Form window = new Form
             {
@@ -185,6 +187,10 @@ namespace nullDCNetplayLauncher
                 ClientSize = cc.Size,
                 Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
             };
+            if(EnableMapper)
+            {
+                StartMapper();
+            }
 
             window.Controls.Add(cc);
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;

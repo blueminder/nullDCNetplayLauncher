@@ -104,20 +104,20 @@ namespace nullDCNetplayLauncher
 
             numHostFPS.Value = Convert.ToInt32(hostFpsEntry);
 
-            cboGamePadMappings.DataSource = Launcher.mappings.GamePadMappings;
-            cboGamePadMappings.DisplayMember = Name;
-
-            GamePadMapping defaultMapping;
             try
             {
-                defaultMapping = Launcher.mappings.GamePadMappings.Where(g => g.Default == true).ToList().First();
+                Launcher.mappings = GamePadMapping.ReadMappingsFile();
+                Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.Where(g => g.Default == true).ToList().First();
             }
             catch
             {
-                defaultMapping = Launcher.mappings.GamePadMappings.First();
+                Launcher.ActiveGamePadMapping = Launcher.mappings.GamePadMappings.First();
             }
 
-            cboGamePadMappings.SelectedItem = defaultMapping;
+            cboGamePadMappings.DataSource = Launcher.mappings.GamePadMappings;
+            cboGamePadMappings.DisplayMember = Name;
+
+            cboGamePadMappings.SelectedItem = Launcher.ActiveGamePadMapping;
 
             lblVersion.Text = Application.ProductVersion;
         }
@@ -155,7 +155,7 @@ namespace nullDCNetplayLauncher
                 serializer.Serialize(writer.BaseStream, Launcher.mappings);
                 writer.Close();
 
-                NetplayLaunchForm.StopMapper();
+                NetplayLaunchForm.StopMapper(true);
                 NetplayLaunchForm.StartMapper();
             }
             else
