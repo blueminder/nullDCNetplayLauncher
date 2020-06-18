@@ -524,7 +524,13 @@ namespace nullDCNetplayLauncher
                 ZipArchive archive = ZipFile.OpenRead(NvramDataPath);
                 foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    entry.ExtractToFile(Path.Combine(NullDcDataPath, entry.FullName), true);
+                    var entryPath = Path.Combine(NullDcDataPath, entry.FullName);
+                    if (File.Exists(entryPath))
+                    {
+                        File.SetAttributes(entryPath, FileAttributes.Normal);
+                    }
+                    entry.ExtractToFile(entryPath, true);
+                    File.SetAttributes(entryPath, FileAttributes.ReadOnly);
                 }
             }
         }
