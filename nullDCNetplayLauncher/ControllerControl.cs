@@ -558,16 +558,16 @@ namespace nullDCNetplayLauncher
                                 ButtonAssignments.Add(button, joystickUpdate);
                             }
 
-                            if (directionalButtons.Any(button.Contains) && AnalogSet)
+                            if (directionalButtons.Any(button.Contains))
                             {
-                                Thread.Sleep(500);
+                                Thread.Sleep(700);
                             }
                         }
                     }
                 }
                 while (CurrentlyAssigned == false)
                 {
-                    Thread.Sleep(300);
+                    Thread.Sleep(700);
                 }
                 button_index++;
             }
