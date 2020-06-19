@@ -47,12 +47,12 @@ namespace nullDCNetplayLauncher
             ShowWindow(handle, SW_HIDE);
         }
 
-        public static void LoadInteractive()
+        public static void LoadInteractive(bool tray = false)
         {
             HideConsoleWindow();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new NetplayLaunchForm());
+            Application.Run(new NetplayLaunchForm(tray));
         }
 
         [STAThread]
@@ -234,7 +234,7 @@ namespace nullDCNetplayLauncher
                         isHost: hosting);
                 }
 
-                
+                LoadInteractive(tray: true);
             }
             else
             {

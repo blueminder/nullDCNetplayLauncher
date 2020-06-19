@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NetplayLaunchForm));
             this.cboGameSelect = new System.Windows.Forms.ComboBox();
             this.btnHost = new System.Windows.Forms.Button();
@@ -37,6 +38,7 @@
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnController = new System.Windows.Forms.Button();
             this.btnDragLoad = new System.Windows.Forms.Button();
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -131,6 +133,12 @@
             this.btnDragLoad.UseVisualStyleBackColor = true;
             this.btnDragLoad.Click += new System.EventHandler(this.btnDragLoad_Click);
             // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
+            this.notifyIcon.Text = "NullDC Netplay";
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
+            // 
             // NetplayLaunchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -145,7 +153,10 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "NetplayLaunchForm";
+            if (StartTray)
+                this.ShowInTaskbar = false;
             this.Text = "NullDC Netplay";
+            this.Resize += new System.EventHandler(this.NetplayLaunchForm_Resize);
             this.panel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -160,5 +171,6 @@
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnController;
         private System.Windows.Forms.Button btnDragLoad;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }

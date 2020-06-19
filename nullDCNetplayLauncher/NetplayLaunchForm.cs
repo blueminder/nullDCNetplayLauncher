@@ -23,15 +23,18 @@ namespace nullDCNetplayLauncher
         public static GamePadMapper gpm;
 
         public static Boolean EnableMapper = false;
+        public static Boolean StartTray;
 
-        public NetplayLaunchForm()
+        public NetplayLaunchForm(bool tray = false)
         {
             controller = new ControllerEngine();
 
             launcher = new Launcher();
             romDict = ScanRoms();
             presets = ConnectionPreset.ReadPresetsFile();
-            
+
+            StartTray = tray;
+
             string launcherCfgText = "";
             try
             {
@@ -50,7 +53,10 @@ namespace nullDCNetplayLauncher
             }
 
             InitializeComponent();
-            
+
+            if (StartTray)
+                this.WindowState = FormWindowState.Minimized;
+
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
             cboGameSelect.ValueMember = "Value";
@@ -66,6 +72,22 @@ namespace nullDCNetplayLauncher
             {
                 Launcher.SelectedGame = romDict.First().Value;
             }
+
+            if (StartTray)
+            {
+                Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+                if (processes.Length > 0)
+                {
+                    Process nulldcProcess = processes[0];
+                    nulldcProcess.EnableRaisingEvents = true;
+
+                    nulldcProcess.Exited += (sender, e) =>
+                    {
+                        Application.Exit();
+                    };
+                }
+            }
+            
         }
 
         public static void StartMapper()
@@ -87,6 +109,23 @@ namespace nullDCNetplayLauncher
                 gpm.Dispose();
             }
         }
+
+        private void NetplayLaunchForm_Resize(object sender, EventArgs e)
+        {
+            if (StartTray && this.WindowState == FormWindowState.Minimized)
+            {
+                Hide();
+                notifyIcon.Visible = true;
+            }
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            Show();
+            this.WindowState = FormWindowState.Normal;
+            notifyIcon.Visible = false;
+        }
+
 
         private void btnOffline_Click(object sender, EventArgs e)
         {
@@ -238,5 +277,6 @@ namespace nullDCNetplayLauncher
             cboGameSelect.DisplayMember = "Key";
             cboGameSelect.ValueMember = "Value";
         }
+
     }
 }
