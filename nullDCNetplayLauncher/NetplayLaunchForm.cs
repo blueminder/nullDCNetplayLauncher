@@ -35,6 +35,9 @@ namespace nullDCNetplayLauncher
 
             StartTray = tray;
 
+            if (!StartTray)
+                Launcher.CleanMalformedQjcFiles();
+
             string launcherCfgText = "";
             try
             {
@@ -52,7 +55,7 @@ namespace nullDCNetplayLauncher
                 StartMapper();
             }
 
-            InitializeComponent();
+            InitializeComponent(StartTray);
 
             if (StartTray)
                 this.WindowState = FormWindowState.Minimized;

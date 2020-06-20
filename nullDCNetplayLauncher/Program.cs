@@ -115,6 +115,8 @@ namespace nullDCNetplayLauncher
                     Launcher.rootDir = Regex.Replace(arguments["root-dir"], @"\s+", string.Empty) + "\\";
                 }
 
+                Launcher.CleanMalformedQjcFiles();
+
                 if (!arguments.ContainsKey("offline")
                     && !arguments.ContainsKey("ip")
                     && !arguments.ContainsKey("host-code"))
@@ -123,14 +125,21 @@ namespace nullDCNetplayLauncher
                     return;
                 }
 
-                
                 if (arguments.ContainsKey("lst-path"))
                 {
                     romPath = arguments["lst-path"];
                 }
                 else if (arguments.ContainsKey("gameid"))
                 {
-                    romPath = Launcher.GetRomPathFromGameId(arguments["gameid"]);
+                    if(File.Exists(Launcher.rootDir + "games.json"))
+                    {
+                        romPath = Launcher.GetRomPathFromGameId(arguments["gameid"]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Please provide a valid games.json file to use the launcher from command line.");
+                        return;
+                    }
                 }
                 else
                 {

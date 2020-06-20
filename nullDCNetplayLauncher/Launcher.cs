@@ -22,25 +22,6 @@ namespace nullDCNetplayLauncher
         public static Dictionary<string, int> MethodOptions = new Dictionary<string, int>();
 
         public static GamePadMappingList mappings;
-        /*
-        public static Dictionary<string, string> ButtonMapping = new Dictionary<string, string>()
-            {
-                { "Y", "1" },
-                { "A", "2" },
-                { "Back", "3" },
-                { "X", "4" },
-                { "B", "5" },
-                { "Start", "6" },
-                { "RightStick", "Start" },
-                { "LeftShoulder", "Coin" },
-                { "RightShoulder", "Test" },
-                { "IsUp", "Up" },
-                { "IsDown", "Down" },
-                { "IsLeft", "Left" },
-                { "IsRight", "Right" },
-            };
-        */
-
         public static GamePadMapping ActiveGamePadMapping;
         public Launcher()
         {
@@ -52,6 +33,53 @@ namespace nullDCNetplayLauncher
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
 
+        }
+
+        // the qkoJAMMA plugin sometimes generates blank QJC files and rewrites malformed file
+        // upon exit for joysticks that are detected, but unused. this causes issues at startup
+        public static void CleanMalformedQjcFiles()
+        {
+            var qjcFiles = Directory.GetFiles(Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\qkoJAMMA"), "*.qjc");
+            foreach (string qjcFile in qjcFiles)
+            {
+                var qjcLines = File.ReadAllLines(qjcFile).Where(f => !string.IsNullOrWhiteSpace(f)).ToArray();
+
+                var qjcEntries = new Dictionary<string, string>();
+                foreach (string qjcLine in qjcLines)
+                {
+                    var lineSplit = qjcLine.Split('=');
+                    qjcEntries[lineSplit[0]] = lineSplit[1];
+                }
+
+                var numLinesInitial = qjcEntries.Count;
+                qjcEntries.Remove("");
+
+                var numLinesAfter = qjcEntries.Count;
+
+                bool modifiedQjc = false;
+                if (numLinesInitial != numLinesAfter)
+                    modifiedQjc = true;
+
+                if (qjcEntries.Keys.Contains("none") && qjcEntries.Keys.Count == 1)
+                {
+                    File.Delete(qjcFile);
+                    continue;
+                }
+
+                if (qjcEntries.Count < 12)
+                {
+                    File.Delete(qjcFile);
+                    continue;
+                }
+                else
+                {
+                    if (modifiedQjc)
+                    {
+                        File.WriteAllLines(qjcFile,
+                            qjcEntries.Select(x => $"{x.Key}={x.Value}"));
+                    }
+                }
+            }
         }
 
         public void AssignActiveMapping()
