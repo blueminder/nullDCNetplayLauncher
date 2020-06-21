@@ -115,7 +115,7 @@ namespace nullDCNetplayLauncher
                     Launcher.rootDir = Regex.Replace(arguments["root-dir"], @"\s+", string.Empty) + "\\";
                 }
 
-                Launcher.CleanMalformedQjcFiles();
+                Launcher.RestoreFiles();
 
                 if (!arguments.ContainsKey("offline")
                     && !arguments.ContainsKey("ip")

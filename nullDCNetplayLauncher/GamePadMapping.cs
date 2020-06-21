@@ -66,6 +66,9 @@ namespace nullDCNetplayLauncher
         {
             string path = Launcher.rootDir + "GamePadMappingList.xml";
             GamePadMappingList readMappingList;
+
+            Launcher.RestoreGamePadMappings();
+
             try
             {
                 XmlSerializer serializer =

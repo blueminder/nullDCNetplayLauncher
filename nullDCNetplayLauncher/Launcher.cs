@@ -23,12 +23,13 @@ namespace nullDCNetplayLauncher
 
         public static GamePadMappingList mappings;
         public static GamePadMapping ActiveGamePadMapping;
+
+        public static bool FilesRestored = false;
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
             MethodOptions["Audio Sync"] = 1;
-
-            RestoreFgcaNvram();
 
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
@@ -543,24 +544,130 @@ namespace nullDCNetplayLauncher
             return windowSettings;
         }
 
-        public static void RestoreFgcaNvram()
+        public static void RestoreNvmem()
         {
-            var NvramDataPath = Launcher.rootDir + @"mvc2andAllSettings\data.zip";
-            var NullDcDataPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\data\";
-            if (File.Exists(NvramDataPath))
+            var nullDcDataPath = Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\data");
+            var nvmemFile = "naomi_nvmem.bin";
+            var nvmemPath = Path.Combine(nullDcDataPath, nvmemFile);
+
+            Console.WriteLine("Restoring NVMEM...");
+            if (File.Exists(nvmemPath))
             {
-                ZipArchive archive = ZipFile.OpenRead(NvramDataPath);
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    var entryPath = Path.Combine(NullDcDataPath, entry.FullName);
-                    if (File.Exists(entryPath))
-                    {
-                        File.SetAttributes(entryPath, FileAttributes.Normal);
-                    }
-                    entry.ExtractToFile(entryPath, true);
-                    File.SetAttributes(entryPath, FileAttributes.ReadOnly);
-                }
+                File.SetAttributes(nvmemPath, FileAttributes.Normal);
             }
+
+            File.WriteAllBytes(nvmemPath,
+                               Properties.Resources.naomi_nvmem_bin);
+
+            File.SetAttributes(nvmemPath, FileAttributes.ReadOnly);
+            Console.WriteLine("NVMEM Restored");
+        }
+
+        public static void RestoreNullDcCfg()
+        {
+            var nullDcPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\";
+            var cfgFile = "nullDC.cfg";
+            var cfgPath = Path.Combine(nullDcPath, cfgFile);
+
+            Console.WriteLine("Restoring NullDC Configuration...");
+            File.WriteAllBytes(cfgPath,
+                               Properties.Resources.nullDC_cfg);
+            Console.WriteLine("NullDC Configuration Restored");
+        }
+
+        public static void RestoreLauncherCfg(bool force = false)
+        {
+            var launcherPath = Launcher.rootDir;
+            var launcherCfgFile = "launcher.cfg";
+            var launcherCfgPath = Path.Combine(launcherPath, launcherCfgFile);
+
+            // to preserve user customizations
+            // only restores if launcher.cfg file doesn't already exist
+            if (!File.Exists(launcherCfgPath) || force)
+            {
+                Console.WriteLine("Restoring Launcher Configuration...");
+                File.WriteAllBytes(launcherCfgPath,
+                                   Properties.Resources.launcher_cfg);
+                Console.WriteLine("Launcher Configuration Restored");
+            }
+        }
+
+        public static void RestoreGamePadMappings(bool force = false)
+        {
+            var launcherPath = Launcher.rootDir;
+            var MappingsFile = "GamePadMappingList.xml";
+            var MappingsPath = Path.Combine(launcherPath, MappingsFile);
+
+            if (!File.Exists(MappingsPath))
+            {
+                Console.WriteLine("Keyboard Mappings Not Found");
+            }
+
+            // to preserve user customizations
+            // only restores if launcher.cfg file doesn't already exist
+            if (!File.Exists(MappingsPath) || force)
+            {
+                Console.WriteLine("Restoring Default Keyboard Mappings...");
+                File.WriteAllText(MappingsPath,
+                                  Properties.Resources.GamePadMappingList);
+                Console.WriteLine("Default Keyboard Mappings Restored");
+            }
+        }
+
+        public static void RestoreFiles(bool force = false)
+        {
+            Launcher.RestoreNullDcFresh(force);
+            Launcher.RestoreNullDcCfg();
+            Launcher.RestoreNvmem();
+            Launcher.CleanMalformedQjcFiles();
+            Launcher.RestoreLauncherCfg();
+            Launcher.FilesRestored = true;
+        }
+
+        public static void DeleteDirectory(string targetDir)
+        {
+            string[] files = Directory.GetFiles(targetDir);
+            string[] dirs = Directory.GetDirectories(targetDir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(targetDir, true);
+        }
+
+        public static void RestoreNullDcFresh(bool force = false)
+        {
+            var NullDcPath = Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win");
+            var NullDcZipPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win.zip");
+
+            if (!Directory.Exists(NullDcPath))
+            {
+                Console.WriteLine("NullDC Folder Not Found");
+            }
+
+            if (Directory.Exists(NullDcPath) && force)
+            {
+                Console.WriteLine("Deleting NullDC Folder...");
+                DeleteDirectory(NullDcPath);
+            }
+
+            if (!Directory.Exists(NullDcPath) || force)
+            {
+                Console.WriteLine("Restoring NullDC Folder...");
+                File.WriteAllBytes(NullDcZipPath,
+                                   Properties.Resources.nulldc_1_0_4_en_win_zip);
+                ZipFile.ExtractToDirectory(NullDcZipPath, Launcher.rootDir);
+            }
+
+            File.Delete(NullDcZipPath);
         }
 
     }

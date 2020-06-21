@@ -34,9 +34,11 @@ namespace nullDCNetplayLauncher
 
             StartTray = tray;
 
-            if (!StartTray)
-                Launcher.CleanMalformedQjcFiles();
-
+            if (!StartTray && !Launcher.FilesRestored)
+            {
+                Launcher.RestoreFiles();
+            }
+            
             string launcherCfgText = "";
             try
             {
