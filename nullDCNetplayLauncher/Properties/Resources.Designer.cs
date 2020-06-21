@@ -171,6 +171,16 @@ namespace nullDCNetplayLauncher.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] launcher_cfg {
+            get {
+                object obj = ResourceManager.GetObject("launcher_cfg", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap left {
@@ -187,6 +197,26 @@ namespace nullDCNetplayLauncher.Properties {
             get {
                 object obj = ResourceManager.GetObject("naomi", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] naomi_nvmem_bin {
+            get {
+                object obj = ResourceManager.GetObject("naomi_nvmem_bin", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] nullDC_cfg {
+            get {
+                object obj = ResourceManager.GetObject("nullDC_cfg", resourceCulture);
+                return ((byte[])(obj));
             }
         }
         
@@ -236,6 +266,16 @@ namespace nullDCNetplayLauncher.Properties {
         internal static System.Drawing.Icon round_publish_black_18dp1 {
             get {
                 object obj = ResourceManager.GetObject("round_publish_black_18dp1", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon round_publish_black_18dp2 {
+            get {
+                object obj = ResourceManager.GetObject("round_publish_black_18dp2", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }

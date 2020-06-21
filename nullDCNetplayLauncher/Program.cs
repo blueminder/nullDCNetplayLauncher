@@ -115,7 +115,10 @@ namespace nullDCNetplayLauncher
                     Launcher.rootDir = Regex.Replace(arguments["root-dir"], @"\s+", string.Empty) + "\\";
                 }
 
+                Launcher.RestoreNullDcCfg();
+                Launcher.RestoreNvmem();
                 Launcher.CleanMalformedQjcFiles();
+                Launcher.RestoreLauncherCfg();
 
                 if (!arguments.ContainsKey("offline")
                     && !arguments.ContainsKey("ip")

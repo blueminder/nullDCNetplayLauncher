@@ -184,4 +184,16 @@
   <data name="round_publish_black_18dp1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\round_publish_black_18dp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="launcher_cfg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\launcher.cfg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="naomi_nvmem_bin" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\naomi_nvmem.bin;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="nullDC_cfg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nullDC.cfg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="round_publish_black_18dp2" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\round_publish_black_18dp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

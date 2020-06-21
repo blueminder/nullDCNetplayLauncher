@@ -35,7 +35,13 @@ namespace nullDCNetplayLauncher
             StartTray = tray;
 
             if (!StartTray)
+            {
+                Launcher.RestoreNullDcCfg();
+                Launcher.RestoreNvmem();
                 Launcher.CleanMalformedQjcFiles();
+                Launcher.RestoreLauncherCfg();
+            }
+                
 
             string launcherCfgText = "";
             try

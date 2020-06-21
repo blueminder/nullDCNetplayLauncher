@@ -543,23 +543,45 @@ namespace nullDCNetplayLauncher
             return windowSettings;
         }
 
-        public static void RestoreFgcaNvram()
+        public static void RestoreNvmem()
         {
-            var NvramDataPath = Launcher.rootDir + @"mvc2andAllSettings\data.zip";
-            var NullDcDataPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\data\";
-            if (File.Exists(NvramDataPath))
+            var nullDcDataPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\data\";
+            var nvmemFile = "naomi_nvmem.bin";
+            var nvmemPath = Path.Combine(nullDcDataPath, nvmemFile);
+
+            if (File.Exists(nvmemPath))
             {
-                ZipArchive archive = ZipFile.OpenRead(NvramDataPath);
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    var entryPath = Path.Combine(NullDcDataPath, entry.FullName);
-                    if (File.Exists(entryPath))
-                    {
-                        File.SetAttributes(entryPath, FileAttributes.Normal);
-                    }
-                    entry.ExtractToFile(entryPath, true);
-                    File.SetAttributes(entryPath, FileAttributes.ReadOnly);
-                }
+                File.SetAttributes(nvmemPath, FileAttributes.Normal);
+            }
+
+            File.WriteAllBytes(nvmemPath,
+                               Properties.Resources.naomi_nvmem_bin);
+
+            File.SetAttributes(nvmemPath, FileAttributes.ReadOnly);
+        }
+
+        public static void RestoreNullDcCfg()
+        {
+            var nullDcPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\";
+            var cfgFile = "nullDC.cfg";
+            var cfgPath = Path.Combine(nullDcPath, cfgFile);
+
+            File.WriteAllBytes(cfgPath,
+                               Properties.Resources.nullDC_cfg);
+        }
+
+        public static void RestoreLauncherCfg(bool force = false)
+        {
+            var launcherPath = Launcher.rootDir;
+            var launcherCfgFile = "launcher.cfg";
+            var launcherCfgPath = Path.Combine(launcherPath, launcherCfgFile);
+
+            // to preserve user customizations
+            // only restores if launcher.cfg file doesn't already exist
+            if (!File.Exists(launcherCfgPath) || force)
+            {
+                File.WriteAllBytes(launcherCfgPath,
+                                   Properties.Resources.launcher_cfg);
             }
         }
 
