@@ -56,8 +56,8 @@ namespace nullDCNetplayLauncher
                 StartMapper();
             }
 
-            InitializeComponent(StartTray);
-            //InitializeComponent();
+            //InitializeComponent(StartTray);
+            InitializeComponent();
 
             if (StartTray)
                 this.WindowState = FormWindowState.Minimized;

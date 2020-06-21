@@ -292,7 +292,7 @@ namespace nullDCNetplayLauncher
         {
             if(splitHost.Panel2Collapsed)
             {
-                this.Height = splitHost.Panel1.Height + 200;
+                //this.Height = splitHost.Panel1.Height;
                 
                 //splitHost.IsSplitterFixed = false;
                 //this.Width = splitHost.MaximumSize.Width;
