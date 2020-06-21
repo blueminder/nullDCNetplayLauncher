@@ -23,12 +23,13 @@ namespace nullDCNetplayLauncher
 
         public static GamePadMappingList mappings;
         public static GamePadMapping ActiveGamePadMapping;
+
+        public static bool FilesRestored = false;
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
             MethodOptions["Audio Sync"] = 1;
-
-            RestoreFgcaNvram();
 
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
@@ -545,10 +546,11 @@ namespace nullDCNetplayLauncher
 
         public static void RestoreNvmem()
         {
-            var nullDcDataPath = Launcher.rootDir + @"nulldc-1-0-4-en-win\data\";
+            var nullDcDataPath = Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win\data");
             var nvmemFile = "naomi_nvmem.bin";
             var nvmemPath = Path.Combine(nullDcDataPath, nvmemFile);
 
+            Console.WriteLine("Restoring NVMEM...");
             if (File.Exists(nvmemPath))
             {
                 File.SetAttributes(nvmemPath, FileAttributes.Normal);
@@ -558,6 +560,7 @@ namespace nullDCNetplayLauncher
                                Properties.Resources.naomi_nvmem_bin);
 
             File.SetAttributes(nvmemPath, FileAttributes.ReadOnly);
+            Console.WriteLine("NVMEM Restored");
         }
 
         public static void RestoreNullDcCfg()
@@ -566,8 +569,10 @@ namespace nullDCNetplayLauncher
             var cfgFile = "nullDC.cfg";
             var cfgPath = Path.Combine(nullDcPath, cfgFile);
 
+            Console.WriteLine("Restoring NullDC Configuration...");
             File.WriteAllBytes(cfgPath,
                                Properties.Resources.nullDC_cfg);
+            Console.WriteLine("NullDC Configuration Restored");
         }
 
         public static void RestoreLauncherCfg(bool force = false)
@@ -580,9 +585,67 @@ namespace nullDCNetplayLauncher
             // only restores if launcher.cfg file doesn't already exist
             if (!File.Exists(launcherCfgPath) || force)
             {
+                Console.WriteLine("Restoring Launcher Configuration...");
                 File.WriteAllBytes(launcherCfgPath,
                                    Properties.Resources.launcher_cfg);
+                Console.WriteLine("Launcher Configuration Restored");
             }
+        }
+
+        public static void RestoreFiles(bool force = false)
+        {
+            Launcher.RestoreNullDcFresh(force);
+            Launcher.RestoreNullDcCfg();
+            Launcher.RestoreNvmem();
+            Launcher.CleanMalformedQjcFiles();
+            Launcher.RestoreLauncherCfg();
+            Launcher.FilesRestored = true;
+        }
+
+        public static void DeleteDirectory(string targetDir)
+        {
+            string[] files = Directory.GetFiles(targetDir);
+            string[] dirs = Directory.GetDirectories(targetDir);
+
+            foreach (string file in files)
+            {
+                File.SetAttributes(file, FileAttributes.Normal);
+                File.Delete(file);
+            }
+
+            foreach (string dir in dirs)
+            {
+                DeleteDirectory(dir);
+            }
+
+            Directory.Delete(targetDir, true);
+        }
+
+        public static void RestoreNullDcFresh(bool force = false)
+        {
+            var NullDcPath = Path.Combine(Launcher.rootDir, @"nulldc-1-0-4-en-win");
+            var NullDcZipPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win.zip");
+
+            if (!Directory.Exists(NullDcPath))
+            {
+                Console.WriteLine("NullDC Folder Not Found");
+            }
+
+            if (Directory.Exists(NullDcPath) && force)
+            {
+                Console.WriteLine("Deleting NullDC Folder...");
+                DeleteDirectory(NullDcPath);
+            }
+
+            if (!Directory.Exists(NullDcPath) || force)
+            {
+                Console.WriteLine("Restoring NullDC Folder...");
+                File.WriteAllBytes(NullDcZipPath,
+                                   Properties.Resources.nulldc_1_0_4_en_win_zip);
+                ZipFile.ExtractToDirectory(NullDcZipPath, Launcher.rootDir);
+            }
+
+            File.Delete(NullDcZipPath);
         }
 
     }

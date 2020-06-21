@@ -34,15 +34,11 @@ namespace nullDCNetplayLauncher
 
             StartTray = tray;
 
-            if (!StartTray)
+            if (!StartTray && !Launcher.FilesRestored)
             {
-                Launcher.RestoreNullDcCfg();
-                Launcher.RestoreNvmem();
-                Launcher.CleanMalformedQjcFiles();
-                Launcher.RestoreLauncherCfg();
+                Launcher.RestoreFiles();
             }
-                
-
+            
             string launcherCfgText = "";
             try
             {

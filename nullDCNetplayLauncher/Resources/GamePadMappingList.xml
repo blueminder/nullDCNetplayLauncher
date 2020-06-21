@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<GamePadMappingList xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GamePadMappings>
+    <GamePadMapping>
+      <Name>Default</Name>
+      <Y>2</Y>
+      <A>1</A>
+      <Back>3</Back>
+      <X>5</X>
+      <B>4</B>
+      <Start>6</Start>
+      <LeftStick>Coin</LeftStick>
+      <RightStick>Start</RightStick>
+      <LeftShoulder />
+      <RightShoulder />
+      <LeftTrigger />
+      <RightTrigger />
+      <IsUp>Up</IsUp>
+      <IsDown>Down</IsDown>
+      <IsLeft>Left</IsLeft>
+      <IsRight>Right</IsRight>
+      <BigButton />
+      <Default>true</Default>
+    </GamePadMapping>
+    <GamePadMapping>
+      <Name>6 axis 15 button gamepad with hat switch</Name>
+      <Y>2</Y>
+      <A>1</A>
+      <Back />
+      <X>5</X>
+      <B>4</B>
+      <Start>6</Start>
+      <LeftStick>Coin</LeftStick>
+      <RightStick>Start</RightStick>
+      <LeftShoulder>Test</LeftShoulder>
+      <RightShoulder>3</RightShoulder>
+      <LeftTrigger />
+      <RightTrigger />
+      <IsUp>Up</IsUp>
+      <IsDown>Down</IsDown>
+      <IsLeft>Left</IsLeft>
+      <IsRight>Right</IsRight>
+      <BigButton />
+      <Default>false</Default>
+    </GamePadMapping>
+    <GamePadMapping>
+      <Name>Controller (Xbox One For Windows)</Name>
+      <Y>2</Y>
+      <A>4</A>
+      <Back>Coin</Back>
+      <X>1</X>
+      <B>5</B>
+      <Start>Start</Start>
+      <LeftStick />
+      <RightStick />
+      <LeftShoulder />
+      <RightShoulder>3</RightShoulder>
+      <LeftTrigger />
+      <RightTrigger>6</RightTrigger>
+      <IsUp>Up</IsUp>
+      <IsDown>Down</IsDown>
+      <IsLeft>Left</IsLeft>
+      <IsRight>Right</IsRight>
+      <BigButton />
+      <Default>false</Default>
+    </GamePadMapping>
+    <GamePadMapping>
+      <Name>P4 Wired Gamepad V1.6</Name>
+      <Y>2</Y>
+      <A>1</A>
+      <Back />
+      <X>5</X>
+      <B>4</B>
+      <Start>6</Start>
+      <LeftStick>Coin</LeftStick>
+      <RightStick>Start</RightStick>
+      <LeftShoulder />
+      <RightShoulder>3</RightShoulder>
+      <LeftTrigger />
+      <RightTrigger>6</RightTrigger>
+      <IsUp>Up</IsUp>
+      <IsDown>Down</IsDown>
+      <IsLeft>Left</IsLeft>
+      <IsRight>Right</IsRight>
+      <BigButton />
+      <Default>false</Default>
+    </GamePadMapping>
+    <GamePadMapping>
+      <Name>Controller (XBOX 360 For Windows)</Name>
+      <Y>2</Y>
+      <A>4</A>
+      <Back>Coin</Back>
+      <X>1</X>
+      <B>5</B>
+      <Start>Start</Start>
+      <LeftStick />
+      <RightStick />
+      <LeftShoulder />
+      <RightShoulder>3</RightShoulder>
+      <LeftTrigger />
+      <RightTrigger>6</RightTrigger>
+      <IsUp>Up</IsUp>
+      <IsDown>Down</IsDown>
+      <IsLeft>Left</IsLeft>
+      <IsRight>Right</IsRight>
+      <BigButton />
+      <Default>false</Default>
+    </GamePadMapping>
+  </GamePadMappings>
+</GamePadMappingList>

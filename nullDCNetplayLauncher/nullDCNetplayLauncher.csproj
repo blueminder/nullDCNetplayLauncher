@@ -219,6 +219,7 @@
   <ItemGroup>
     <None Include="Resources\launcher.cfg" />
     <None Include="Resources\naomi_nvmem.bin" />
+    <None Include="Resources\nulldc-1-0-4-en-win.zip" />
     <None Include="Resources\nullDC.cfg" />
     <None Include="Resources\settings.ico" />
   </ItemGroup>
@@ -275,6 +276,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="naomi.ico" />
+    <None Include="Resources\GamePadMappingList.xml" />
     <Content Include="Resources\round_publish_black_18dp.ico" />
     <None Include="Resources\outline_highlight_alt_black_48dp.png" />
     <None Include="Resources\round_publish_black_18dp.png" />
