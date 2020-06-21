@@ -592,6 +592,28 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        public static void RestoreGamePadMappings(bool force = false)
+        {
+            var launcherPath = Launcher.rootDir;
+            var MappingsFile = "GamePadMappingList.xml";
+            var MappingsPath = Path.Combine(launcherPath, MappingsFile);
+
+            if (!File.Exists(MappingsPath))
+            {
+                Console.WriteLine("Keyboard Mappings Not Found");
+            }
+
+            // to preserve user customizations
+            // only restores if launcher.cfg file doesn't already exist
+            if (!File.Exists(MappingsPath) || force)
+            {
+                Console.WriteLine("Restoring Default Keyboard Mappings...");
+                File.WriteAllText(MappingsPath,
+                                  Properties.Resources.GamePadMappingList);
+                Console.WriteLine("Default Keyboard Mappings Restored");
+            }
+        }
+
         public static void RestoreFiles(bool force = false)
         {
             Launcher.RestoreNullDcFresh(force);
