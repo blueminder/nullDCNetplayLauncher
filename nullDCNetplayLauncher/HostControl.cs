@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Xml;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.DirectoryServices;
+using System.Text.RegularExpressions;
 
 namespace nullDCNetplayLauncher
 {
@@ -31,6 +36,19 @@ namespace nullDCNetplayLauncher
             cboMethod.DataSource = new BindingSource(Launcher.MethodOptions, null);
             cboMethod.DisplayMember = "Key";
             cboMethod.ValueMember = "Value";
+
+            cboHostIP.DataSource = new BindingSource(GetIPsByNetwork(), null);
+            cboHostIP.DisplayMember = "Value";
+            cboHostIP.ValueMember = "Value";
+
+            String hostIP;
+            if (GetRadminHostIP() != null)
+                hostIP = GetRadminHostIP();
+            else if (GetExternalIP() != null)
+                hostIP = GetExternalIP();
+            else
+                hostIP = GetIPsByNetwork().Values.First();
+            cboHostIP.SelectedValue = hostIP;
         }
 
         public void SavePreset(string presetName)
@@ -38,7 +56,7 @@ namespace nullDCNetplayLauncher
             var toEdit = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
             if (toEdit != null)
             {
-                toEdit.IP = txtHostIP.Text;
+                toEdit.IP = cboHostIP.Text;
                 toEdit.Port = txtHostPort.Text;
                 toEdit.Delay = numDelay.Value;
                 toEdit.Method = Convert.ToInt32(cboMethod.SelectedValue);
@@ -47,7 +65,7 @@ namespace nullDCNetplayLauncher
             {
                 var toAdd = new ConnectionPreset();
                 toAdd.Name = cboPresetName.Text;
-                toAdd.IP = txtHostIP.Text;
+                toAdd.IP = cboHostIP.Text;
                 toAdd.Port = txtHostPort.Text;
                 toAdd.Delay = numDelay.Value;
                 toAdd.Method = Convert.ToInt32(cboMethod.SelectedValue);
@@ -98,7 +116,7 @@ namespace nullDCNetplayLauncher
             ConnectionPreset toLoad = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
             if (toLoad != null)
             {
-                txtHostIP.Text = toLoad.IP;
+                cboHostIP.Text = toLoad.IP;
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
                 cboMethod.SelectedValue = toLoad.Method;
@@ -107,7 +125,7 @@ namespace nullDCNetplayLauncher
 
         private void btnGuess_Click(object sender, EventArgs e)
         {
-            long guessedDelay = Launcher.GuessDelay(txtGuestIP.Text);
+            long guessedDelay = Launcher.GuessDelay(txtOpponentIP.Text);
             if (guessedDelay >= 0)
             {
                 numDelay.BackColor = Color.White;
@@ -122,7 +140,7 @@ namespace nullDCNetplayLauncher
 
         private void btnGenHostCode_Click(object sender, EventArgs e)
         {
-            var hostCode = Launcher.GenerateHostCode(txtHostIP.Text,
+            var hostCode = Launcher.GenerateHostCode(cboHostIP.Text,
                                                      txtHostPort.Text,
                                                      Convert.ToInt32(numDelay.Value).ToString(),
                                                      Convert.ToInt32(cboMethod.SelectedValue).ToString());
@@ -134,7 +152,7 @@ namespace nullDCNetplayLauncher
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: true,
-                hostAddress: txtHostIP.Text,
+                hostAddress: cboHostIP.Text,
                 hostPort: txtHostPort.Text,
                 frameDelay: Convert.ToInt32(numDelay.Value)
                                    .ToString(),
@@ -193,11 +211,102 @@ namespace nullDCNetplayLauncher
         private void cboPresetName_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtHostCode.BackColor = Color.White;
-            txtHostIP.BackColor = Color.White;
+            cboHostIP.BackColor = Color.White;
             txtHostPort.BackColor = Color.White;
             numDelay.BackColor = Color.White;
             cboMethod.BackColor = Color.White;
             LoadPreset(cboPresetName.Text);
         }
+
+        private void cboHostnameIP_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        /// <summary> 
+        /// This utility function displays all the IPv4 addresses of the local computer. 
+        /// </summary> 
+        /// https://blog.stephencleary.com/2009/05/getting-local-ip-addresses.html
+        public static Dictionary<String, String> GetIPsByNetwork()
+        {
+            var IPsByNetwork = new Dictionary<String, String>();
+
+            var externalIP = GetExternalIP();
+            if (externalIP != null)
+                IPsByNetwork.Add("External", externalIP);
+
+            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+
+            foreach (NetworkInterface network in networkInterfaces)
+            {
+                IPInterfaceProperties properties = network.GetIPProperties();
+                foreach (IPAddressInformation address in properties.UnicastAddresses)
+                {
+                    if (address.Address.AddressFamily != AddressFamily.InterNetwork)
+                        continue;
+
+                    if (IPAddress.IsLoopback(address.Address))
+                        continue;
+
+                    IPsByNetwork[network.Name] = address.Address.ToString();
+                }
+            }
+
+            return IPsByNetwork;
+        }
+
+        private static string GetExternalIP()
+        {
+            try
+            {
+                string externalIP;
+                externalIP = (new WebClient()).DownloadString("http://checkip.dyndns.org/");
+                externalIP = (new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"))
+                             .Matches(externalIP)[0].ToString();
+                return externalIP;
+            }
+            catch { return null; }
+        }
+
+        public static String GetRadminHostIP()
+        {
+            String radminHostIP;
+            try
+            {
+                radminHostIP = GetIPsByNetwork()["Radmin VPN"];
+            }
+            catch
+            {
+                radminHostIP = null;
+            }
+            return radminHostIP;
+        }
+
+        private void btnGuessAgain_Click(object sender, EventArgs e)
+        {
+            var RadminHostIP = GetIPsByNetwork()["Radmin VPN"];
+            MessageBox.Show(RadminHostIP);
+        }
+
+        private void btnExpandCollapse_Click(object sender, EventArgs e)
+        {
+            if(splitHost.Panel2Collapsed)
+            {
+                this.Height = splitHost.Panel1.Height;
+                splitHost.Panel2Collapsed = false;
+                splitHost.IsSplitterFixed = false;
+                btnExpandCollapse.Text = "▼                    ▼";
+            }
+            else
+            {
+                this.Height = splitHost.Height;
+                splitHost.Panel2Collapsed = true;
+                splitHost.IsSplitterFixed = false;
+                btnExpandCollapse.Text = "▲                    ▲";
+            }
+            
+            
+        }
+
     }
 }
