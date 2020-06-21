@@ -20,7 +20,7 @@ namespace nullDCNetplayLauncher
     public partial class SettingsControl : UserControl
     {
         private readonly IUpdateManager _updateManager = new UpdateManager(
-                new GithubPackageResolver("blueminder", "nullDCNetplayLauncher", "*Update*"),
+                new GithubPackageResolver("blueminder", "nullDCNetplayLauncher", "*Distribution*"),
                 new ZipPackageExtractor());
         
         public SettingsControl()
