@@ -30,6 +30,7 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HostControl));
             this.splitHost = new System.Windows.Forms.SplitContainer();
+            this.btnExpandCollapse = new System.Windows.Forms.Button();
             this.txtOpponentIP = new System.Windows.Forms.TextBox();
             this.btnLaunchGame = new System.Windows.Forms.Button();
             this.btnCopy = new System.Windows.Forms.Button();
@@ -49,7 +50,6 @@
             this.lblHostIP = new System.Windows.Forms.Label();
             this.txtHostPort = new System.Windows.Forms.TextBox();
             this.lblHostPort = new System.Windows.Forms.Label();
-            this.btnExpandCollapse = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.splitHost)).BeginInit();
             this.splitHost.Panel1.SuspendLayout();
             this.splitHost.Panel2.SuspendLayout();
@@ -60,9 +60,10 @@
             // 
             // splitHost
             // 
-            this.splitHost.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.splitHost.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitHost.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.splitHost.Location = new System.Drawing.Point(9, 6);
+            this.splitHost.IsSplitterFixed = true;
+            this.splitHost.Location = new System.Drawing.Point(0, 0);
             this.splitHost.Name = "splitHost";
             this.splitHost.Orientation = System.Windows.Forms.Orientation.Horizontal;
             // 
@@ -84,10 +85,23 @@
             // 
             this.splitHost.Panel2.Controls.Add(this.grpAdvanced);
             this.splitHost.Panel2MinSize = 0;
-            this.splitHost.Size = new System.Drawing.Size(275, 360);
+            this.splitHost.Size = new System.Drawing.Size(288, 191);
             this.splitHost.SplitterDistance = 185;
             this.splitHost.SplitterWidth = 1;
             this.splitHost.TabIndex = 72;
+            // 
+            // btnExpandCollapse
+            // 
+            this.btnExpandCollapse.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnExpandCollapse.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.btnExpandCollapse.Location = new System.Drawing.Point(-9, 155);
+            this.btnExpandCollapse.Name = "btnExpandCollapse";
+            this.btnExpandCollapse.Size = new System.Drawing.Size(293, 25);
+            this.btnExpandCollapse.TabIndex = 77;
+            this.btnExpandCollapse.Text = "▲                    ▲";
+            this.btnExpandCollapse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnExpandCollapse.UseVisualStyleBackColor = false;
+            this.btnExpandCollapse.Click += new System.EventHandler(this.btnExpandCollapse_Click);
             // 
             // txtOpponentIP
             // 
@@ -194,7 +208,7 @@
             this.grpAdvanced.Location = new System.Drawing.Point(0, 0);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Padding = new System.Windows.Forms.Padding(5);
-            this.grpAdvanced.Size = new System.Drawing.Size(275, 174);
+            this.grpAdvanced.Size = new System.Drawing.Size(288, 5);
             this.grpAdvanced.TabIndex = 59;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Options";
@@ -280,27 +294,17 @@
             this.lblHostPort.TabIndex = 66;
             this.lblHostPort.Text = "Host Port";
             // 
-            // btnExpandCollapse
-            // 
-            this.btnExpandCollapse.BackColor = System.Drawing.SystemColors.ButtonFace;
-            this.btnExpandCollapse.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.btnExpandCollapse.Location = new System.Drawing.Point(-9, 155);
-            this.btnExpandCollapse.Name = "btnExpandCollapse";
-            this.btnExpandCollapse.Size = new System.Drawing.Size(293, 25);
-            this.btnExpandCollapse.TabIndex = 77;
-            this.btnExpandCollapse.Text = "▲                    ▲";
-            this.btnExpandCollapse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnExpandCollapse.UseVisualStyleBackColor = false;
-            this.btnExpandCollapse.Click += new System.EventHandler(this.btnExpandCollapse_Click);
-            // 
             // HostControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.Controls.Add(this.splitHost);
+            this.MaximumSize = new System.Drawing.Size(288, 434);
+            this.MinimumSize = new System.Drawing.Size(288, 191);
             this.Name = "HostControl";
-            this.Size = new System.Drawing.Size(293, 371);
+            this.Size = new System.Drawing.Size(288, 191);
             this.Load += new System.EventHandler(this.HostControl_Load);
             this.splitHost.Panel1.ResumeLayout(false);
             this.splitHost.Panel1.PerformLayout();

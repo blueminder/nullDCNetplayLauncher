@@ -165,8 +165,9 @@
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "NetplayLaunchForm";
+            //if (StartTray)
+                //this.ShowInTaskbar = false;
             this.Text = "NullDC Netplay";
             this.Resize += new System.EventHandler(this.NetplayLaunchForm_Resize);
             this.panel1.ResumeLayout(false);
