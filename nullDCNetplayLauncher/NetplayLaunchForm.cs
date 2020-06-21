@@ -30,7 +30,6 @@ namespace nullDCNetplayLauncher
             controller = new ControllerEngine();
 
             launcher = new Launcher();
-            romDict = ScanRoms();
             presets = ConnectionPreset.ReadPresetsFile();
 
             StartTray = tray;
@@ -60,21 +59,7 @@ namespace nullDCNetplayLauncher
             if (StartTray)
                 this.WindowState = FormWindowState.Minimized;
 
-            cboGameSelect.DataSource = new BindingSource(romDict, null);
-            cboGameSelect.DisplayMember = "Key";
-            cboGameSelect.ValueMember = "Value";
-
-            if (romDict.Count == 1 && romDict.First().Key == "")
-            {
-                btnOffline.Enabled = false;
-                btnHost.Enabled = false;
-                btnJoin.Enabled = false;
-                cboGameSelect.Enabled = false;
-            }
-            else
-            {
-                Launcher.SelectedGame = romDict.First().Value;
-            }
+            ReloadRomList();
 
             if (StartTray)
             {
@@ -91,6 +76,31 @@ namespace nullDCNetplayLauncher
                 }
             }
             
+        }
+
+        private void ReloadRomList()
+        {
+            romDict = ScanRoms();
+
+            cboGameSelect.DataSource = new BindingSource(romDict, null);
+            cboGameSelect.DisplayMember = "Key";
+            cboGameSelect.ValueMember = "Value";
+
+            if (romDict.Count == 1 && romDict.First().Key == "")
+            {
+                btnOffline.Enabled = false;
+                btnHost.Enabled = false;
+                btnJoin.Enabled = false;
+                cboGameSelect.Enabled = false;
+            }
+            else
+            {
+                Launcher.SelectedGame = romDict.First().Value;
+                btnOffline.Enabled = true;
+                btnHost.Enabled = true;
+                btnJoin.Enabled = true;
+                cboGameSelect.Enabled = true;
+            }
         }
 
         public static void StartMapper()
@@ -274,11 +284,7 @@ namespace nullDCNetplayLauncher
             window.Controls.Add(cc);
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
-            romDict = ScanRoms();
-
-            cboGameSelect.DataSource = new BindingSource(romDict, null);
-            cboGameSelect.DisplayMember = "Key";
-            cboGameSelect.ValueMember = "Value";
+            ReloadRomList();
         }
 
     }
