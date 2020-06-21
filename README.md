@@ -38,6 +38,10 @@ Once you have gathered the necessary files:
 1. Open `nullDCNetplayLauncher.exe`
 2. Open the *File Drop* menu by pressing the up button next to the controller icon on the right.
 3. Locate your `naomi_bios.bin` & ROM `.zip` files in the appropriate format and drag the file into the square. Each ROM `.zip` file must be a collection of `.bin`/`.dat` files along with a corresponding `.lst` file.
+   
+
+![File Drop Demo](file_drop_demo.gif)
+
 
 Alternatively, you can manually place the NAOMI BIOS (`naomi_bios.bin`) in `nulldc-1-0-4-en-win\data` and place your unzipped ROMs in `nulldc-1-0-4-en-win\roms` in their own corresponding directories.
 
@@ -63,8 +67,9 @@ The rest of the instructions assume that Radmin is installed, but this should wo
 
 1. Open `nullDCNetplayLauncher.exe`
 
+2. Select any ROM from the drop-down menu
 
-2.  Start Session by pressing *Host Game* or *Join Game*
+3. Start Session by pressing *Host Game* or *Join Game*
 
    - **Hosting a Game**
 
@@ -79,16 +84,26 @@ The rest of the instructions assume that Radmin is installed, but this should wo
       Verify that you and your opponent have the same Delay set.
 
       Press the *Launch Game* button.
+      
+
+      ![Host Game Demo](host_demo.gif)
+
+      
 
    - **Joining a Game**
 
       Paste the generated Host Code and server details should automatically be filled in. Alternatively, you may manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
 
       Make sure you have your opponent's Radmin IP in the launcher's *Host IP* column. Verify that you and your opponent have the same Delay.
+      
+      
+      ![Join Game Demo](join_demo.gif)
 
-3. Press the *Launch Game* button.
+   
 
-4. Play!
+4. Press the *Launch Game* button.
+
+5. Play!
 
 If you experience any significant slowdown or strange performance, be sure to change the Delay around the determined value. It takes some trial and error, but once you have it, it's smooth sailing from there. Just be sure that you and your opponent have a matching Delay.
 
@@ -102,7 +117,7 @@ Just in case the *Guess* button isn't reliable, these are the recommended Delay 
 < 130ms = 4 Delay Frame needed
 < 155ms = 5 Delay Frame needed
 < 180ms = 6 Delay Frame needed
-\> 180ms = Don't even bother :(
+> 180ms = Don't even bother :(
 ```
 
 ## Command Line
@@ -131,7 +146,7 @@ If you want the launcher to automatically guess the delay, you may use the `--gu
 
 `nullDCNetplayLauncher.exe --gameid cvs2 --hosting 0 --ip <ip address> --port <port> --guess-ip <remote ip>`
 
-
+When the Launcher is called via command line, the launcher menu is kept available through an icon on the system tray. You may adjust your Keyboard Mapper options in here while your game is in session.
 
 ## Troubleshooting
 
