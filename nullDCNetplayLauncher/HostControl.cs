@@ -292,23 +292,24 @@ namespace nullDCNetplayLauncher
         {
             if(splitHost.Panel2Collapsed)
             {
+                this.Height = this.MinimumSize.Height;
                 //this.Height = splitHost.Panel1.Height;
-                
+
                 //splitHost.IsSplitterFixed = false;
                 //this.Width = splitHost.MaximumSize.Width;
                 //this.Height = splitHost.MaximumSize.Height;
-                btnExpandCollapse.Text = "▼                    ▼";
+                //btnExpandCollapse.Text = "▼                    ▼";
                 splitHost.Panel2Collapsed = false;
             }
             else
             {
-                this.Height = splitHost.MaximumSize.Height;
+                this.Height = this.MaximumSize.Height;
                 
                 //splitHost.IsSplitterFixed = false;
                 //this.Width = splitHost.MinimumSize.Width;
                 //this.Height = splitHost.MinimumSize.Height;
                 //splitHost.Size = splitHost.MaximumSize;
-                btnExpandCollapse.Text = "▲                    ▲";
+                //btnExpandCollapse.Text = "▲                    ▲";
                 splitHost.Panel2Collapsed = true;
             }
             
