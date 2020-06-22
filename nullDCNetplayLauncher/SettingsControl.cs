@@ -130,11 +130,17 @@ namespace nullDCNetplayLauncher
         {
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+            string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+                launcherText = launcherText.Replace("player1=joy1", "player1=keyboard");
 
-                foreach(GamePadMapping mapping in Launcher.mappings.GamePadMappings)
+                var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+
+                foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
                 {
                     mapping.Default = false;
                 }
@@ -156,22 +162,22 @@ namespace nullDCNetplayLauncher
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+                launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
                 var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
                 NetplayLaunchForm.StopMapper();
             }
-            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
-            
             String p1_val = $"{cboPlayer1.SelectedValue}";
 
             if (p1_val.Length == 0)
                 p1_val = "NULL";
 
             cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
+            launcherText = launcherText.Replace(player1_old, "player1=" + p1_val);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
             // reload from file
             cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");

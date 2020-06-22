@@ -520,6 +520,39 @@ namespace nullDCNetplayLauncher
             File.WriteAllText(launcherCfgPath, result);
         }
 
+        public static void LoadInputSettings()
+        {
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var launcherCfgText = File.ReadAllText(launcherCfgPath);
+            
+            string player1_actual;
+            try
+            {
+                player1_actual = launcherCfgLines.Where(s => s.Contains("player1=")).ToList().First();
+            }
+            catch
+            {
+                if(launcherCfgText.Contains("enable_mapper=1"))
+                    player1_actual = "player1=keyboard";
+                else
+                    player1_actual = "player1=joy1";
+                launcherCfgText += $"\n{player1_actual}";
+                // strips newlines
+                launcherCfgText = Regex.Replace(launcherCfgText, @"^\s*$\n|\r", string.Empty, RegexOptions.Multiline).TrimEnd();
+                launcherCfgText += $"\n";
+                File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+            }
+            var player1ActualEntry = player1_actual.Split('=')[1];
+
+            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+            cfgText = cfgText.Replace("player1=joy1", "player1=" + player1ActualEntry);
+            
+
+            File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+        }
+
         public static int[] LoadWindowSettings()
         {
             int[] windowSettings = new int[4];
@@ -604,7 +637,7 @@ namespace nullDCNetplayLauncher
             }
 
             // to preserve user customizations
-            // only restores if launcher.cfg file doesn't already exist
+            // only restores if mappings file doesn't already exist
             if (!File.Exists(MappingsPath) || force)
             {
                 Console.WriteLine("Restoring Default Keyboard Mappings...");
@@ -621,6 +654,9 @@ namespace nullDCNetplayLauncher
             Launcher.RestoreNvmem();
             Launcher.CleanMalformedQjcFiles();
             Launcher.RestoreLauncherCfg();
+
+            Launcher.LoadInputSettings();
+
             Launcher.FilesRestored = true;
         }
 
