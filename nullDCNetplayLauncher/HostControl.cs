@@ -128,13 +128,15 @@ namespace nullDCNetplayLauncher
             long guessedDelay = Launcher.GuessDelay(txtOpponentIP.Text);
             if (guessedDelay >= 0)
             {
-                numDelay.BackColor = Color.White;
                 numDelay.Value = guessedDelay;
+                txtOpponentIP.BackColor = Color.Honeydew;
+                numDelay.BackColor = Color.Honeydew;
             }
             else
             {
-                numDelay.BackColor = Color.Tomato;
                 numDelay.Text = "";
+                txtOpponentIP.BackColor = Color.LightCoral;
+                numDelay.BackColor = Color.LightCoral;
             }
         }
 
@@ -318,5 +320,19 @@ namespace nullDCNetplayLauncher
             
         }
 
+        private void txtOpponentIP_TextChanged(object sender, EventArgs e)
+        {
+            txtOpponentIP.BackColor = Color.White;
+        }
+
+        private void numDelay_ValueChanged(object sender, EventArgs e)
+        {
+            numDelay.BackColor = Color.White;
+        }
+
+        private void txtHostCode_TextChanged(object sender, EventArgs e)
+        {
+            txtHostCode.BackColor = Color.White;
+        }
     }
 }

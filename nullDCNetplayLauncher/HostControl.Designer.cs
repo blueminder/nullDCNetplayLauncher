@@ -112,6 +112,7 @@
             this.txtOpponentIP.Name = "txtOpponentIP";
             this.txtOpponentIP.Size = new System.Drawing.Size(118, 20);
             this.txtOpponentIP.TabIndex = 72;
+            this.txtOpponentIP.TextChanged += new System.EventHandler(this.txtOpponentIP_TextChanged);
             // 
             // btnLaunchGame
             // 
@@ -144,6 +145,7 @@
             this.txtHostCode.Name = "txtHostCode";
             this.txtHostCode.Size = new System.Drawing.Size(176, 20);
             this.txtHostCode.TabIndex = 69;
+            this.txtHostCode.TextChanged += new System.EventHandler(this.txtHostCode_TextChanged);
             // 
             // lblVerifyDelay
             // 
@@ -198,6 +200,7 @@
             0,
             0,
             0});
+            this.numDelay.ValueChanged += new System.EventHandler(this.numDelay_ValueChanged);
             // 
             // grpAdvanced
             // 
@@ -217,7 +220,7 @@
             this.grpAdvanced.Margin = new System.Windows.Forms.Padding(2);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Padding = new System.Windows.Forms.Padding(4);
-            this.grpAdvanced.Size = new System.Drawing.Size(216, 137);
+            this.grpAdvanced.Size = new System.Drawing.Size(150, 46);
             this.grpAdvanced.TabIndex = 59;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Options";
