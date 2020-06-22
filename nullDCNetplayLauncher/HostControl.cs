@@ -290,11 +290,13 @@ namespace nullDCNetplayLauncher
 
         private void btnExpandCollapse_Click(object sender, EventArgs e)
         {
-            if(splitHost.Panel2Collapsed)
+            var win = this.Parent;
+            if (splitHost.Panel2Collapsed)
             {
-                this.Height = this.MinimumSize.Height;
+                //this.Size = this.MinimumSize.Size;
                 //this.Height = splitHost.Panel1.Height;
-
+                
+                win.Size = win.MaximumSize;
                 //splitHost.IsSplitterFixed = false;
                 //this.Width = splitHost.MaximumSize.Width;
                 //this.Height = splitHost.MaximumSize.Height;
@@ -303,8 +305,8 @@ namespace nullDCNetplayLauncher
             }
             else
             {
-                this.Height = this.MaximumSize.Height;
-                
+                //this.Size = this.MaximumSize.Size;
+                win.Size = win.MinimumSize;
                 //splitHost.IsSplitterFixed = false;
                 //this.Width = splitHost.MinimumSize.Width;
                 //this.Height = splitHost.MinimumSize.Height;

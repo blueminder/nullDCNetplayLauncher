@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Configuration;
 using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -164,6 +165,9 @@ namespace nullDCNetplayLauncher
                 Icon = nullDCNetplayLauncher.Properties.Resources.round_multiple_stop_black_24dp
             };
 
+            window.MinimumSize = new Size(230, 195);
+            window.MaximumSize = new Size(230, 355);
+            window.Size = window.MinimumSize;
             window.Controls.Add(hc);
             hc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
