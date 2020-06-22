@@ -196,10 +196,10 @@
   <data name="nulldc_1_0_4_en_win_zip" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\nulldc-1-0-4-en-win.zip;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="nullDC_cfg" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\nullDC.cfg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="round_publish_black_18dp2" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\resources\round_publish_black_18dp.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="nullDC_cfg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\nullDC.cfg;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
