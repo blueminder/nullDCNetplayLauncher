@@ -53,6 +53,8 @@
             this.cboGameSelect.Size = new System.Drawing.Size(255, 21);
             this.cboGameSelect.TabIndex = 38;
             this.cboGameSelect.SelectedIndexChanged += new System.EventHandler(this.cboGameSelect_SelectedIndexChanged);
+            this.cboGameSelect.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboGameSelect.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cboGameSelect_DrawItem);
             // 
             // btnHost
             // 

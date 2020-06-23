@@ -271,6 +271,31 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        // https://stackoverflow.com/questions/4667532/colour-individual-items-in-a-winforms-combobox
+        private void cboGameSelect_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            // Draw the background 
+            e.DrawBackground();
+
+            // Get the item text    
+            //string text = ((ComboBox)sender).Items[e.Index].ToString();
+            string text = ((ComboBox)sender).Items[e.Index].ToString().Split(',')[0].Remove(0, 1);
+
+            // Determine the forecolor based on whether or not the item is selected    
+            Brush brush;
+            if (e.Index > 2)// compare  date with your list.  
+            {
+                brush = Brushes.LightCoral;
+            }
+            else
+            {
+                brush = Brushes.Black;
+            }
+
+            // Draw the text    
+            e.Graphics.DrawString(text, ((Control)sender).Font, brush, e.Bounds.X, e.Bounds.Y);
+        }
+
         private void cboGameSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cboGameSelect.SelectedValue != null)
