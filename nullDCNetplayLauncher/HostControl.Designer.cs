@@ -107,7 +107,7 @@
             // 
             // txtOpponentIP
             // 
-            this.txtOpponentIP.Location = new System.Drawing.Point(86, 6);
+            this.txtOpponentIP.Location = new System.Drawing.Point(88, 6);
             this.txtOpponentIP.Margin = new System.Windows.Forms.Padding(2);
             this.txtOpponentIP.Name = "txtOpponentIP";
             this.txtOpponentIP.Size = new System.Drawing.Size(118, 20);
@@ -116,10 +116,10 @@
             // 
             // btnLaunchGame
             // 
-            this.btnLaunchGame.Location = new System.Drawing.Point(4, 102);
+            this.btnLaunchGame.Location = new System.Drawing.Point(6, 102);
             this.btnLaunchGame.Margin = new System.Windows.Forms.Padding(2);
             this.btnLaunchGame.Name = "btnLaunchGame";
-            this.btnLaunchGame.Size = new System.Drawing.Size(202, 19);
+            this.btnLaunchGame.Size = new System.Drawing.Size(200, 19);
             this.btnLaunchGame.TabIndex = 71;
             this.btnLaunchGame.Text = "Launch Game";
             this.btnLaunchGame.UseVisualStyleBackColor = true;
@@ -130,7 +130,7 @@
             this.btnCopy.AutoSize = true;
             this.btnCopy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnCopy.Image = ((System.Drawing.Image)(resources.GetObject("btnCopy.Image")));
-            this.btnCopy.Location = new System.Drawing.Point(182, 76);
+            this.btnCopy.Location = new System.Drawing.Point(184, 76);
             this.btnCopy.Margin = new System.Windows.Forms.Padding(2);
             this.btnCopy.Name = "btnCopy";
             this.btnCopy.Size = new System.Drawing.Size(22, 22);
@@ -140,7 +140,7 @@
             // 
             // txtHostCode
             // 
-            this.txtHostCode.Location = new System.Drawing.Point(4, 77);
+            this.txtHostCode.Location = new System.Drawing.Point(6, 77);
             this.txtHostCode.Margin = new System.Windows.Forms.Padding(2);
             this.txtHostCode.Name = "txtHostCode";
             this.txtHostCode.Size = new System.Drawing.Size(176, 20);
@@ -150,7 +150,7 @@
             // lblVerifyDelay
             // 
             this.lblVerifyDelay.AutoSize = true;
-            this.lblVerifyDelay.Location = new System.Drawing.Point(7, 30);
+            this.lblVerifyDelay.Location = new System.Drawing.Point(9, 30);
             this.lblVerifyDelay.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblVerifyDelay.Name = "lblVerifyDelay";
             this.lblVerifyDelay.Size = new System.Drawing.Size(63, 13);
@@ -160,7 +160,7 @@
             // lblHostnameIP
             // 
             this.lblHostnameIP.AutoSize = true;
-            this.lblHostnameIP.Location = new System.Drawing.Point(7, 8);
+            this.lblHostnameIP.Location = new System.Drawing.Point(9, 8);
             this.lblHostnameIP.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHostnameIP.Name = "lblHostnameIP";
             this.lblHostnameIP.Size = new System.Drawing.Size(67, 13);
@@ -169,7 +169,7 @@
             // 
             // btnGenHostCode
             // 
-            this.btnGenHostCode.Location = new System.Drawing.Point(4, 53);
+            this.btnGenHostCode.Location = new System.Drawing.Point(6, 53);
             this.btnGenHostCode.Margin = new System.Windows.Forms.Padding(2);
             this.btnGenHostCode.Name = "btnGenHostCode";
             this.btnGenHostCode.Size = new System.Drawing.Size(200, 19);
@@ -180,7 +180,7 @@
             // 
             // btnGuess
             // 
-            this.btnGuess.Location = new System.Drawing.Point(124, 27);
+            this.btnGuess.Location = new System.Drawing.Point(126, 27);
             this.btnGuess.Name = "btnGuess";
             this.btnGuess.Size = new System.Drawing.Size(80, 20);
             this.btnGuess.TabIndex = 74;
@@ -190,7 +190,7 @@
             // 
             // numDelay
             // 
-            this.numDelay.Location = new System.Drawing.Point(86, 28);
+            this.numDelay.Location = new System.Drawing.Point(88, 28);
             this.numDelay.Margin = new System.Windows.Forms.Padding(2);
             this.numDelay.Name = "numDelay";
             this.numDelay.Size = new System.Drawing.Size(33, 20);
@@ -220,7 +220,7 @@
             this.grpAdvanced.Margin = new System.Windows.Forms.Padding(2);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Padding = new System.Windows.Forms.Padding(4);
-            this.grpAdvanced.Size = new System.Drawing.Size(150, 46);
+            this.grpAdvanced.Size = new System.Drawing.Size(216, 137);
             this.grpAdvanced.TabIndex = 59;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Options";
@@ -228,16 +228,16 @@
             // cboMethod
             // 
             this.cboMethod.FormattingEnabled = true;
-            this.cboMethod.Location = new System.Drawing.Point(83, 96);
+            this.cboMethod.Location = new System.Drawing.Point(83, 95);
             this.cboMethod.Margin = new System.Windows.Forms.Padding(2);
             this.cboMethod.Name = "cboMethod";
-            this.cboMethod.Size = new System.Drawing.Size(96, 21);
+            this.cboMethod.Size = new System.Drawing.Size(105, 21);
             this.cboMethod.TabIndex = 71;
             // 
             // lblMethod
             // 
             this.lblMethod.AutoSize = true;
-            this.lblMethod.Location = new System.Drawing.Point(28, 100);
+            this.lblMethod.Location = new System.Drawing.Point(28, 98);
             this.lblMethod.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblMethod.Name = "lblMethod";
             this.lblMethod.Size = new System.Drawing.Size(43, 13);
@@ -247,7 +247,7 @@
             // btnSavePreset
             // 
             this.btnSavePreset.Image = ((System.Drawing.Image)(resources.GetObject("btnSavePreset.Image")));
-            this.btnSavePreset.Location = new System.Drawing.Point(155, 24);
+            this.btnSavePreset.Location = new System.Drawing.Point(166, 24);
             this.btnSavePreset.Margin = new System.Windows.Forms.Padding(2);
             this.btnSavePreset.Name = "btnSavePreset";
             this.btnSavePreset.Size = new System.Drawing.Size(22, 22);
@@ -258,7 +258,7 @@
             // btnDeletePreset
             // 
             this.btnDeletePreset.Image = ((System.Drawing.Image)(resources.GetObject("btnDeletePreset.Image")));
-            this.btnDeletePreset.Location = new System.Drawing.Point(134, 24);
+            this.btnDeletePreset.Location = new System.Drawing.Point(144, 24);
             this.btnDeletePreset.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeletePreset.Name = "btnDeletePreset";
             this.btnDeletePreset.Size = new System.Drawing.Size(22, 22);
@@ -269,10 +269,10 @@
             // cboPresetName
             // 
             this.cboPresetName.FormattingEnabled = true;
-            this.cboPresetName.Location = new System.Drawing.Point(28, 26);
+            this.cboPresetName.Location = new System.Drawing.Point(31, 26);
             this.cboPresetName.Margin = new System.Windows.Forms.Padding(2);
             this.cboPresetName.Name = "cboPresetName";
-            this.cboPresetName.Size = new System.Drawing.Size(102, 21);
+            this.cboPresetName.Size = new System.Drawing.Size(108, 21);
             this.cboPresetName.TabIndex = 58;
             this.cboPresetName.SelectedIndexChanged += new System.EventHandler(this.cboPresetName_SelectedIndexChanged);
             // 
@@ -282,8 +282,9 @@
             this.cboHostIP.Location = new System.Drawing.Point(83, 54);
             this.cboHostIP.Margin = new System.Windows.Forms.Padding(2);
             this.cboHostIP.Name = "cboHostIP";
-            this.cboHostIP.Size = new System.Drawing.Size(96, 21);
+            this.cboHostIP.Size = new System.Drawing.Size(105, 21);
             this.cboHostIP.TabIndex = 2;
+            this.cboHostIP.SelectedIndexChanged += new System.EventHandler(this.cboHostIP_SelectedIndexChanged);
             // 
             // lblHostIP
             // 
@@ -297,17 +298,17 @@
             // 
             // txtHostPort
             // 
-            this.txtHostPort.Location = new System.Drawing.Point(83, 76);
+            this.txtHostPort.Location = new System.Drawing.Point(83, 75);
             this.txtHostPort.Margin = new System.Windows.Forms.Padding(2);
             this.txtHostPort.Name = "txtHostPort";
-            this.txtHostPort.Size = new System.Drawing.Size(96, 20);
+            this.txtHostPort.Size = new System.Drawing.Size(105, 20);
             this.txtHostPort.TabIndex = 61;
             this.txtHostPort.Text = "27886";
             // 
             // lblHostPort
             // 
             this.lblHostPort.AutoSize = true;
-            this.lblHostPort.Location = new System.Drawing.Point(28, 80);
+            this.lblHostPort.Location = new System.Drawing.Point(28, 78);
             this.lblHostPort.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHostPort.Name = "lblHostPort";
             this.lblHostPort.Size = new System.Drawing.Size(51, 13);

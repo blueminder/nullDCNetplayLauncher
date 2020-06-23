@@ -33,19 +33,26 @@ namespace nullDCNetplayLauncher
             cboMethod.ValueMember = "Value";
         }
 
-        private void btnGuess_Click(object sender, EventArgs e)
+        private void GuessDelay(string ip)
         {
-            long guessedDelay = Launcher.GuessDelay(txtHostIP.Text);
+            long guessedDelay = Launcher.GuessDelay(ip);
             if (guessedDelay >= 0)
             {
-                numDelay.BackColor = Color.White;
                 numDelay.Value = guessedDelay;
+                txtOpponentIP.BackColor = Color.Honeydew;
+                numDelay.BackColor = Color.Honeydew;
             }
             else
             {
-                numDelay.BackColor = Color.Tomato;
                 numDelay.Text = "";
+                txtOpponentIP.BackColor = Color.LightCoral;
+                numDelay.BackColor = Color.LightCoral;
             }
+        }
+
+        private void btnGuess_Click(object sender, EventArgs e)
+        {
+            GuessDelay(txtOpponentIP.Text);
         }
 
         private void btnLaunchGame_Click(object sender, EventArgs e)
@@ -53,7 +60,7 @@ namespace nullDCNetplayLauncher
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: false,
-                hostAddress: txtHostIP.Text,
+                hostAddress: txtOpponentIP.Text,
                 hostPort: txtHostPort.Text,
                 frameDelay: Convert.ToInt32(numDelay.Value)
                                    .ToString());
@@ -71,7 +78,7 @@ namespace nullDCNetplayLauncher
             txtHostCode.BackColor = Color.White;
         }
 
-        private void txtHostPort_GotFocus(object sender, EventArgs e)
+        private void txtGuestPort_GotFocus(object sender, EventArgs e)
         {
             txtHostPort.BackColor = Color.White;
         }
@@ -88,6 +95,7 @@ namespace nullDCNetplayLauncher
 
         private void txtHostCode_TextChanged(object sender, EventArgs e)
         {
+            txtHostCode.BackColor = Color.White;
             string base64Pattern = @"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9 +/]{3}=)?$";
             bool isBase64 = Regex.IsMatch(txtHostCode.Text, base64Pattern);
             if (isBase64 || txtHostCode.Text == "")
@@ -98,16 +106,31 @@ namespace nullDCNetplayLauncher
                 {
                     cboPresetName.Text = "";
 
+                    txtHostCode.BackColor = Color.LemonChiffon;
+
+                    txtOpponentIP.BackColor = Color.Honeydew;
+                    numDelay.BackColor = Color.Honeydew;
+
                     txtHostIP.BackColor = Color.LemonChiffon;
                     txtHostPort.BackColor = Color.LemonChiffon;
-                    numDelay.BackColor = Color.LemonChiffon;
                     cboMethod.BackColor = Color.LemonChiffon;
 
+                    txtOpponentIP.Text = hostInfo.IP;
                     txtHostIP.Text = hostInfo.IP;
                     txtHostPort.Text = hostInfo.Port;
                     numDelay.Value = Convert.ToInt32(hostInfo.Delay);
 
-                    cboMethod.SelectedValue = Convert.ToInt32(hostInfo.Method);
+                    var oldMethod = Convert.ToInt32(cboMethod.SelectedValue);
+                    var newMethod = Convert.ToInt32(hostInfo.Method);
+                    cboMethod.SelectedValue = newMethod;
+
+                    if (oldMethod != newMethod)
+                    {
+                        splitGuest.Panel2Collapsed = false;
+
+                        var win = this.Parent;
+                        win.Size = win.MaximumSize;
+                    }
                 }
             }
         }
@@ -117,7 +140,7 @@ namespace nullDCNetplayLauncher
             var toEdit = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
             if (toEdit != null)
             {
-                toEdit.IP = txtHostIP.Text;
+                toEdit.IP = txtOpponentIP.Text;
                 toEdit.Port = txtHostPort.Text;
                 toEdit.Delay = numDelay.Value;
                 toEdit.Method = Convert.ToInt32(cboMethod.SelectedValue);
@@ -126,7 +149,7 @@ namespace nullDCNetplayLauncher
             {
                 var toAdd = new ConnectionPreset();
                 toAdd.Name = cboPresetName.Text;
-                toAdd.IP = txtHostIP.Text;
+                toAdd.IP = txtOpponentIP.Text;
                 toAdd.Port = txtHostPort.Text;
                 toAdd.Delay = numDelay.Value;
                 toAdd.Method = Convert.ToInt32(cboMethod.SelectedValue);
@@ -177,6 +200,8 @@ namespace nullDCNetplayLauncher
             ConnectionPreset toLoad = presets.ConnectionPresets.FirstOrDefault(p => p.Name == presetName);
             if (toLoad != null)
             {
+                txtHostCode.Text = "";
+                txtOpponentIP.Text = toLoad.IP;
                 txtHostIP.Text = toLoad.IP;
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
@@ -201,13 +226,30 @@ namespace nullDCNetplayLauncher
 
         private void cboPresetName_SelectedIndexChanged(object sender, EventArgs e)
         {
+            txtHostCode.Text = "";
             cboPresetName.BackColor = Color.White;
             txtHostCode.BackColor = Color.White;
+            txtOpponentIP.BackColor = Color.White;
             txtHostIP.BackColor = Color.White;
             txtHostPort.BackColor = Color.White;
             numDelay.BackColor = Color.White;
+            cboMethod.BackColor = Color.White;
             LoadPreset(cboPresetName.Text);
         }
 
+        private void btnExpandCollapse_Click(object sender, EventArgs e)
+        {
+            var win = this.Parent;
+            if (splitGuest.Panel2Collapsed)
+            {
+                win.Size = win.MaximumSize;
+                splitGuest.Panel2Collapsed = false;
+            }
+            else
+            {
+                win.Size = win.MinimumSize;
+                splitGuest.Panel2Collapsed = true;
+            }
+        }
     }
 }

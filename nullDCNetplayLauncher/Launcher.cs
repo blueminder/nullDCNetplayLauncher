@@ -26,6 +26,8 @@ namespace nullDCNetplayLauncher
 
         public static bool FilesRestored = false;
 
+        public static NetworkQuery NetQuery;
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
@@ -34,6 +36,7 @@ namespace nullDCNetplayLauncher
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
 
+            NetQuery = new NetworkQuery();
         }
 
         // the qkoJAMMA plugin sometimes generates blank QJC files and rewrites malformed file

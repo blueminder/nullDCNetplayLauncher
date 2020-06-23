@@ -36,19 +36,21 @@ namespace nullDCNetplayLauncher
             cboMethod.DataSource = new BindingSource(Launcher.MethodOptions, null);
             cboMethod.DisplayMember = "Key";
             cboMethod.ValueMember = "Value";
+            
 
-            cboHostIP.DataSource = new BindingSource(GetIPsByNetwork(), null);
+            cboHostIP.DataSource = new BindingSource(Launcher.NetQuery.LocalIPsByNetwork, null);
             cboHostIP.DisplayMember = "Value";
             cboHostIP.ValueMember = "Value";
-
+            
             String hostIP;
-            if (GetRadminHostIP() != null)
-                hostIP = GetRadminHostIP();
-            else if (GetExternalIP() != null)
-                hostIP = GetExternalIP();
+            if (NetworkQuery.GetRadminHostIP() != null)
+                hostIP = NetworkQuery.GetRadminHostIP();
+            else if (NetworkQuery.GetExternalIP() != null)
+                hostIP = NetworkQuery.GetExternalIP();
             else
-                hostIP = GetIPsByNetwork().Values.First();
+                hostIP = (string)Launcher.NetQuery.LocalIPsByNetwork.First().Value;
             cboHostIP.SelectedValue = hostIP;
+            
         }
 
         public void SavePreset(string presetName)
@@ -123,9 +125,9 @@ namespace nullDCNetplayLauncher
             }
         }
 
-        private void btnGuess_Click(object sender, EventArgs e)
+        private void GuessDelay(string ip)
         {
-            long guessedDelay = Launcher.GuessDelay(txtOpponentIP.Text);
+            long guessedDelay = Launcher.GuessDelay(ip);
             if (guessedDelay >= 0)
             {
                 numDelay.Value = guessedDelay;
@@ -140,6 +142,11 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        private void btnGuess_Click(object sender, EventArgs e)
+        {
+            GuessDelay(txtOpponentIP.Text);
+        }
+
         private void btnGenHostCode_Click(object sender, EventArgs e)
         {
             var hostCode = Launcher.GenerateHostCode(cboHostIP.Text,
@@ -147,6 +154,7 @@ namespace nullDCNetplayLauncher
                                                      Convert.ToInt32(numDelay.Value).ToString(),
                                                      Convert.ToInt32(cboMethod.SelectedValue).ToString());
             txtHostCode.Text = hostCode;
+            txtHostCode.BackColor = Color.Honeydew;
         }
 
         private void btnLaunchGame_Click(object sender, EventArgs e)
@@ -220,109 +228,27 @@ namespace nullDCNetplayLauncher
             LoadPreset(cboPresetName.Text);
         }
 
-        private void cboHostnameIP_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        /// <summary> 
-        /// This utility function displays all the IPv4 addresses of the local computer. 
-        /// </summary> 
-        /// https://blog.stephencleary.com/2009/05/getting-local-ip-addresses.html
-        public static Dictionary<String, String> GetIPsByNetwork()
-        {
-            var IPsByNetwork = new Dictionary<String, String>();
-
-            var externalIP = GetExternalIP();
-            if (externalIP != null)
-                IPsByNetwork.Add("External", externalIP);
-
-            NetworkInterface[] networkInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-
-            foreach (NetworkInterface network in networkInterfaces)
-            {
-                IPInterfaceProperties properties = network.GetIPProperties();
-                foreach (IPAddressInformation address in properties.UnicastAddresses)
-                {
-                    if (address.Address.AddressFamily != AddressFamily.InterNetwork)
-                        continue;
-
-                    if (IPAddress.IsLoopback(address.Address))
-                        continue;
-
-                    IPsByNetwork[network.Name] = address.Address.ToString();
-                }
-            }
-
-            return IPsByNetwork;
-        }
-
-        private static string GetExternalIP()
-        {
-            try
-            {
-                string externalIP;
-                externalIP = (new WebClient()).DownloadString("http://checkip.dyndns.org/");
-                externalIP = (new Regex(@"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}"))
-                             .Matches(externalIP)[0].ToString();
-                return externalIP;
-            }
-            catch { return null; }
-        }
-
-        public static String GetRadminHostIP()
-        {
-            String radminHostIP;
-            try
-            {
-                radminHostIP = GetIPsByNetwork()["Radmin VPN"];
-            }
-            catch
-            {
-                radminHostIP = null;
-            }
-            return radminHostIP;
-        }
-
-        private void btnGuessAgain_Click(object sender, EventArgs e)
-        {
-            var RadminHostIP = GetIPsByNetwork()["Radmin VPN"];
-            MessageBox.Show(RadminHostIP);
-        }
-
         private void btnExpandCollapse_Click(object sender, EventArgs e)
         {
             var win = this.Parent;
             if (splitHost.Panel2Collapsed)
             {
-                //this.Size = this.MinimumSize.Size;
-                //this.Height = splitHost.Panel1.Height;
-                
                 win.Size = win.MaximumSize;
-                //splitHost.IsSplitterFixed = false;
-                //this.Width = splitHost.MaximumSize.Width;
-                //this.Height = splitHost.MaximumSize.Height;
-                //btnExpandCollapse.Text = "▼                    ▼";
                 splitHost.Panel2Collapsed = false;
             }
             else
             {
-                //this.Size = this.MaximumSize.Size;
                 win.Size = win.MinimumSize;
-                //splitHost.IsSplitterFixed = false;
-                //this.Width = splitHost.MinimumSize.Width;
-                //this.Height = splitHost.MinimumSize.Height;
-                //splitHost.Size = splitHost.MaximumSize;
-                //btnExpandCollapse.Text = "▲                    ▲";
                 splitHost.Panel2Collapsed = true;
             }
-            
-            
         }
 
         private void txtOpponentIP_TextChanged(object sender, EventArgs e)
         {
-            txtOpponentIP.BackColor = Color.White;
+            if (NetworkQuery.ValidateIPv4(txtOpponentIP.Text))
+                GuessDelay(txtOpponentIP.Text);
+            else
+                txtOpponentIP.BackColor = Color.White;
         }
 
         private void numDelay_ValueChanged(object sender, EventArgs e)
@@ -333,6 +259,11 @@ namespace nullDCNetplayLauncher
         private void txtHostCode_TextChanged(object sender, EventArgs e)
         {
             txtHostCode.BackColor = Color.White;
+        }
+
+        private void cboHostIP_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtHostCode.Text = "";
         }
     }
 }
