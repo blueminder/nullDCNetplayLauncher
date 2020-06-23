@@ -290,5 +290,26 @@ namespace nullDCNetplayLauncher
             ReloadRomList();
         }
 
+        private void btnHelp_Click(object sender, EventArgs e)
+        {
+            WebBrowser wb = new WebBrowser();
+            string readme_html = Properties.Resources.README_html;
+            wb.DocumentText = readme_html;
+            wb.Size = new Size(800, 600);
+
+            Form window = new Form
+            {
+                Text = "Help",
+                TopLevel = true,
+                FormBorderStyle = FormBorderStyle.Fixed3D,
+                MaximizeBox = false,
+                MinimizeBox = true,
+                ClientSize = wb.Size,
+                Icon = nullDCNetplayLauncher.Properties.Resources.round_not_listed_location_black_18dp1
+            };
+            window.Controls.Add(wb);
+            wb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            window.Show();
+        }
     }
 }

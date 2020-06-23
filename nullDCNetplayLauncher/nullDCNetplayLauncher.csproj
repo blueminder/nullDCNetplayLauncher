@@ -277,6 +277,12 @@
   <ItemGroup>
     <Content Include="naomi.ico" />
     <None Include="Resources\GamePadMappingList.xml" />
+    <None Include="Resources\round_not_listed_location_black_18dp.png" />
+    <None Include="Resources\round_not_listed_location_black_18dp.ico" />
+    <None Include="Resources\file_drop_demo.gif" />
+    <None Include="Resources\host_demo.gif" />
+    <None Include="Resources\join_demo.gif" />
+    <None Include="Resources\README.html" />
     <Content Include="Resources\round_publish_black_18dp.ico" />
     <None Include="Resources\outline_highlight_alt_black_48dp.png" />
     <None Include="Resources\round_publish_black_18dp.png" />
