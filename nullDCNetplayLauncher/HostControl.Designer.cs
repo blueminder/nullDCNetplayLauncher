@@ -111,7 +111,7 @@
             this.txtOpponentIP.Margin = new System.Windows.Forms.Padding(2);
             this.txtOpponentIP.Name = "txtOpponentIP";
             this.txtOpponentIP.Size = new System.Drawing.Size(118, 20);
-            this.txtOpponentIP.TabIndex = 72;
+            this.txtOpponentIP.TabIndex = 67;
             this.txtOpponentIP.TextChanged += new System.EventHandler(this.txtOpponentIP_TextChanged);
             // 
             // btnLaunchGame
@@ -220,7 +220,7 @@
             this.grpAdvanced.Margin = new System.Windows.Forms.Padding(2);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Padding = new System.Windows.Forms.Padding(4);
-            this.grpAdvanced.Size = new System.Drawing.Size(216, 137);
+            this.grpAdvanced.Size = new System.Drawing.Size(150, 46);
             this.grpAdvanced.TabIndex = 59;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Options";

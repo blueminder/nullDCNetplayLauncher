@@ -31,6 +31,8 @@ namespace nullDCNetplayLauncher
             cboMethod.DataSource = new BindingSource(Launcher.MethodOptions, null);
             cboMethod.DisplayMember = "Key";
             cboMethod.ValueMember = "Value";
+
+            txtOpponentIP.Text = "";
         }
 
         private void GuessDelay(string ip)
