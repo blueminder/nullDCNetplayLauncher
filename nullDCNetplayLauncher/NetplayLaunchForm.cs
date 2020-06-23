@@ -297,12 +297,21 @@ namespace nullDCNetplayLauncher
             ReloadRomList();
         }
 
+        public void wb_Navigating(object sender, WebBrowserNavigatingEventArgs e)
+        {
+            e.Cancel = true;
+            // open links in default browser
+            Process.Start(e.Url.ToString());
+        }
+
         private void btnHelp_Click(object sender, EventArgs e)
         {
             WebBrowser wb = new WebBrowser();
             string readme_html = Properties.Resources.README_html;
             wb.DocumentText = readme_html;
             wb.Size = new Size(800, 600);
+
+            wb.Navigating += new WebBrowserNavigatingEventHandler(this.wb_Navigating);
 
             Form window = new Form
             {
@@ -318,5 +327,7 @@ namespace nullDCNetplayLauncher
             wb.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.Show();
         }
+
+        
     }
 }
