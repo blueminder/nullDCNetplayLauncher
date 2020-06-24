@@ -140,7 +140,7 @@ namespace nullDCNetplayLauncher
 
             JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
 
-            var path = games.FirstOrDefault(x => x.Value<string>("gameid") == $"nulldc_{gameid}").Value<string>("path");
+            var path = games.FirstOrDefault(x => x.Value<string>("id") == $"nulldc_{gameid}").Value<string>("path");
             path = RomDir + path;
 
             return path;
