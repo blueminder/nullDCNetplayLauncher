@@ -92,8 +92,16 @@ namespace nullDCNetplayLauncher
 
         private void ReloadRomList()
         {
-            //if (File.Exists(Launcher.rootDir + "games.json"))
-            romDict = ScanRomsFromJson();
+            if (File.Exists(Launcher.rootDir + "games.json") 
+                && File.ReadAllText(Launcher.rootDir + "games.json").Contains("reference_url"))
+            {
+                romDict = ScanRomsFromJson();
+            }
+            else
+            {
+                romDict = ScanRoms();
+            }
+            
             
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
@@ -235,13 +243,12 @@ namespace nullDCNetplayLauncher
 
             string GameJsonPath = Launcher.rootDir + "games.json";
 
-            JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
-
             var romDict = new Dictionary<string, string>();
             List<Game> all;
             try
             {
-                GamesJson = JsonConvert.DeserializeObject<List<Game>>(File.ReadAllText(GameJsonPath));
+                var GamesJsonTxt = File.ReadAllText(GameJsonPath);
+                GamesJson = JsonConvert.DeserializeObject<List<Game>>(GamesJsonTxt);
                 all = GamesJson.Where(g => g.Root == "roms").ToList();
 
                 foreach(Game game in all)
@@ -265,20 +272,6 @@ namespace nullDCNetplayLauncher
             }
 
             return romDict;
-        }
-
-        private string GetReferenceUrlFromGameId(string gameid)
-        {
-            string NullDir = Launcher.rootDir + "nulldc-1-0-4-en-win\\";
-            string RomDir = NullDir + "roms\\";
-
-            string GameJsonPath = Launcher.rootDir + "games.json";
-
-            JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
-
-            var url = games.FirstOrDefault(x => x.Value<string>("gameid") == $"nulldc_{gameid}").Value<string>("reference_url");
-            
-            return url;
         }
 
         private void btnSettings_Click(object sender, EventArgs e)
@@ -337,17 +330,13 @@ namespace nullDCNetplayLauncher
         // https://stackoverflow.com/questions/4667532/colour-individual-items-in-a-winforms-combobox
         private void cboGameSelect_DrawItem(object sender, DrawItemEventArgs e)
         {
-            // Draw the background 
             e.DrawBackground();
-            // Get the item text    
-            //string text = ((ComboBox)sender).Items[e.Index].ToString();
-            //string text = ((ComboBox)sender).Items[e.Index].ToString().Split(',')[0].Remove(0, 1);
+
             string displayMemberText = ((ComboBox)sender).GetItemText(((ComboBox)sender).Items[e.Index]);
             var item = (System.Collections.Generic.KeyValuePair<string, string>)((ComboBox)sender).Items[e.Index];
 
-            // Determine the forecolor based on whether or not the item is selected    
             Brush brush;
-            if (item.Value.Equals(""))// compare  date with your list.  
+            if (item.Value.Equals(""))
             {
                 brush = Brushes.LightCoral;
             }
@@ -355,8 +344,7 @@ namespace nullDCNetplayLauncher
             {
                 brush = Brushes.Black;
             }
-
-            // Draw the text    
+    
             e.Graphics.DrawString(displayMemberText, ((Control)sender).Font, brush, e.Bounds.X, e.Bounds.Y);
         }
 
@@ -371,7 +359,10 @@ namespace nullDCNetplayLauncher
                 ReferenceFound = (SelectedGame.ReferenceUrl != null);
             if ((string)cboGameSelect.SelectedValue == "" && ReferenceFound)
             {
-                DialogResult dialogResult = MessageBox.Show($"{cboGameSelect.Text} not installed.\nWould you like to retrieve it?", cboGameSelect.Text, MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show(
+                    $"{cboGameSelect.Text} not installed.\nWould you like to retrieve it?", 
+                    "Missing ROM", 
+                    MessageBoxButtons.YesNo);
                 switch(dialogResult)
                 {
                     case (DialogResult.Yes):
@@ -407,17 +398,17 @@ namespace nullDCNetplayLauncher
                                     System.IO.Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));
                                     entry.ExtractToFile(destinationFile, true);
                                     var matchingSum = (fileEntry.Md5Sum.ToLower() == Asset.CalculateMD5(destinationFile));
-                                    Console.WriteLine($"{fileEntry.Md5Sum.ToLower()} {Asset.CalculateMD5(destinationFile)}");
                                     if (matchingSum)
-                                        Console.WriteLine($"{fileEntry.Destination} Successfully Verified");
+                                        Console.WriteLine($"{fileEntry.Destination} Successfully Verified - MD5: {Asset.CalculateMD5(destinationFile)}");
                                     else
-                                        Console.WriteLine($"{fileEntry.Destination} Verification Failed");
+                                        Console.WriteLine($"{fileEntry.Destination} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}");
                                 }
                                     
                             }
                         }
-                        //File.Delete(zipPath);
+                        File.Delete(zipPath);
 
+                        Console.WriteLine($"\nPress any key to continue.");
                         Console.ReadKey();
                         Program.HideConsoleWindow();
                         var old = cboGameSelect.SelectedIndex;
@@ -430,7 +421,6 @@ namespace nullDCNetplayLauncher
             }
             else if (cboGameSelect.SelectedValue != null)
                 Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
-
 
         }
 
