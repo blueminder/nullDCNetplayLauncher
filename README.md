@@ -1,5 +1,5 @@
-# NullDC-NAOMI Netplay Launcher Distribution 0.6.3.3
-Configuration optimized by blueminder *(June 21, 2020)*
+# NullDC-NAOMI Netplay Launcher Distribution 0.6.4
+Configuration optimized by blueminder *(June 24, 2020)*
 
 **Special Thanks**
 
@@ -7,7 +7,7 @@ Configuration optimized by blueminder *(June 21, 2020)*
 - [MarioBrotha](https://github.com/MarioBrotha) of FGC Arcadia Discord (nullDCMultiLauncher, nullDCControlSetup)
 - [RossenX](https://github.com/RossenX) of FGC Arcadia Discord for Netplay optimizations
 - [poliva](https://github.com/poliva) & [JordiRos](https://github.com/JordiRos) of [Fightcade](https://web.fightcade.com/) for integration & testing
-- BRBS of FGC Arcadia Discord for jumping on every beta as it comes out and providing feedback
+- BRBS of FGC Arcadia Discord for jumping on every beta as it comes out and providing feedback.
 - DQRF of GGXXACR Discord
 - RaptorIIRC
 - Teyah
@@ -53,6 +53,8 @@ Dreamcast CDI and GDI ROMs are unsupported at this time. The directory names the
 
 2. Press the Controller Icon in the bottom left corner. Be sure that only one game controller is plugged in and follow the prompts.
 
+   ![setup_demo](setup_demo.gif)
+
 3. Select any ROM from the drop-down menu, and press the *Play Offline* button
 
 This will launch your ROM of choice in NullDC, giving you an opportunity to test your inputs. If this works and you are assigned to Player 1, then you're all set for netplay!
@@ -73,32 +75,34 @@ The rest of the instructions assume that Radmin is installed, but this should wo
 
    - **Hosting a Game**
 
-      If you are hosting, be sure to copy your IP from Radmin to the launcher's *Host IP* column. Save this as a preset so that the Launcher has your default host details handy. 
-
-      Copy your target's IP from Radmin and paste it in the *Guest IP* column. From there, press the *Guess* button to determine an adequate Delay value based on your distance and ping times. If you are unable to connect, the Delay field will clear and turn red.
+      Copy your target's IP from Radmin and paste it in the *Opponent IP* column. From there, the Launcher will automatically guess the Delay setting for your match based on your distance and ping times. If you are unable to connect, the Delay field will clear and turn red. If applicable, press the *Guess* button to try again.
 
       Press *Generate Host Code* and press the Clipboard icon to copy the generated code.
 
-      Paste it to your opponent, and they should be able to generate the server details from there. Alternatively, you may give them your Host IP, Port, and Delay. Either method works.
+      Paste it to your opponent, and they should be able to generate the server details from there. Alternatively, you may expand the window and give them your Host IP, Port, and Delay. Either method works.
 
       Verify that you and your opponent have the same Delay set.
 
       Press the *Launch Game* button.
-      
-
-      ![Host Game Demo](host_demo.gif)
 
       
-
-   - **Joining a Game**
-
-      Paste the generated Host Code and server details should automatically be filled in. Alternatively, you may manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
-
-      Make sure you have your opponent's Radmin IP in the launcher's *Host IP* column. Verify that you and your opponent have the same Delay.
+      
+![Host Game Demo](simple-host-obfs.gif)
       
       
-      ![Join Game Demo](join_demo.gif)
-
+      
+- **Joining a Game**
+  
+   Paste the generated Host Code and server details should automatically be filled in. If any advanced options have been set by your host, your window will expand to reveal these options.
+   
+   Alternatively, you may expand your window to manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
+   
+   Make sure you have your opponent's Radmin IP in the launcher's *Opponent IP* column. Verify that you and your opponent have the same Delay.
+   
+   
+   
+   ![Join Game Demo](guest-pop-obfs.gif)
+   
    
 
 4. Press the *Launch Game* button.
@@ -165,6 +169,18 @@ If the option is available on your arcade stick, you can also try to select the 
 The very first step to troubleshooting network connectivity issues is to temporarily disable your firewalls to see if everything works in those conditions. You can do this in the "Windows Defender Firewall" Control Panel. If you are able to connect to each other when the firewall is off, verify your settings and make sure that you give `nullDC_Win32_Release-NoTrace.exe` permission to access private networks. If that doesn't work, enable public networks from there.
 
 When troubleshooting network issues, keep an eye on the Command Window for any details. This will be useful information for anyone who helps you in the [FGC Arcadia Discord](https://discord.com/invite/KczAkRr).
+
+------
+
+
+
+> Is there any way to change my Keyboard controls, or joystick controls manually without the aid of the launcher?
+
+You may edit your keyboard and joystick definitions by editing the'`.qkc` and  `.qjc`files respectively, found in the `nulldc-1-0-4-en-win\qkoJAMMA` directory. You may be able to access this folder directly by going to *Settings* > *Advanced* > *Open qkoJAMMA Folder*. You may edit these files with any text editor of your choice.
+
+If you are setting Keyboard keys, note that numpad and arrow keys are not supported at this time. A known workaround people have used is AutoHotkey. That said, expanding keyboard controls is anticipated in a future release, since arcade cabinets popularly use IPAC and similar devices that simulate keyboard inputs.
+
+If you are setting your joystick, be sure that the button numbers set in your corresponding `.qjc` file match your controller's definition in the *Windows Game Controllers*. You may also be able to find a shortcut to this in the *Settings* > *Advanced* menu.
 
 ------
 
