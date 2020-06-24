@@ -92,10 +92,13 @@ namespace nullDCNetplayLauncher
 
         private void ReloadRomList()
         {
+            var localRomDict = ScanRoms();
             if (File.Exists(Launcher.rootDir + "games.json") 
                 && File.ReadAllText(Launcher.rootDir + "games.json").Contains("reference_url"))
             {
-                romDict = ScanRomsFromJson();
+                var jsonRomDict = ScanRomsFromJson();
+                localRomDict.ToList().ForEach(r => jsonRomDict[r.Key] = r.Value);
+                romDict = jsonRomDict;
             }
             else
             {
