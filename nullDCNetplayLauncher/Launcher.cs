@@ -28,6 +28,8 @@ namespace nullDCNetplayLauncher
 
         public static NetworkQuery NetQuery;
 
+        public static List<Game> GamesJson;
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
@@ -37,7 +39,15 @@ namespace nullDCNetplayLauncher
             AssignActiveMapping();
 
             NetQuery = new NetworkQuery();
-        }
+
+            try
+            {
+                string GameJsonPath = Launcher.rootDir + "games.json";
+                var GamesJsonTxt = File.ReadAllText(GameJsonPath);
+                GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
+            }
+            catch (Exception) { };
+            }
 
         // the qkoJAMMA plugin sometimes generates blank QJC files and rewrites malformed file
         // upon exit for joysticks that are detected, but unused. this causes issues at startup
@@ -707,6 +717,57 @@ namespace nullDCNetplayLauncher
             }
 
             File.Delete(NullDcZipPath);
+        }
+
+        public class Game
+        {
+            [JsonProperty("id")]
+            public string ID { get; set; }
+
+            [JsonProperty("path")]
+            public string Name { get; set; }
+
+            [JsonProperty("reference_url")]
+            public string ReferenceUrl { get; set; }
+
+            [JsonProperty("files")]
+            public List<Asset> Assets { get; set; }
+
+            [JsonProperty("root")]
+            public string Root { get; set; }
+        }
+
+        public class Asset
+        {
+            [JsonProperty("src")]
+            public string Source { get; set; }
+
+            [JsonProperty("dst")]
+            public string Destination { get; set; }
+
+            [JsonProperty("md5")]
+            public string Md5Sum { get; set; }
+
+            public static string CalculateMD5(string filename)
+            {
+                using (var md5 = System.Security.Cryptography.MD5.Create())
+                {
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        var hash = md5.ComputeHash(stream);
+                        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    }
+                }
+            }
+
+            public string VerifyFile(string destinationFile)
+            {
+                var matchingSum = (Md5Sum.ToLower() == Asset.CalculateMD5(destinationFile));
+                if (matchingSum)
+                    return $"{Destination} Successfully Verified - MD5: {Asset.CalculateMD5(destinationFile)}";
+                else
+                    return $"{Destination} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}";
+            }
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CG.Web.MegaApiClient;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using WebClient = System.Net.WebClient;
 
 namespace nullDCNetplayLauncher
 {
@@ -28,8 +30,6 @@ namespace nullDCNetplayLauncher
 
         public static ControllerEngine controller;
         public static GamePadMapper gpm;
-
-        List<Game> GamesJson;
 
         public static Boolean EnableMapper = false;
         public static Boolean StartTray;
@@ -104,7 +104,6 @@ namespace nullDCNetplayLauncher
             {
                 romDict = ScanRoms();
             }
-            
             
             cboGameSelect.DataSource = new BindingSource(romDict, null);
             cboGameSelect.DisplayMember = "Key";
@@ -247,14 +246,14 @@ namespace nullDCNetplayLauncher
             string GameJsonPath = Launcher.rootDir + "games.json";
 
             var romDict = new Dictionary<string, string>();
-            List<Game> all;
+            List<Launcher.Game> all;
             try
             {
                 var GamesJsonTxt = File.ReadAllText(GameJsonPath);
-                GamesJson = JsonConvert.DeserializeObject<List<Game>>(GamesJsonTxt);
-                all = GamesJson.Where(g => g.Root == "roms").ToList();
+                Launcher.GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
+                all = Launcher.GamesJson.Where(g => g.Root == "roms").ToList();
 
-                foreach(Game game in all)
+                foreach(Launcher.Game game in all)
                 {
                     string RomPath = Path.Combine(NullDir, game.Root, game.Name, game.Assets.First().Destination);
                     if (File.Exists(RomPath))
@@ -269,7 +268,7 @@ namespace nullDCNetplayLauncher
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 romDict = ScanRoms();
             }
@@ -357,7 +356,7 @@ namespace nullDCNetplayLauncher
             string RomDir = NullDir + "roms\\";
 
             bool ReferenceFound = false;
-            Game SelectedGame = GamesJson.Where(g => g.Name == cboGameSelect.Text).FirstOrDefault();
+            Launcher.Game SelectedGame = Launcher.GamesJson.Where(g => g.Name == cboGameSelect.Text).FirstOrDefault();
             if (SelectedGame != null)
                 ReferenceFound = (SelectedGame.ReferenceUrl != null);
             if ((string)cboGameSelect.SelectedValue == "" && ReferenceFound)
@@ -378,10 +377,26 @@ namespace nullDCNetplayLauncher
                         
                         if(!File.Exists(zipPath))
                         {
-                            using (WebClient client = new WebClient())
+                            var referenceUri = new Uri(SelectedGame.ReferenceUrl);
+                            if (referenceUri.Host == "mega.nz")
                             {
-                                client.DownloadFile(new Uri(SelectedGame.ReferenceUrl),
-                                                    zipPath);
+                                MegaApiClient client = new MegaApiClient();
+                                client.LoginAnonymous();
+
+                                INodeInfo node = client.GetNodeFromLink(referenceUri);
+
+                                Console.WriteLine($"Downloading {node.Name}");
+                                client.DownloadFile(referenceUri, zipPath);
+
+                                client.Logout();
+                            }
+                            else
+                            {
+                                using (WebClient client = new WebClient())
+                                {
+                                    client.DownloadFile(referenceUri,
+                                                        zipPath);
+                                }
                             }
                         }
                         
@@ -391,7 +406,7 @@ namespace nullDCNetplayLauncher
                         var extractPath = RomDir + SelectedGame.Name;
                         using (ZipArchive archive = ZipFile.OpenRead(zipPath))
                         {
-                            List<Asset> files = SelectedGame.Assets;
+                            List<Launcher.Asset> files = SelectedGame.Assets;
                             foreach (ZipArchiveEntry entry in archive.Entries)
                             {
                                 var fileEntry = files.Where(f => f.Source == entry.Name).First();
@@ -400,13 +415,8 @@ namespace nullDCNetplayLauncher
                                     var destinationFile = Path.Combine(extractPath, fileEntry.Destination);
                                     System.IO.Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));
                                     entry.ExtractToFile(destinationFile, true);
-                                    var matchingSum = (fileEntry.Md5Sum.ToLower() == Asset.CalculateMD5(destinationFile));
-                                    if (matchingSum)
-                                        Console.WriteLine($"{fileEntry.Destination} Successfully Verified - MD5: {Asset.CalculateMD5(destinationFile)}");
-                                    else
-                                        Console.WriteLine($"{fileEntry.Destination} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}");
+                                    Console.WriteLine(fileEntry.VerifyFile(destinationFile));
                                 }
-                                    
                             }
                         }
                         File.Delete(zipPath);
@@ -481,46 +491,6 @@ namespace nullDCNetplayLauncher
         
     }
 
-    class Game
-    {
-        [JsonProperty("id")]
-        public string ID { get; set; }
 
-        [JsonProperty("path")]
-        public string Name { get; set; }
-
-        [JsonProperty("reference_url")]
-        public string ReferenceUrl { get; set; }
-
-        [JsonProperty("files")]
-        public List<Asset> Assets { get; set; }
-
-        [JsonProperty("root")]
-        public string Root { get; set; }
-    }
-
-    class Asset
-    {
-        [JsonProperty("src")]
-        public string Source { get; set; }
-
-        [JsonProperty("dst")]
-        public string Destination { get; set; }
-
-        [JsonProperty("md5")]
-        public string Md5Sum { get; set; }
-
-        public static string CalculateMD5(string filename)
-        {
-            using (var md5 = MD5.Create())
-            {
-                using (var stream = File.OpenRead(filename))
-                {
-                    var hash = md5.ComputeHash(stream);
-                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
-                }
-            }
-        }
-    }
 
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.IO.Compression;
+using System.Linq.Expressions;
 
 namespace nullDCNetplayLauncher
 {
@@ -76,16 +77,58 @@ namespace nullDCNetplayLauncher
                 }
                 else if (Path.GetExtension(path).Equals(".zip"))
                 {
-                    destpath += "roms\\" + Path.GetFileNameWithoutExtension(files[0]);
+                    bool zipHasEntry = false;
+                    var folderName = Path.GetFileNameWithoutExtension(files[0]);
+                    Launcher.Game GamesJsonEntry = null;
+                    if (Launcher.GamesJson != null)
+                    {
+                        try
+                        {
+                            GamesJsonEntry = Launcher.GamesJson.Where(g => g.Name == folderName).First();
+                            if (GamesJsonEntry != null && GamesJsonEntry.Assets.Count() > 0)
+                            {
+                                zipHasEntry = true;
+                            }
+                        }
+                        catch (Exception) { };
+                    }
+                    
+                    destpath += "roms\\" + folderName;
                     Directory.CreateDirectory(destpath);
                     lblDragInfo.Text = "Extracting ROM...";
                     if (File.Exists(path))
                     {
                         ZipArchive archive = ZipFile.OpenRead(path);
+                        if (zipHasEntry)
+                        {
+                            Program.ShowConsoleWindow();
+                            Console.Clear();
+                        }
                         foreach (ZipArchiveEntry entry in archive.Entries)
                         {
-                            entry.ExtractToFile(Path.Combine(destpath, entry.FullName), true);
+                            Launcher.Asset asset = null;
+
+                            if (GamesJsonEntry != null)
+                                asset = GamesJsonEntry.Assets.Where(a => a.Source == entry.Name).First();
+
+                            if (zipHasEntry)
+                            {
+                                entry.ExtractToFile(Path.Combine(destpath, asset.Destination), true);
+                                var verifiedString = asset.VerifyFile(Path.Combine(destpath, asset.Destination));
+                                Console.WriteLine(verifiedString);
+                            }
+                            else
+                            {
+                                entry.ExtractToFile(Path.Combine(destpath, entry.FullName), true);
+                            }
                         }
+                        if (zipHasEntry)
+                        {
+                            Console.WriteLine("\nPress any key to continue.");
+                            Console.ReadKey();
+                            Program.HideConsoleWindow();
+                        }
+                            
                     }
                     lblDragInfo.Text = $"Rom Extracted to {Launcher.ExtractRelativePath(destpath)}";
                 }
