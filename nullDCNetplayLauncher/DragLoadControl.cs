@@ -120,12 +120,12 @@ namespace nullDCNetplayLauncher
                             Launcher.Asset asset = null;
 
                             if (GamesJsonEntry != null)
-                                asset = GamesJsonEntry.Assets.Where(a => a.Source == entry.Name).First();
+                                asset = GamesJsonEntry.Assets.Where(a => a.Name == entry.Name).First();
 
                             if (zipHasEntry)
                             {
-                                entry.ExtractToFile(Path.Combine(destpath, asset.Destination), true);
-                                var verifiedString = asset.VerifyFile(Path.Combine(destpath, asset.Destination));
+                                entry.ExtractToFile(Path.Combine(destpath, asset.LocalName()), true);
+                                var verifiedString = asset.VerifyFile(Path.Combine(destpath, asset.LocalName()));
                                 Console.WriteLine(verifiedString);
                             }
                             else

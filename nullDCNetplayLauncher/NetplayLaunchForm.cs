@@ -1,5 +1,4 @@
-﻿using CG.Web.MegaApiClient;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -15,7 +14,6 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using WebClient = System.Net.WebClient;
 
 namespace nullDCNetplayLauncher
 {
@@ -151,7 +149,7 @@ namespace nullDCNetplayLauncher
                     {
                         var dataEntry = DataGamesJson.First();
                         DialogResult dialogResult = MessageBox.Show(
-                            "BIOS is not detected. Would you like to download one?",
+                            "BIOS is not detected. Would you like to retrieve one?",
                             "Missing BIOS",
                             MessageBoxButtons.YesNo);
 
@@ -159,47 +157,9 @@ namespace nullDCNetplayLauncher
                         {
                             Program.ShowConsoleWindow();
                             Console.Clear();
-                            Console.WriteLine($"Downloading {dataEntry.ID}...");
-                            var zipPath = Launcher.rootDir + $"nulldc-1-0-4-en-win\\data\\{dataEntry.ID}.zip";
 
-                            if (!File.Exists(zipPath))
-                            {
-                                var referenceUri = new Uri(dataEntry.ReferenceUrl);
-                                using (WebClient client = new WebClient())
-                                {
-                                    client.DownloadFile(referenceUri,
-                                                        zipPath);
-                                }
-                            }
+                            NetworkQuery.DownloadReferenceUrl(dataEntry);
 
-                            Console.WriteLine($"Download Complete");
-                            Console.WriteLine($"Extracting...\n");
-
-                            var extractPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\data\\";
-                            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-                            {
-                                List<Launcher.Asset> files = dataEntry.Assets;
-                                foreach (ZipArchiveEntry entry in archive.Entries)
-                                {
-                                    try
-                                    {
-                                        var fileEntries = files.Where(f => f.Source == entry.Name);
-                                        var fileEntry = (fileEntries != null) ? fileEntries.First() : null;
-                                        if (fileEntry != null)
-                                        {
-                                            var destinationFile = Path.Combine(extractPath, fileEntry.Destination);
-                                            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));
-                                            entry.ExtractToFile(destinationFile, true);
-                                            Console.WriteLine(fileEntry.VerifyFile(destinationFile));
-                                        }
-                                    }
-                                    catch (Exception) { };
-                                }
-                            }
-                            File.Delete(zipPath);
-
-                            Console.WriteLine($"\nPress any key to continue.");
-                            Console.ReadKey();
                             Program.HideConsoleWindow();
                         }
                     }
@@ -343,7 +303,8 @@ namespace nullDCNetplayLauncher
 
                 foreach(Launcher.Game game in all)
                 {
-                    string RomPath = Path.Combine(NullDir, game.Root, game.Name, game.Assets.First().Destination);
+                    var RomLstAsset = game.Assets.Where(a => a.Name.Contains(".lst")).First();
+                    string RomPath = Path.Combine(NullDir, game.Root, game.Name, RomLstAsset.LocalName());
                     if (File.Exists(RomPath))
                     {
                         System.Diagnostics.Debug.WriteLine(RomPath);
@@ -461,67 +422,13 @@ namespace nullDCNetplayLauncher
                     case (DialogResult.Yes):
                         Program.ShowConsoleWindow();
                         Console.Clear();
-                        Console.WriteLine($"Downloading {cboGameSelect.Text}...");
-                        var di = new DirectoryInfo(RomDir);
-                        di.Attributes |= FileAttributes.Normal;
-                        var zipPath = RomDir + $"{SelectedGame.ID}.zip";
-                        
-                        if(!File.Exists(zipPath))
-                        {
-                            var referenceUri = new Uri(SelectedGame.ReferenceUrl);
-                            if (referenceUri.Host == "mega.nz")
-                            {
-                                MegaApiClient client = new MegaApiClient();
-                                client.LoginAnonymous();
-
-                                INodeInfo node = client.GetNodeFromLink(referenceUri);
-
-                                Console.WriteLine($"Downloading {node.Name}");
-                                client.DownloadFile(referenceUri, zipPath);
-
-                                client.Logout();
-                            }
-                            else
-                            {
-                                using (WebClient client = new WebClient())
-                                {
-                                    Console.WriteLine($"Downloading {Path.GetFileName(referenceUri.LocalPath)}");
-                                    client.DownloadFile(referenceUri,
-                                                        zipPath);
-                                }
-                            }
-                        }
-                        
-                        Console.WriteLine($"Download Complete");
-                        Console.WriteLine($"Extracting...\n");
-
-                        var extractPath = RomDir + SelectedGame.Name;
-                        using (ZipArchive archive = ZipFile.OpenRead(zipPath))
-                        {
-                            List<Launcher.Asset> files = SelectedGame.Assets;
-                            foreach (ZipArchiveEntry entry in archive.Entries)
-                            {
-                                var fileEntry = files.Where(f => f.Source == entry.Name).First();
-                                if (fileEntry != null)
-                                {
-                                    var destinationFile = Path.Combine(extractPath, fileEntry.Destination);
-                                    System.IO.Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));
-                                    entry.ExtractToFile(destinationFile, true);
-                                    Console.WriteLine(fileEntry.VerifyFile(destinationFile));
-                                }
-                            }
-                        }
-                        File.Delete(zipPath);
-
-                        Console.WriteLine($"\nPress any key to continue.");
-                        Console.ReadKey();
+                        NetworkQuery.DownloadReferenceUrl(SelectedGame);
                         Program.HideConsoleWindow();
-                        var old = cboGameSelect.SelectedIndex;
+                        var previous = cboGameSelect.SelectedIndex;
                         ReloadRomList();
-                        cboGameSelect.SelectedIndex = old;
+                        cboGameSelect.SelectedIndex = previous;
                         break;
                     case (DialogResult.No):
-                        
                         break;
                 }
             }

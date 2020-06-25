@@ -160,8 +160,8 @@ namespace nullDCNetplayLauncher
 
                 if (games.Count() > 0)
                 {
-                    var lst = games.First().Assets.Where(a => a.Destination.EndsWith(".lst")).First();
-                    path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.Destination);
+                    var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
+                    path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.LocalName());
                 }
             }
             catch (Exception) { };
@@ -753,11 +753,19 @@ namespace nullDCNetplayLauncher
 
         public class Asset
         {
-            [JsonProperty("src")]
-            public string Source { get; set; }
+            [JsonProperty("name")]
+            public string Name { get; set; }
 
-            [JsonProperty("dst")]
-            public string Destination { get; set; }
+            [JsonProperty("renamed")]
+            public string Renamed { get; set; }
+
+            public string LocalName()
+            {
+                if (Renamed == null || Renamed.Length == 0)
+                    return Name;
+                else
+                    return Renamed;
+            }
 
             [JsonProperty("md5")]
             public string Md5Sum { get; set; }
@@ -778,9 +786,9 @@ namespace nullDCNetplayLauncher
             {
                 var matchingSum = (Md5Sum.ToLower() == Asset.CalculateMD5(destinationFile));
                 if (matchingSum)
-                    return $"{Destination} Successfully Verified - MD5: {Asset.CalculateMD5(destinationFile)}";
+                    return $"{LocalName()} Successfully Verified - MD5: {Asset.CalculateMD5(destinationFile)}";
                 else
-                    return $"{Destination} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}";
+                    return $"{LocalName()} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}";
             }
 
         }

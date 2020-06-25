@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CG.Web.MegaApiClient;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -7,6 +10,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web.UI.WebControls;
+using WebClient = System.Net.WebClient;
 
 namespace nullDCNetplayLauncher
 {
@@ -95,6 +100,95 @@ namespace nullDCNetplayLauncher
                 radminHostIP = null;
             }
             return radminHostIP;
+        }
+
+        public static void DownloadReferenceUrl(Launcher.Game game)
+        {
+            string displayName;
+            if (game.Name.Length > 0)
+                displayName = game.Name;
+            else
+                displayName = game.ID;
+
+            Console.WriteLine($"Downloading {displayName}...");
+
+            string workingDir = "";
+            if (game.Root == "roms" || game.Root == "data")
+            {
+                workingDir = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", game.Root);
+            }
+            else
+            {
+                Console.WriteLine("no valid root found in reference entry");
+                return;
+            }
+            var di = new DirectoryInfo(workingDir);
+            di.Attributes |= FileAttributes.Normal;
+            var zipPath = Path.Combine(workingDir, $"{game.ID}.zip");
+
+            if (!File.Exists(zipPath))
+            {
+                var referenceUri = new Uri(game.ReferenceUrl);
+                if (referenceUri.Host == "mega.nz")
+                {
+                    MegaApiClient client = new MegaApiClient();
+                    client.LoginAnonymous();
+
+                    INodeInfo node = client.GetNodeFromLink(referenceUri);
+
+                    Console.WriteLine($"Downloading {node.Name}");
+                    client.DownloadFile(referenceUri, zipPath);
+
+                    client.Logout();
+                }
+                else
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        Console.WriteLine($"Downloading {Path.GetFileName(referenceUri.LocalPath)}");
+                        client.DownloadFile(referenceUri,
+                                            zipPath);
+                    }
+                }
+            }
+
+            Console.WriteLine($"Download Complete");
+            Console.WriteLine($"Extracting...\n");
+
+            string extractPath;
+            if (game.Root == "roms")
+            {
+                extractPath = Path.Combine(workingDir, displayName);
+                Directory.CreateDirectory(extractPath);
+            }
+            else
+            {
+                extractPath = workingDir;
+            }
+                
+            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+            {
+                List<Launcher.Asset> files = game.Assets;
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    try
+                    {
+                        var fileEntry = files.Where(f => f.Name == entry.Name).First();
+                        if (fileEntry != null)
+                        {
+                            var destinationFile = Path.Combine(extractPath, fileEntry.LocalName());
+                            entry.ExtractToFile(destinationFile, true);
+                            Console.WriteLine(fileEntry.VerifyFile(destinationFile));
+                        }
+
+                    }
+                    catch (Exception) { }
+                }
+            }
+            File.Delete(zipPath);
+
+            Console.WriteLine($"\nPress any key to continue.");
+            Console.ReadKey(); 
         }
 
     }
