@@ -118,7 +118,8 @@ namespace nullDCNetplayLauncher
             }
             else
             {
-                Launcher.SelectedGame = romDict.First().Value;
+                Launcher.SelectedGame = romDict.Where(r => r.Value != "").First().Value;
+                cboGameSelect.SelectedValue = Launcher.SelectedGame;
                 btnOffline.Enabled = true;
                 btnHost.Enabled = true;
                 btnJoin.Enabled = true;
@@ -131,9 +132,10 @@ namespace nullDCNetplayLauncher
                 var RootDir = Launcher.rootDir;
                 if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin")))
                 {
-                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi").First();
-                    if (DataGamesJson != null)
+                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi");
+                    if (DataGamesJson != null && DataGamesJson.Count() > 0)
                     {
+                        var dataEntry = DataGamesJson.First();
                         DialogResult dialogResult = MessageBox.Show(
                             "BIOS is not detected. Would you like to download one?",
                             "Missing BIOS",
@@ -143,12 +145,12 @@ namespace nullDCNetplayLauncher
                         {
                             Program.ShowConsoleWindow();
                             Console.Clear();
-                            Console.WriteLine($"Downloading {DataGamesJson.ID}...");
-                            var zipPath = Launcher.rootDir + $"nulldc-1-0-4-en-win\\data\\{DataGamesJson.ID}.zip";
+                            Console.WriteLine($"Downloading {dataEntry.ID}...");
+                            var zipPath = Launcher.rootDir + $"nulldc-1-0-4-en-win\\data\\{dataEntry.ID}.zip";
 
                             if (!File.Exists(zipPath))
                             {
-                                var referenceUri = new Uri(DataGamesJson.ReferenceUrl);
+                                var referenceUri = new Uri(dataEntry.ReferenceUrl);
                                 using (WebClient client = new WebClient())
                                 {
                                     client.DownloadFile(referenceUri,
@@ -162,7 +164,7 @@ namespace nullDCNetplayLauncher
                             var extractPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\data\\";
                             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
                             {
-                                List<Launcher.Asset> files = DataGamesJson.Assets;
+                                List<Launcher.Asset> files = dataEntry.Assets;
                                 foreach (ZipArchiveEntry entry in archive.Entries)
                                 {
                                     try
