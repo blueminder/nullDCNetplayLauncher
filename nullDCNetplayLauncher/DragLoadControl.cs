@@ -75,6 +75,17 @@ namespace nullDCNetplayLauncher
                     File.SetAttributes(destpath, FileAttributes.ReadOnly);
                     lblDragInfo.Text = $"QKC copied to {Launcher.ExtractRelativePath(destpath)}";
                 }
+                else if (Path.GetFileName(path) == "nullDC.cfg")
+                {
+                    lblDragInfo.Text = "Copying CFG...";
+                    destpath += Path.GetFileName(files[0]);
+                    if (File.Exists(destpath))
+                    {
+                        File.SetAttributes(destpath, FileAttributes.Normal);
+                    }
+                    File.Copy(path, destpath, true);
+                    lblDragInfo.Text = $"nullDC.cfg copied to {Launcher.ExtractRelativePath(destpath)}. Restart to restore defaults.";
+                }
                 else if (Path.GetExtension(path).Equals(".zip"))
                 {
                     bool zipHasEntry = false;
