@@ -145,15 +145,26 @@ namespace nullDCNetplayLauncher
             return delay;
         }
 
-        public static string GetRomPathFromGameId(string gameid)
+        public static String GetRomPathFromGameId(string gameid)
         {
-            string RomDir = "nulldc-1-0-4-en-win\\roms\\";
-            string GameJsonPath = rootDir + "games.json";
+            string DistroDir = "nulldc-1-0-4-en-win\\";
+            var path = "";
 
-            JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
+            try
+            {
+                string GameJsonPath = Launcher.rootDir + "games.json";
+                var GamesJsonTxt = File.ReadAllText(GameJsonPath);
 
-            var path = games.FirstOrDefault(x => x.Value<string>("id") == $"nulldc_{gameid}").Value<string>("path");
-            path = RomDir + path;
+                var GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
+                var games = GamesJson.Where(g => g.ID == $"nulldc_{gameid}");
+
+                if (games.Count() > 0)
+                {
+                    var lst = games.First().Assets.Where(a => a.Destination.EndsWith(".lst")).First();
+                    path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.Destination);
+                }
+            }
+            catch (Exception) { };
 
             return path;
         }
@@ -737,6 +748,7 @@ namespace nullDCNetplayLauncher
 
             [JsonProperty("root")]
             public string Root { get; set; }
+            
         }
 
         public class Asset

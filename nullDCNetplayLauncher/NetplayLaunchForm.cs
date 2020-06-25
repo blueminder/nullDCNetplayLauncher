@@ -65,8 +65,8 @@ namespace nullDCNetplayLauncher
                 StartMapper();
             }
 
-            //InitializeComponent(StartTray);
-            InitializeComponent();
+            InitializeComponent(StartTray);
+            //InitializeComponent();
 
             if (StartTray)
                 this.WindowState = FormWindowState.Minimized;
@@ -92,10 +92,13 @@ namespace nullDCNetplayLauncher
 
         private void ReloadRomList()
         {
+            cboGameSelect.SelectedIndexChanged -= new EventHandler(cboGameSelect_SelectedIndexChanged);
             var localRomDict = ScanRoms();
+            
             if (File.Exists(Launcher.rootDir + "games.json") 
                 && File.ReadAllText(Launcher.rootDir + "games.json").Contains("reference_url"))
             {
+                localRomDict.Remove("");
                 var jsonRomDict = ScanRomsFromJson();
                 localRomDict.ToList().ForEach(r => jsonRomDict[r.Key] = r.Value);
                 romDict = jsonRomDict;
@@ -116,16 +119,27 @@ namespace nullDCNetplayLauncher
                 btnJoin.Enabled = false;
                 cboGameSelect.Enabled = false;
             }
+            else if (romDict.Values.All(v => v == ""))
+            {
+                btnOffline.Enabled = false;
+                btnHost.Enabled = false;
+                btnJoin.Enabled = false;
+                cboGameSelect.Enabled = true;
+            }
             else
             {
-                Launcher.SelectedGame = romDict.Where(r => r.Value != "").First().Value;
-                cboGameSelect.SelectedValue = Launcher.SelectedGame;
+                try
+                {
+                    Launcher.SelectedGame = romDict.Where(r => r.Value != "").First().Value;
+                    cboGameSelect.SelectedValue = Launcher.SelectedGame;
+                }
+                catch (Exception)
+                { }
                 btnOffline.Enabled = true;
                 btnHost.Enabled = true;
                 btnJoin.Enabled = true;
                 cboGameSelect.Enabled = true;
             }
-
 
             if (Launcher.GamesJson != null)
             {
@@ -159,7 +173,7 @@ namespace nullDCNetplayLauncher
                             }
 
                             Console.WriteLine($"Download Complete");
-                            Console.WriteLine($"Extracting...");
+                            Console.WriteLine($"Extracting...\n");
 
                             var extractPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\data\\";
                             using (ZipArchive archive = ZipFile.OpenRead(zipPath))
@@ -190,6 +204,13 @@ namespace nullDCNetplayLauncher
                         }
                     }
                 }
+            }
+            cboGameSelect.SelectedIndexChanged += new EventHandler(cboGameSelect_SelectedIndexChanged);
+            if ((string)cboGameSelect.SelectedValue == "")
+            {
+                btnOffline.Enabled = false;
+                btnJoin.Enabled = false;
+                btnHost.Enabled = false;
             }
         }
 
@@ -318,7 +339,7 @@ namespace nullDCNetplayLauncher
             {
                 var GamesJsonTxt = File.ReadAllText(GameJsonPath);
                 Launcher.GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
-                all = Launcher.GamesJson.Where(g => g.Root == "roms").ToList();
+                all = Launcher.GamesJson.Where(g => g.Root == "roms" && g.Name != "").ToList();
 
                 foreach(Launcher.Game game in all)
                 {
@@ -426,8 +447,11 @@ namespace nullDCNetplayLauncher
             Launcher.Game SelectedGame = Launcher.GamesJson.Where(g => g.Name == cboGameSelect.Text).FirstOrDefault();
             if (SelectedGame != null)
                 ReferenceFound = (SelectedGame.ReferenceUrl != null);
-            if ((string)cboGameSelect.SelectedValue == "" && ReferenceFound)
+            if ((string)cboGameSelect.Text != "" && (string)cboGameSelect.SelectedValue == "" && ReferenceFound)
             {
+                btnOffline.Enabled = false;
+                btnJoin.Enabled = false;
+                btnHost.Enabled = false;
                 DialogResult dialogResult = MessageBox.Show(
                     $"{cboGameSelect.Text} not installed.\nWould you like to retrieve it?", 
                     "Missing ROM", 
@@ -461,6 +485,7 @@ namespace nullDCNetplayLauncher
                             {
                                 using (WebClient client = new WebClient())
                                 {
+                                    Console.WriteLine($"Downloading {Path.GetFileName(referenceUri.LocalPath)}");
                                     client.DownloadFile(referenceUri,
                                                         zipPath);
                                 }
@@ -468,7 +493,7 @@ namespace nullDCNetplayLauncher
                         }
                         
                         Console.WriteLine($"Download Complete");
-                        Console.WriteLine($"Extracting...");
+                        Console.WriteLine($"Extracting...\n");
 
                         var extractPath = RomDir + SelectedGame.Name;
                         using (ZipArchive archive = ZipFile.OpenRead(zipPath))
@@ -496,11 +521,18 @@ namespace nullDCNetplayLauncher
                         cboGameSelect.SelectedIndex = old;
                         break;
                     case (DialogResult.No):
+                        
                         break;
                 }
             }
             else if (cboGameSelect.SelectedValue != null)
+            {
+                btnOffline.Enabled = true;
+                btnJoin.Enabled = true;
+                btnHost.Enabled = true;
                 Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
+            }
+                
 
         }
 

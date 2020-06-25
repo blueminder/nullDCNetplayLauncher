@@ -131,7 +131,7 @@ namespace nullDCNetplayLauncher
                 }
                 else if (arguments.ContainsKey("gameid"))
                 {
-                    if(File.Exists(Launcher.rootDir + "games.json"))
+                    if (File.Exists(Launcher.rootDir + "games.json"))
                     {
                         romPath = Launcher.GetRomPathFromGameId(arguments["gameid"]);
                     }
