@@ -124,6 +124,71 @@ namespace nullDCNetplayLauncher
                 btnJoin.Enabled = true;
                 cboGameSelect.Enabled = true;
             }
+
+
+            if (Launcher.GamesJson != null)
+            {
+                var RootDir = Launcher.rootDir;
+                if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin")))
+                {
+                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi").First();
+                    if (DataGamesJson != null)
+                    {
+                        DialogResult dialogResult = MessageBox.Show(
+                            "BIOS is not detected. Would you like to download one?",
+                            "Missing BIOS",
+                            MessageBoxButtons.YesNo);
+
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Program.ShowConsoleWindow();
+                            Console.Clear();
+                            Console.WriteLine($"Downloading {DataGamesJson.ID}...");
+                            var zipPath = Launcher.rootDir + $"nulldc-1-0-4-en-win\\data\\{DataGamesJson.ID}.zip";
+
+                            if (!File.Exists(zipPath))
+                            {
+                                var referenceUri = new Uri(DataGamesJson.ReferenceUrl);
+                                using (WebClient client = new WebClient())
+                                {
+                                    client.DownloadFile(referenceUri,
+                                                        zipPath);
+                                }
+                            }
+
+                            Console.WriteLine($"Download Complete");
+                            Console.WriteLine($"Extracting...");
+
+                            var extractPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\data\\";
+                            using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+                            {
+                                List<Launcher.Asset> files = DataGamesJson.Assets;
+                                foreach (ZipArchiveEntry entry in archive.Entries)
+                                {
+                                    try
+                                    {
+                                        var fileEntries = files.Where(f => f.Source == entry.Name);
+                                        var fileEntry = (fileEntries != null) ? fileEntries.First() : null;
+                                        if (fileEntry != null)
+                                        {
+                                            var destinationFile = Path.Combine(extractPath, fileEntry.Destination);
+                                            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(destinationFile));
+                                            entry.ExtractToFile(destinationFile, true);
+                                            Console.WriteLine(fileEntry.VerifyFile(destinationFile));
+                                        }
+                                    }
+                                    catch (Exception) { };
+                                }
+                            }
+                            File.Delete(zipPath);
+
+                            Console.WriteLine($"\nPress any key to continue.");
+                            Console.ReadKey();
+                            Program.HideConsoleWindow();
+                        }
+                    }
+                }
+            }
         }
 
         public static void StartMapper()

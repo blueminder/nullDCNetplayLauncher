@@ -40,6 +40,8 @@ namespace nullDCNetplayLauncher
 
             NetQuery = new NetworkQuery();
 
+            GamesJson = null;
+
             try
             {
                 string GameJsonPath = Launcher.rootDir + "games.json";
@@ -768,6 +770,7 @@ namespace nullDCNetplayLauncher
                 else
                     return $"{Destination} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}";
             }
+
         }
 
     }
