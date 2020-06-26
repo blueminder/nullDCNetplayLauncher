@@ -1,5 +1,5 @@
-# NullDC-NAOMI Netplay Launcher Distribution 0.6.4
-Configuration optimized by blueminder *(June 25, 2020)*
+# NullDC-NAOMI Netplay Launcher Distribution 0.6.4.1
+Configuration optimized by blueminder *(June 26, 2020)*
 
 **Special Thanks**
 
