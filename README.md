@@ -1,5 +1,5 @@
 # NullDC-NAOMI Netplay Launcher Distribution 0.6.4
-Configuration optimized by blueminder *(June 24, 2020)*
+Configuration optimized by blueminder *(June 25, 2020)*
 
 **Special Thanks**
 
@@ -40,7 +40,7 @@ Once you have gathered the necessary files:
 3. Locate your `naomi_bios.bin` & ROM `.zip` files in the appropriate format and drag the file into the square. Each ROM `.zip` file must be a collection of `.bin`/`.dat` files along with a corresponding `.lst` file.
    
 
-![File Drop Demo](file_drop_demo.gif)
+![File Drop Demo](file-drop.gif)
 
 
 Alternatively, you can manually place the NAOMI BIOS (`naomi_bios.bin`) in `nulldc-1-0-4-en-win\data` and place your unzipped ROMs in `nulldc-1-0-4-en-win\roms` in their own corresponding directories.
@@ -53,6 +53,8 @@ Dreamcast CDI and GDI ROMs are unsupported at this time. The directory names the
 
 2. Press the Controller Icon in the bottom left corner. Be sure that only one game controller is plugged in and follow the prompts.
 
+   **If the option is available on your arcade stick or controller, switch to PS3 mode.** This has been shown to have the best native compatibility with the qkoJAMMA netplay plugin. If you are using a Brook Universal Fighting Board, you can hold down the *Light Punch* button as you plug it into your PC to activate PS3 mode.
+
    ![setup_demo](setup_demo.gif)
 
 3. Select any ROM from the drop-down menu, and press the *Play Offline* button
@@ -63,7 +65,7 @@ This will launch your ROM of choice in NullDC, giving you an opportunity to test
 
 **(OPTIONAL, BUT RECOMMENDED)** [Radmin VPN](https://www.radmin-vpn.com/)
 
-This Netplay method works for any local LAN or virtual LAN setup like Radmin VPN, ZeroTier, or Hamachi. Radmin VPN is the de facto service used on FGC Arcadia. Be sure to have this installed and running before asking for matches on the Discord. You will either need to create or join a network with others also using NullDC prior to playing.
+This netplay method works for any local LAN or virtual LAN setup like Radmin VPN, ZeroTier, or Hamachi. Radmin VPN is the de facto service used on FGC Arcadia. Be sure to have this installed and running before asking for matches on the Discord. You will either need to create or join a network with others also using NullDC prior to playing.
 
 The rest of the instructions assume that Radmin is installed, but this should work the same way with any network configuration so long as you have the right host IP, ports, and your firewall isn't blocking the relevant ports.
 
@@ -84,11 +86,10 @@ The rest of the instructions assume that Radmin is installed, but this should wo
       Verify that you and your opponent have the same Delay set.
 
       Press the *Launch Game* button.
-
       
       
-![Host Game Demo](simple-host-obfs.gif)
       
+      ![Host Game Demo](host-flow.gif)
       
       
 - **Joining a Game**
@@ -101,7 +102,7 @@ The rest of the instructions assume that Radmin is installed, but this should wo
    
    
    
-   ![Join Game Demo](guest-pop-obfs.gif)
+   ![Join Game Demo](guest-flow-pop-out.gif)
    
    
 
@@ -158,17 +159,7 @@ When the Launcher is called via command line, the launcher menu is kept availabl
 
 If you are having trouble with mapping your controls, try pressing the *Force Keyboard Mapper* checkbox on the controller setup menu. This will activate the launcher's internal keyboard mapper which provides expanded controller support from the default qkoJAMMA controller drivers.
 
-If the option is available on your arcade stick, you can also try to select the "PS3" option on your controller and try again without the Keyboard Mapper enabled. PS3 controllers have been found to have the best compatibility with qkoJAMMA. If you have a Brook Universal Fight Board, you can activate the PS3 mode by holding down Light Punch as you plug it in your computer.
-
-------
-
-
-
-> When I try to join or host a game, neither of us are able to connect. What should I do?
-
-The very first step to troubleshooting network connectivity issues is to temporarily disable your firewalls to see if everything works in those conditions. You can do this in the "Windows Defender Firewall" Control Panel. If you are able to connect to each other when the firewall is off, verify your settings and make sure that you give `nullDC_Win32_Release-NoTrace.exe` permission to access private networks. If that doesn't work, enable public networks from there.
-
-When troubleshooting network issues, keep an eye on the Command Window for any details. This will be useful information for anyone who helps you in the [FGC Arcadia Discord](https://discord.com/invite/KczAkRr).
+If the option is available on your arcade stick, you can also try to select the "PS3" option on your controller and try again without the Keyboard Mapper enabled. PS3 controllers have been found to have the best compatibility with qkoJAMMA. If you have a Brook Universal Fighting Board, you can activate the PS3 mode by holding down Light Punch as you plug it in your computer.
 
 ------
 
@@ -186,9 +177,13 @@ If you are setting your joystick, be sure that the button numbers set in your co
 
 
 
-> I accidentally turned on the Keyboard Mapper for my joystick in the controller setup. How do I change it back to a natively supported controller?
+> When I try to join or host a game, neither of us are able to connect. What should I do?
 
-If you ever want to disable the Keyboard Mapper, go into Settings and uncheck *Enable Keyboard Mapper*. It will revert NullDC back to its default joystick drivers.
+The very first step to troubleshooting network connectivity issues is to temporarily disable your firewalls to see if everything works in those conditions. You can do this in the "Windows Defender Firewall" Control Panel. If you are able to connect to each other when the firewall is off, verify your settings and make sure that you give `nullDC_Win32_Release-NoTrace.exe` permission to access private networks. If that doesn't work, enable public networks from there.
+
+When troubleshooting network issues, keep an eye on the Command Window for any details. This will be useful information for anyone who helps you in the [FGC Arcadia Discord](https://discord.com/invite/KczAkRr).
+
+
 
 ------
 

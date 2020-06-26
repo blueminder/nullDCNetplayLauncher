@@ -100,7 +100,7 @@
             this.btnExpandCollapse.Name = "btnExpandCollapse";
             this.btnExpandCollapse.Size = new System.Drawing.Size(227, 22);
             this.btnExpandCollapse.TabIndex = 77;
-            this.btnExpandCollapse.Text = "⇵";
+            this.btnExpandCollapse.Text = "↑   Advanced Options   ↑";
             this.btnExpandCollapse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnExpandCollapse.UseVisualStyleBackColor = false;
             this.btnExpandCollapse.Click += new System.EventHandler(this.btnExpandCollapse_Click);

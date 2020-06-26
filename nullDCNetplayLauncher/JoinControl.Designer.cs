@@ -41,6 +41,7 @@
             this.btnGuess = new System.Windows.Forms.Button();
             this.numDelay = new System.Windows.Forms.NumericUpDown();
             this.grpAdvanced = new System.Windows.Forms.GroupBox();
+            this.txtHostIP = new System.Windows.Forms.TextBox();
             this.cboMethod = new System.Windows.Forms.ComboBox();
             this.lblMethod = new System.Windows.Forms.Label();
             this.btnSavePreset = new System.Windows.Forms.Button();
@@ -49,7 +50,6 @@
             this.lblHostIP = new System.Windows.Forms.Label();
             this.txtHostPort = new System.Windows.Forms.TextBox();
             this.lblGuestPort = new System.Windows.Forms.Label();
-            this.txtHostIP = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitGuest)).BeginInit();
             this.splitGuest.Panel1.SuspendLayout();
             this.splitGuest.Panel2.SuspendLayout();
@@ -122,7 +122,7 @@
             this.btnExpandCollapse.Name = "btnExpandCollapse";
             this.btnExpandCollapse.Size = new System.Drawing.Size(227, 22);
             this.btnExpandCollapse.TabIndex = 77;
-            this.btnExpandCollapse.Text = "⇵";
+            this.btnExpandCollapse.Text = "↑   Advanced Options   ↑";
             this.btnExpandCollapse.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnExpandCollapse.UseVisualStyleBackColor = false;
             this.btnExpandCollapse.Click += new System.EventHandler(this.btnExpandCollapse_Click);
@@ -216,10 +216,17 @@
             this.grpAdvanced.Margin = new System.Windows.Forms.Padding(2);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Padding = new System.Windows.Forms.Padding(4);
-            this.grpAdvanced.Size = new System.Drawing.Size(216, 137);
+            this.grpAdvanced.Size = new System.Drawing.Size(150, 46);
             this.grpAdvanced.TabIndex = 59;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Options";
+            // 
+            // txtHostIP
+            // 
+            this.txtHostIP.Location = new System.Drawing.Point(83, 55);
+            this.txtHostIP.Name = "txtHostIP";
+            this.txtHostIP.Size = new System.Drawing.Size(105, 20);
+            this.txtHostIP.TabIndex = 72;
             // 
             // cboMethod
             // 
@@ -300,13 +307,6 @@
             this.lblGuestPort.Size = new System.Drawing.Size(51, 13);
             this.lblGuestPort.TabIndex = 66;
             this.lblGuestPort.Text = "Host Port";
-            // 
-            // txtHostIP
-            // 
-            this.txtHostIP.Location = new System.Drawing.Point(83, 55);
-            this.txtHostIP.Name = "txtHostIP";
-            this.txtHostIP.Size = new System.Drawing.Size(105, 20);
-            this.txtHostIP.TabIndex = 72;
             // 
             // JoinControl
             // 

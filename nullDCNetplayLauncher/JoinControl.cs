@@ -244,11 +244,13 @@ namespace nullDCNetplayLauncher
             var win = this.Parent;
             if (splitGuest.Panel2Collapsed)
             {
+                btnExpandCollapse.Text = "↓   Advanced Options   ↓";
                 win.Size = win.MaximumSize;
                 splitGuest.Panel2Collapsed = false;
             }
             else
             {
+                btnExpandCollapse.Text = "↑   Advanced Options   ↑";
                 win.Size = win.MinimumSize;
                 splitGuest.Panel2Collapsed = true;
             }
