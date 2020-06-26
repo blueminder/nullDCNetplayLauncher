@@ -1,5 +1,5 @@
-# NullDC-NAOMI Netplay Launcher Distribution 0.6.3.3
-Configuration optimized by blueminder *(June 21, 2020)*
+# NullDC-NAOMI Netplay Launcher Distribution 0.6.4
+Configuration optimized by blueminder *(June 25, 2020)*
 
 **Special Thanks**
 
@@ -7,7 +7,7 @@ Configuration optimized by blueminder *(June 21, 2020)*
 - [MarioBrotha](https://github.com/MarioBrotha) of FGC Arcadia Discord (nullDCMultiLauncher, nullDCControlSetup)
 - [RossenX](https://github.com/RossenX) of FGC Arcadia Discord for Netplay optimizations
 - [poliva](https://github.com/poliva) & [JordiRos](https://github.com/JordiRos) of [Fightcade](https://web.fightcade.com/) for integration & testing
-- BRBS of FGC Arcadia Discord for jumping on every beta as it comes out and providing feedback
+- BRBS of FGC Arcadia Discord for jumping on every beta as it comes out and providing feedback.
 - DQRF of GGXXACR Discord
 - RaptorIIRC
 - Teyah
@@ -40,7 +40,7 @@ Once you have gathered the necessary files:
 3. Locate your `naomi_bios.bin` & ROM `.zip` files in the appropriate format and drag the file into the square. Each ROM `.zip` file must be a collection of `.bin`/`.dat` files along with a corresponding `.lst` file.
    
 
-![File Drop Demo](file_drop_demo.gif)
+![File Drop Demo](file-drop.gif)
 
 
 Alternatively, you can manually place the NAOMI BIOS (`naomi_bios.bin`) in `nulldc-1-0-4-en-win\data` and place your unzipped ROMs in `nulldc-1-0-4-en-win\roms` in their own corresponding directories.
@@ -53,6 +53,10 @@ Dreamcast CDI and GDI ROMs are unsupported at this time. The directory names the
 
 2. Press the Controller Icon in the bottom left corner. Be sure that only one game controller is plugged in and follow the prompts.
 
+   **If the option is available on your arcade stick or controller, switch to PS3 mode.** This has been shown to have the best native compatibility with the qkoJAMMA netplay plugin. If you are using a Brook Universal Fighting Board, you can hold down the *Light Punch* button as you plug it into your PC to activate PS3 mode.
+
+   ![setup_demo](setup_demo.gif)
+
 3. Select any ROM from the drop-down menu, and press the *Play Offline* button
 
 This will launch your ROM of choice in NullDC, giving you an opportunity to test your inputs. If this works and you are assigned to Player 1, then you're all set for netplay!
@@ -61,7 +65,7 @@ This will launch your ROM of choice in NullDC, giving you an opportunity to test
 
 **(OPTIONAL, BUT RECOMMENDED)** [Radmin VPN](https://www.radmin-vpn.com/)
 
-This Netplay method works for any local LAN or virtual LAN setup like Radmin VPN, ZeroTier, or Hamachi. Radmin VPN is the de facto service used on FGC Arcadia. Be sure to have this installed and running before asking for matches on the Discord. You will either need to create or join a network with others also using NullDC prior to playing.
+This netplay method works for any local LAN or virtual LAN setup like Radmin VPN, ZeroTier, or Hamachi. Radmin VPN is the de facto service used on FGC Arcadia. Be sure to have this installed and running before asking for matches on the Discord. You will either need to create or join a network with others also using NullDC prior to playing.
 
 The rest of the instructions assume that Radmin is installed, but this should work the same way with any network configuration so long as you have the right host IP, ports, and your firewall isn't blocking the relevant ports.
 
@@ -73,32 +77,33 @@ The rest of the instructions assume that Radmin is installed, but this should wo
 
    - **Hosting a Game**
 
-      If you are hosting, be sure to copy your IP from Radmin to the launcher's *Host IP* column. Save this as a preset so that the Launcher has your default host details handy. 
-
-      Copy your target's IP from Radmin and paste it in the *Guest IP* column. From there, press the *Guess* button to determine an adequate Delay value based on your distance and ping times. If you are unable to connect, the Delay field will clear and turn red.
+      Copy your target's IP from Radmin and paste it in the *Opponent IP* column. From there, the Launcher will automatically guess the Delay setting for your match based on your distance and ping times. If you are unable to connect, the Delay field will clear and turn red. If applicable, press the *Guess* button to try again.
 
       Press *Generate Host Code* and press the Clipboard icon to copy the generated code.
 
-      Paste it to your opponent, and they should be able to generate the server details from there. Alternatively, you may give them your Host IP, Port, and Delay. Either method works.
+      Paste it to your opponent, and they should be able to generate the server details from there. Alternatively, you may expand the window and give them your Host IP, Port, and Delay. Either method works.
 
       Verify that you and your opponent have the same Delay set.
 
       Press the *Launch Game* button.
       
-
-      ![Host Game Demo](host_demo.gif)
-
-      
-
-   - **Joining a Game**
-
-      Paste the generated Host Code and server details should automatically be filled in. Alternatively, you may manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
-
-      Make sure you have your opponent's Radmin IP in the launcher's *Host IP* column. Verify that you and your opponent have the same Delay.
       
       
-      ![Join Game Demo](join_demo.gif)
-
+      ![Host Game Demo](host-flow.gif)
+      
+      
+- **Joining a Game**
+  
+   Paste the generated Host Code and server details should automatically be filled in. If any advanced options have been set by your host, your window will expand to reveal these options.
+   
+   Alternatively, you may expand your window to manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
+   
+   Make sure you have your opponent's Radmin IP in the launcher's *Opponent IP* column. Verify that you and your opponent have the same Delay.
+   
+   
+   
+   ![Join Game Demo](guest-flow-pop-out.gif)
+   
    
 
 4. Press the *Launch Game* button.
@@ -154,7 +159,19 @@ When the Launcher is called via command line, the launcher menu is kept availabl
 
 If you are having trouble with mapping your controls, try pressing the *Force Keyboard Mapper* checkbox on the controller setup menu. This will activate the launcher's internal keyboard mapper which provides expanded controller support from the default qkoJAMMA controller drivers.
 
-If the option is available on your arcade stick, you can also try to select the "PS3" option on your controller and try again without the Keyboard Mapper enabled. PS3 controllers have been found to have the best compatibility with qkoJAMMA. If you have a Brook Universal Fight Board, you can activate the PS3 mode by holding down Light Punch as you plug it in your computer.
+If the option is available on your arcade stick, you can also try to select the "PS3" option on your controller and try again without the Keyboard Mapper enabled. PS3 controllers have been found to have the best compatibility with qkoJAMMA. If you have a Brook Universal Fighting Board, you can activate the PS3 mode by holding down Light Punch as you plug it in your computer.
+
+------
+
+
+
+> Is there any way to change my Keyboard controls, or joystick controls manually without the aid of the launcher?
+
+You may edit your keyboard and joystick definitions by editing the'`.qkc` and  `.qjc`files respectively, found in the `nulldc-1-0-4-en-win\qkoJAMMA` directory. You may be able to access this folder directly by going to *Settings* > *Advanced* > *Open qkoJAMMA Folder*. You may edit these files with any text editor of your choice.
+
+If you are setting Keyboard keys, note that numpad and arrow keys are not supported at this time. A known workaround people have used is AutoHotkey. That said, expanding keyboard controls is anticipated in a future release, since arcade cabinets popularly use IPAC and similar devices that simulate keyboard inputs.
+
+If you are setting your joystick, be sure that the button numbers set in your corresponding `.qjc` file match your controller's definition in the *Windows Game Controllers*. You may also be able to find a shortcut to this in the *Settings* > *Advanced* menu.
 
 ------
 
@@ -166,13 +183,7 @@ The very first step to troubleshooting network connectivity issues is to tempora
 
 When troubleshooting network issues, keep an eye on the Command Window for any details. This will be useful information for anyone who helps you in the [FGC Arcadia Discord](https://discord.com/invite/KczAkRr).
 
-------
 
-
-
-> I accidentally turned on the Keyboard Mapper for my joystick in the controller setup. How do I change it back to a natively supported controller?
-
-If you ever want to disable the Keyboard Mapper, go into Settings and uncheck *Enable Keyboard Mapper*. It will revert NullDC back to its default joystick drivers.
 
 ------
 

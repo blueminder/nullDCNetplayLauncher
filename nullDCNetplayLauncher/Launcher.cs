@@ -26,6 +26,10 @@ namespace nullDCNetplayLauncher
 
         public static bool FilesRestored = false;
 
+        public static NetworkQuery NetQuery;
+
+        public static List<Game> GamesJson;
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
@@ -34,7 +38,18 @@ namespace nullDCNetplayLauncher
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
 
-        }
+            NetQuery = new NetworkQuery();
+
+            GamesJson = null;
+
+            try
+            {
+                string GameJsonPath = Launcher.rootDir + "games.json";
+                var GamesJsonTxt = File.ReadAllText(GameJsonPath);
+                GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
+            }
+            catch (Exception) { };
+            }
 
         // the qkoJAMMA plugin sometimes generates blank QJC files and rewrites malformed file
         // upon exit for joysticks that are detected, but unused. this causes issues at startup
@@ -130,15 +145,26 @@ namespace nullDCNetplayLauncher
             return delay;
         }
 
-        public static string GetRomPathFromGameId(string gameid)
+        public static String GetRomPathFromGameId(string gameid)
         {
-            string RomDir = "nulldc-1-0-4-en-win\\roms\\";
-            string GameJsonPath = rootDir + "games.json";
+            string DistroDir = "nulldc-1-0-4-en-win\\";
+            var path = "";
 
-            JArray games = JArray.Parse(File.ReadAllText(GameJsonPath));
+            try
+            {
+                string GameJsonPath = Launcher.rootDir + "games.json";
+                var GamesJsonTxt = File.ReadAllText(GameJsonPath);
 
-            var path = games.FirstOrDefault(x => x.Value<string>("gameid") == $"nulldc_{gameid}").Value<string>("path");
-            path = RomDir + path;
+                var GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
+                var games = GamesJson.Where(g => g.ID == $"nulldc_{gameid}");
+
+                if (games.Count() > 0)
+                {
+                    var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
+                    path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.LocalName());
+                }
+            }
+            catch (Exception) { };
 
             return path;
         }
@@ -704,6 +730,67 @@ namespace nullDCNetplayLauncher
             }
 
             File.Delete(NullDcZipPath);
+        }
+
+        public class Game
+        {
+            [JsonProperty("id")]
+            public string ID { get; set; }
+
+            [JsonProperty("path")]
+            public string Name { get; set; }
+
+            [JsonProperty("reference_url")]
+            public string ReferenceUrl { get; set; }
+
+            [JsonProperty("files")]
+            public List<Asset> Assets { get; set; }
+
+            [JsonProperty("root")]
+            public string Root { get; set; }
+            
+        }
+
+        public class Asset
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
+
+            [JsonProperty("renamed")]
+            public string Renamed { get; set; }
+
+            public string LocalName()
+            {
+                if (Renamed == null || Renamed.Length == 0)
+                    return Name;
+                else
+                    return Renamed;
+            }
+
+            [JsonProperty("md5")]
+            public string Md5Sum { get; set; }
+
+            public static string CalculateMD5(string filename)
+            {
+                using (var md5 = System.Security.Cryptography.MD5.Create())
+                {
+                    using (var stream = File.OpenRead(filename))
+                    {
+                        var hash = md5.ComputeHash(stream);
+                        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                    }
+                }
+            }
+
+            public string VerifyFile(string destinationFile)
+            {
+                var matchingSum = (Md5Sum.ToLower() == Asset.CalculateMD5(destinationFile));
+                if (matchingSum)
+                    return $"{LocalName()} Successfully Verified - MD5: {Asset.CalculateMD5(destinationFile)}";
+                else
+                    return $"{LocalName()} Verification Failed - MD5: {Asset.CalculateMD5(destinationFile)}";
+            }
+
         }
 
     }

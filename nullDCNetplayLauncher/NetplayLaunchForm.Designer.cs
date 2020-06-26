@@ -26,8 +26,8 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        //private void InitializeComponent(bool StartTray)
-        private void InitializeComponent()
+        /// private void InitializeComponent()
+        private void InitializeComponent(bool StartTray)
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NetplayLaunchForm));
@@ -53,6 +53,8 @@
             this.cboGameSelect.Size = new System.Drawing.Size(255, 21);
             this.cboGameSelect.TabIndex = 38;
             this.cboGameSelect.SelectedIndexChanged += new System.EventHandler(this.cboGameSelect_SelectedIndexChanged);
+            this.cboGameSelect.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.cboGameSelect.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cboGameSelect_DrawItem);
             // 
             // btnHost
             // 
@@ -165,8 +167,9 @@
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "NetplayLaunchForm";
+            if (StartTray)
+                this.ShowInTaskbar = false;
             this.Text = "NullDC Netplay";
             this.Resize += new System.EventHandler(this.NetplayLaunchForm_Resize);
             this.panel1.ResumeLayout(false);
