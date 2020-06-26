@@ -163,6 +163,23 @@ namespace nullDCNetplayLauncher
                     var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
                     path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.LocalName());
                 }
+
+                if (!File.Exists(path))
+                {
+                    // check for other .lst file in same directory. for commonly renamed packages
+                    var searchDir = System.IO.Path.GetDirectoryName(path);
+                    string[] files = Directory.GetFiles(searchDir);
+                    var lstCandidates = files.Where(f => f.EndsWith(".lst")).ToList();
+
+                    if (lstCandidates.Count() > 0)
+                    {
+                        path = lstCandidates.First();
+                    }
+                    else
+                    {
+                        path = null;
+                    }
+                }
             }
             catch (Exception) { };
 
