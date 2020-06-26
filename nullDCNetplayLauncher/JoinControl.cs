@@ -130,6 +130,7 @@ namespace nullDCNetplayLauncher
                     {
                         splitGuest.Panel2Collapsed = false;
 
+                        btnExpandCollapse.Text = "↓   Advanced Options   ↓";
                         var win = this.Parent;
                         win.Size = win.MaximumSize;
                     }
