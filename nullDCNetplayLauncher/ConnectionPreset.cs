@@ -16,6 +16,7 @@ namespace nullDCNetplayLauncher
         public string Port;
         public decimal Delay;
         public int Method;
+        public string Region { get; set; } = "japan";
 
         public override string ToString()
         {
@@ -43,7 +44,8 @@ namespace nullDCNetplayLauncher
                     IP = "127.0.0.1",
                     Port = "27886",
                     Delay = 1,
-                    Method = 0
+                    Method = 0,
+                    Region = "japan"
                 };
                 readPresetList = new ConnectionPresetList();
                 readPresetList.ConnectionPresets.Add(defaultPreset);
