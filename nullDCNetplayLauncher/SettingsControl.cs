@@ -37,7 +37,6 @@ namespace nullDCNetplayLauncher
         string p1Entry;
         string backupEntry;
         string p2Entry;
-        string regionEntry;
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {

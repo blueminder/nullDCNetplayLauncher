@@ -70,6 +70,7 @@ namespace nullDCNetplayLauncher
                 toEdit.Port = txtHostPort.Text;
                 toEdit.Delay = numDelay.Value;
                 toEdit.Method = Convert.ToInt32(cboMethod.SelectedValue);
+                toEdit.Region = cboRegion.SelectedValue.ToString();
             }
             else
             {
@@ -79,6 +80,7 @@ namespace nullDCNetplayLauncher
                 toAdd.Port = txtHostPort.Text;
                 toAdd.Delay = numDelay.Value;
                 toAdd.Method = Convert.ToInt32(cboMethod.SelectedValue);
+                toAdd.Region = cboRegion.SelectedValue.ToString();
                 presets.ConnectionPresets.Add(toAdd);
             }
 
@@ -130,6 +132,7 @@ namespace nullDCNetplayLauncher
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
                 cboMethod.SelectedValue = toLoad.Method;
+                cboRegion.SelectedValue = toLoad.Region;
             }
         }
 
