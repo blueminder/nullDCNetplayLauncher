@@ -86,6 +86,7 @@
             // splitGuest.Panel2
             // 
             this.splitGuest.Panel2.Controls.Add(this.grpAdvanced);
+            this.splitGuest.Panel2Collapsed = true;
             this.splitGuest.Size = new System.Drawing.Size(216, 310);
             this.splitGuest.SplitterDistance = 162;
             this.splitGuest.SplitterWidth = 1;

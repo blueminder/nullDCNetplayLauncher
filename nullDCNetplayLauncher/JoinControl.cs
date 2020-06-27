@@ -24,6 +24,14 @@ namespace nullDCNetplayLauncher
             cboPresetName.DataSource = presets.ConnectionPresets;
 
             btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
+
+            Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
+            RegionOptions["Japan"] = "japan";
+            RegionOptions["USA"] = "usa";
+
+            cboRegion.DataSource = new BindingSource(RegionOptions, null);
+            cboRegion.DisplayMember = "Key";
+            cboRegion.ValueMember = "Value";
         }
 
         private void JoinControl_Load(object sender, EventArgs e)
@@ -59,6 +67,7 @@ namespace nullDCNetplayLauncher
 
         private void btnLaunchGame_Click(object sender, EventArgs e)
         {
+            Launcher.SwitchRegion(cboRegion.SelectedValue.ToString());
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: false,
@@ -116,17 +125,22 @@ namespace nullDCNetplayLauncher
                     txtHostIP.BackColor = Color.LemonChiffon;
                     txtHostPort.BackColor = Color.LemonChiffon;
                     cboMethod.BackColor = Color.LemonChiffon;
+                    cboRegion.BackColor = Color.LemonChiffon;
 
                     txtOpponentIP.Text = hostInfo.IP;
                     txtHostIP.Text = hostInfo.IP;
                     txtHostPort.Text = hostInfo.Port;
                     numDelay.Value = Convert.ToInt32(hostInfo.Delay);
 
+                    var oldRegion = cboRegion.SelectedValue;
+                    var newRegion = hostInfo.Region;
+                    cboRegion.SelectedValue = hostInfo.Region;
+
                     var oldMethod = Convert.ToInt32(cboMethod.SelectedValue);
                     var newMethod = Convert.ToInt32(hostInfo.Method);
                     cboMethod.SelectedValue = newMethod;
 
-                    if (oldMethod != newMethod)
+                    if (oldMethod != newMethod || oldRegion != newRegion)
                     {
                         splitGuest.Panel2Collapsed = false;
 
