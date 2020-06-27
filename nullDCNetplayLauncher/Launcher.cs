@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -37,10 +38,13 @@ namespace nullDCNetplayLauncher
 
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
+            LoadRegionSettings();
 
             NetQuery = new NetworkQuery();
 
             GamesJson = null;
+
+            LoadRegionSettings();
 
             try
             {
@@ -588,12 +592,51 @@ namespace nullDCNetplayLauncher
             }
             var player1ActualEntry = player1_actual.Split('=')[1];
 
-            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            cfgText = cfgText.Replace("player1=joy1", "player1=" + player1ActualEntry);
-            
-
-            File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+        }
+
+        public static void LoadRegionSettings()
+        {
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var launcherCfgText = File.ReadAllText(launcherCfgPath);
+
+            string region = "japan";
+            try
+            {
+                var region_line = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
+                region = region_line.Split('=')[1];
+            }
+            catch
+            {
+                launcherCfgText += $"\nregion={region}";
+                // strips newlines
+                launcherCfgText = Regex.Replace(launcherCfgText, @"^\s*$\n|\r", string.Empty, RegexOptions.Multiline).TrimEnd();
+                launcherCfgText += $"\n";
+                File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+            }
+
+            SwitchRegion(region);
+        }
+
+        public static void SwitchRegion(string region)
+        {
+            if (region == "japan")
+            {
+                var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                if (File.Exists(us_bios_path))
+                {
+                    File.Move(us_bios_path, $"{us_bios_path}.inactive");
+                }
+            }
+            else if (region == "usa")
+            {
+                var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                if (File.Exists($"{us_bios_path}.inactive"))
+                {
+                    File.Move($"{us_bios_path}.inactive", us_bios_path);
+                }
+            }
         }
 
         public static int[] LoadWindowSettings()

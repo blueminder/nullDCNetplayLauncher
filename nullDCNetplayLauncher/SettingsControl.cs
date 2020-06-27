@@ -37,6 +37,7 @@ namespace nullDCNetplayLauncher
         string p1Entry;
         string backupEntry;
         string p2Entry;
+        string regionEntry;
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
@@ -44,7 +45,7 @@ namespace nullDCNetplayLauncher
             player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
             backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
             player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
-
+            
             Dictionary<string, string> InputOptions = new Dictionary<string, string>();
             InputOptions[""] = "";
             InputOptions["Keyboard"] = "keyboard";
@@ -77,7 +78,8 @@ namespace nullDCNetplayLauncher
             txtWindowX.Text = windowSettings[1].ToString();
             txtWindowY.Text = windowSettings[2].ToString();
 
-            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            string launcherText = File.ReadAllText(launcherCfgPath);
             if (launcherText.Contains("enable_mapper=1") || NetplayLaunchForm.EnableMapper == true)
             {
                 chkEnableMapper.Checked = true;
@@ -87,13 +89,22 @@ namespace nullDCNetplayLauncher
                 chkEnableMapper.Checked = false;
             }
 
-            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
+            RegionOptions["Japan"] = "japan";
+            RegionOptions["USA"] = "usa";
+
+            cboRegion.DataSource = new BindingSource(RegionOptions, null);
+            cboRegion.DisplayMember = "Key";
+            cboRegion.ValueMember = "Value";
+            
             var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
             var host_fps_old = launcherCfgLines.Where(s => s.Contains("host_fps=")).ToList().First();
             var guest_fps_old = launcherCfgLines.Where(s => s.Contains("guest_fps=")).ToList().First();
+            var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
 
             var hostFpsEntry = host_fps_old.Split('=')[1];
             var guestFpsEntry = guest_fps_old.Split('=')[1];
+            var regionEntry = region_old.Split('=')[1];
 
             numHostFPS.Value = Convert.ToInt32(hostFpsEntry);
 
@@ -112,6 +123,8 @@ namespace nullDCNetplayLauncher
 
             cboGamePadMappings.SelectedItem = Launcher.ActiveGamePadMapping;
 
+            cboRegion.SelectedValue = regionEntry;
+
             lblVersion.Text = Application.ProductVersion;
         }
 
@@ -128,6 +141,7 @@ namespace nullDCNetplayLauncher
         private void btnSaveInput_Click(object sender, EventArgs e)
         {
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+            string[] launcherCfgLines = File.ReadAllLines(Launcher.rootDir + "launcher.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
 
@@ -173,8 +187,12 @@ namespace nullDCNetplayLauncher
             if (p1_val.Length == 0)
                 p1_val = "NULL";
 
+            var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
+            String region_val = $"{cboRegion.SelectedValue}";
+
             cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
             launcherText = launcherText.Replace(player1_old, "player1=" + p1_val);
+            launcherText = launcherText.Replace(region_old, "region=" + region_val);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
@@ -184,7 +202,9 @@ namespace nullDCNetplayLauncher
             backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
             player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
 
-            MessageBox.Show("Input Settings Successfully Saved");
+            Launcher.LoadRegionSettings();
+
+            MessageBox.Show("Main Settings Successfully Saved");
         }
 
         private void chkEnableMapper_CheckedChanged(object sender, EventArgs e)

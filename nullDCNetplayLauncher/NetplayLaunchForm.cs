@@ -70,6 +70,7 @@ namespace nullDCNetplayLauncher
                 this.WindowState = FormWindowState.Minimized;
 
             ReloadRomList();
+            Launcher.LoadRegionSettings();
 
             if (StartTray)
             {
@@ -144,12 +145,12 @@ namespace nullDCNetplayLauncher
                 var RootDir = Launcher.rootDir;
                 if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin")))
                 {
-                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi");
+                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID.Contains("naomi"));
                     if (DataGamesJson != null && DataGamesJson.Count() > 0)
                     {
-                        var dataEntry = DataGamesJson.First();
+                        List<Launcher.Game> dataEntries = DataGamesJson.ToList();
                         DialogResult dialogResult = MessageBox.Show(
-                            "BIOS is not detected. Would you like to retrieve one?",
+                            "BIOS is not detected. Would you like to retrieve a reference set?",
                             "Missing BIOS",
                             MessageBoxButtons.YesNo);
 
@@ -158,7 +159,11 @@ namespace nullDCNetplayLauncher
                             Program.ShowConsoleWindow();
                             Console.Clear();
 
-                            NetworkQuery.DownloadReferenceUrl(dataEntry);
+                            foreach (Launcher.Game dataEntry in dataEntries)
+                            {
+                                NetworkQuery.DownloadReferenceUrl(dataEntry, false);
+                            }
+                            
 
                             Program.HideConsoleWindow();
                         }
