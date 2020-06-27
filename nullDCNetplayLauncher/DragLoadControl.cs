@@ -60,7 +60,6 @@ namespace nullDCNetplayLauncher
                         File.SetAttributes(destpath, FileAttributes.Normal);
                     }
                     File.Copy(path, destpath, true);
-                    File.SetAttributes(destpath, FileAttributes.ReadOnly);
                     lblDragInfo.Text = $"QJC copied to {Launcher.ExtractRelativePath(destpath)}";
                 }
                 else if (Path.GetExtension(path).Equals(".qkc"))
@@ -72,7 +71,6 @@ namespace nullDCNetplayLauncher
                         File.SetAttributes(destpath, FileAttributes.Normal);
                     }
                     File.Copy(path, destpath, true);
-                    File.SetAttributes(destpath, FileAttributes.ReadOnly);
                     lblDragInfo.Text = $"QKC copied to {Launcher.ExtractRelativePath(destpath)}";
                 }
                 else if (Path.GetFileName(path) == "nullDC.cfg")
