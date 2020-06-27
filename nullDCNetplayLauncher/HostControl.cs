@@ -248,7 +248,23 @@ namespace nullDCNetplayLauncher
         private void txtOpponentIP_TextChanged(object sender, EventArgs e)
         {
             if (NetworkQuery.ValidateIPv4(txtOpponentIP.Text))
+            {
+                string hostIP;
+                // if radmin ip not detected, changes host to external
+                // falls back to local if external connection can not be made
+                if (txtOpponentIP.Text.StartsWith("26"))
+                {
+                    hostIP = NetworkQuery.GetRadminHostIP();
+                }
+                else
+                {
+                    hostIP = NetworkQuery.GetExternalIP();
+                    if (hostIP == null)
+                        hostIP = (string)Launcher.NetQuery.LocalIPsByNetwork.First().Value;
+                }
+                cboHostIP.SelectedValue = hostIP;
                 GuessDelay(txtOpponentIP.Text);
+            }
             else
                 txtOpponentIP.BackColor = Color.White;
         }
