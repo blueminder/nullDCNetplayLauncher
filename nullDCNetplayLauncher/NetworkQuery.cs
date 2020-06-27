@@ -102,15 +102,13 @@ namespace nullDCNetplayLauncher
             return radminHostIP;
         }
 
-        public static void DownloadReferenceUrl(Launcher.Game game)
+        public static void DownloadReferenceUrl(Launcher.Game game, bool clearCache = true)
         {
             string displayName;
             if (game.Name.Length > 0)
                 displayName = game.Name;
             else
                 displayName = game.ID;
-
-            Console.WriteLine($"Downloading {displayName}...");
 
             string workingDir = "";
             if (game.Root == "roms" || game.Root == "data")
@@ -124,10 +122,11 @@ namespace nullDCNetplayLauncher
             }
             var di = new DirectoryInfo(workingDir);
             di.Attributes |= FileAttributes.Normal;
-            var zipPath = Path.Combine(workingDir, $"{game.ID}.zip");
+            var zipPath = Path.Combine(workingDir, $"{Path.GetFileNameWithoutExtension(game.ReferenceUrl)}.zip");
 
             if (!File.Exists(zipPath))
             {
+                Console.WriteLine($"Downloading {displayName}...");
                 var referenceUri = new Uri(game.ReferenceUrl);
                 if (referenceUri.Host == "mega.nz")
                 {
@@ -150,9 +149,9 @@ namespace nullDCNetplayLauncher
                                             zipPath);
                     }
                 }
+                Console.WriteLine($"Download Complete");
             }
 
-            Console.WriteLine($"Download Complete");
             Console.WriteLine($"Extracting...\n");
 
             string extractPath;
@@ -185,7 +184,9 @@ namespace nullDCNetplayLauncher
                     catch (Exception) { }
                 }
             }
-            File.Delete(zipPath);
+
+            if(clearCache)
+                File.Delete(zipPath);
 
             Console.WriteLine($"\nPress any key to continue.");
             Console.ReadKey(); 
