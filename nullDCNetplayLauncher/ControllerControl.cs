@@ -466,8 +466,8 @@ namespace nullDCNetplayLauncher
 
             string successText;
 
-            // only writes qkoJAMMA joystick configuration if 12 buttons minimum are assigned
-            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count >= 12)
+            // only writes qkoJAMMA joystick configuration if 11 buttons minimum are assigned
+            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count >= 11)
             {
                 NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
