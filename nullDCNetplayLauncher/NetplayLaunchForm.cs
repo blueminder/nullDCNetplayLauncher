@@ -143,9 +143,11 @@ namespace nullDCNetplayLauncher
             if (Launcher.GamesJson != null)
             {
                 var RootDir = Launcher.rootDir;
+
+                var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID.Contains("naomi")).ToList();
+
                 if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin")))
                 {
-                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID.Contains("naomi"));
                     if (DataGamesJson != null && DataGamesJson.Count() > 0)
                     {
                         List<Launcher.Game> dataEntries = DataGamesJson.ToList();
@@ -162,11 +164,34 @@ namespace nullDCNetplayLauncher
                             foreach (Launcher.Game dataEntry in dataEntries)
                             {
                                 NetworkQuery.DownloadReferenceUrl(dataEntry, false);
+                                Console.WriteLine("");
                             }
-                            
+
 
                             Program.HideConsoleWindow();
                         }
+                    }
+                }
+
+                DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi_usa").ToList();
+                if (DataGamesJson.Count() > 0
+                    && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin"))
+                    && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin.inactive")))
+                {
+                    List<Launcher.Game> dataEntries = DataGamesJson.ToList();
+                    DialogResult dialogResult = MessageBox.Show(
+                        "USA BIOS is not detected. Would you like to retrieve one?",
+                        "Missing BIOS",
+                        MessageBoxButtons.YesNo);
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Program.ShowConsoleWindow();
+                        Console.Clear();
+
+                        NetworkQuery.DownloadReferenceUrl(dataEntries.First(), false);
+
+                        Program.HideConsoleWindow();
                     }
                 }
             }
