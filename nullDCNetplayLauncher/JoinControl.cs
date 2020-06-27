@@ -138,6 +138,15 @@ namespace nullDCNetplayLauncher
 
                     var oldRegion = cboRegion.SelectedValue.ToString();
                     var newRegion = hostInfo.Region;
+
+                    var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                    if (hostInfo.Region != "japan" 
+                        && !File.Exists(us_bios_path) 
+                        && !File.Exists($"{us_bios_path}.inactive"))
+                    {
+                        MessageBox.Show($"Your opponent has chosen the unsupported region \"{hostInfo.Region}\".\nPlease install the appropriate BIOS or ask your opponent to change their region.");
+                    }
+
                     cboRegion.SelectedValue = hostInfo.Region;
 
                     var oldMethod = Convert.ToInt32(cboMethod.SelectedValue);

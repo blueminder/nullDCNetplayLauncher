@@ -38,7 +38,6 @@ namespace nullDCNetplayLauncher
 
             mappings = GamePadMapping.ReadMappingsFile(); ;
             AssignActiveMapping();
-            LoadRegionSettings();
 
             NetQuery = new NetworkQuery();
 
