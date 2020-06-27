@@ -108,9 +108,9 @@
             this.lblHostCode.AutoSize = true;
             this.lblHostCode.Location = new System.Drawing.Point(41, 5);
             this.lblHostCode.Name = "lblHostCode";
-            this.lblHostCode.Size = new System.Drawing.Size(140, 13);
+            this.lblHostCode.Size = new System.Drawing.Size(134, 13);
             this.lblHostCode.TabIndex = 78;
-            this.lblHostCode.Text = "Enter Received Guest Code";
+            this.lblHostCode.Text = "Enter Received Host Code";
             // 
             // btnExpandCollapse
             // 
