@@ -86,6 +86,7 @@
             // splitHost.Panel2
             // 
             this.splitHost.Panel2.Controls.Add(this.grpAdvanced);
+            this.splitHost.Panel2Collapsed = true;
             this.splitHost.Size = new System.Drawing.Size(216, 310);
             this.splitHost.SplitterDistance = 162;
             this.splitHost.SplitterWidth = 1;
@@ -334,6 +335,7 @@
             this.cboRegion.Name = "cboRegion";
             this.cboRegion.Size = new System.Drawing.Size(105, 21);
             this.cboRegion.TabIndex = 74;
+            this.cboRegion.SelectedIndexChanged += new System.EventHandler(this.cboRegion_SelectedIndexChanged);
             // 
             // HostControl
             // 

@@ -411,18 +411,22 @@ namespace nullDCNetplayLauncher
             return String.Join("\\", Enumerable.Reverse(splitPath).Take(3).Reverse().ToList<string>());
         }
 
-        public static string GenerateHostCode(string ip, string port, string delay, string method="0")
+        public static string GenerateHostCode(string ip, string port, string delay, string method="0", string region="japan")
         {
             string combinedHostInfo;
-            if (method == "0")
+            if (method == "0" && region == "japan")
             {
                 combinedHostInfo = ip + "|" + port + "|" + delay;
             }
-            else
+            else if (region == "japan")
             {
                 combinedHostInfo = ip + "|" + port + "|" + delay + "|" + method;
             }
-            
+            else
+            {
+                combinedHostInfo = ip + "|" + port + "|" + delay + "|" + method + "|" + region;
+            }
+
             var infoBytes = System.Text.Encoding.UTF8.GetBytes(combinedHostInfo);
             return System.Convert.ToBase64String(infoBytes);
         }
@@ -433,6 +437,7 @@ namespace nullDCNetplayLauncher
             public string Port { get; set; }
             public string Delay { get; set; }
             public string Method { get; set; }
+            public string Region { get; set; }
         }
 
         public static HostInfo DecodeHostCode(string hostCode)
@@ -447,6 +452,7 @@ namespace nullDCNetplayLauncher
                 decodedHostInfo.Port = hostInfoArray[1];
                 decodedHostInfo.Delay = hostInfoArray[2];
                 decodedHostInfo.Method = "0";
+                decodedHostInfo.Region = "japan";
             }
             if (hostInfoArray.Length == 4)
             {
@@ -454,6 +460,15 @@ namespace nullDCNetplayLauncher
                 decodedHostInfo.Port = hostInfoArray[1];
                 decodedHostInfo.Delay = hostInfoArray[2];
                 decodedHostInfo.Method = hostInfoArray[3];
+                decodedHostInfo.Region = "japan";
+            }
+            if (hostInfoArray.Length == 5)
+            {
+                decodedHostInfo.IP = hostInfoArray[0];
+                decodedHostInfo.Port = hostInfoArray[1];
+                decodedHostInfo.Delay = hostInfoArray[2];
+                decodedHostInfo.Method = hostInfoArray[3];
+                decodedHostInfo.Region = hostInfoArray[4];
             }
             return decodedHostInfo;
         }

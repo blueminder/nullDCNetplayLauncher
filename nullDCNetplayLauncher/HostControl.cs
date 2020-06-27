@@ -29,6 +29,14 @@ namespace nullDCNetplayLauncher
             cboPresetName.DataSource = presets.ConnectionPresets;
 
             btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
+
+            Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
+            RegionOptions["Japan"] = "japan";
+            RegionOptions["USA"] = "usa";
+
+            cboRegion.DataSource = new BindingSource(RegionOptions, null);
+            cboRegion.DisplayMember = "Key";
+            cboRegion.ValueMember = "Value";
         }
 
         private void HostControl_Load(object sender, EventArgs e)
@@ -149,16 +157,21 @@ namespace nullDCNetplayLauncher
 
         private void btnGenHostCode_Click(object sender, EventArgs e)
         {
+            if (cboRegion.SelectedValue.ToString() != "japan")
+                cboRegion.BackColor = Color.Honeydew;
+            
             var hostCode = Launcher.GenerateHostCode(cboHostIP.Text,
                                                      txtHostPort.Text,
                                                      Convert.ToInt32(numDelay.Value).ToString(),
-                                                     Convert.ToInt32(cboMethod.SelectedValue).ToString());
+                                                     Convert.ToInt32(cboMethod.SelectedValue).ToString(),
+                                                     cboRegion.SelectedValue.ToString());
             txtHostCode.Text = hostCode;
             txtHostCode.BackColor = Color.Honeydew;
         }
 
         private void btnLaunchGame_Click(object sender, EventArgs e)
         {
+            Launcher.SwitchRegion(cboRegion.SelectedValue.ToString());
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: true,
@@ -282,6 +295,11 @@ namespace nullDCNetplayLauncher
         private void cboHostIP_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtHostCode.Text = "";
+        }
+
+        private void cboRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cboRegion.BackColor = Color.White;
         }
     }
 }
