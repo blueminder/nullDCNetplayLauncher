@@ -35,9 +35,11 @@ namespace nullDCNetplayLauncher
         public bool SetupUnfinished;
 
         GamePadMapping WorkingMapping;
+        Dictionary<string, string> jWorkingMapping;
 
         private ControllerEngine controller;
         private GamePadState OldState;
+        private OpenTK.Input.JoystickState jOldState;
 
         string[] directionalButtons;
         string[] faceButtons;
@@ -70,6 +72,7 @@ namespace nullDCNetplayLauncher
             buttonNames = directionalButtons.Concat(faceButtons).Concat(optionButtons).ToArray();
 
             WorkingMapping = new GamePadMapping();
+            jWorkingMapping = new Dictionary<string, string>();
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
@@ -267,6 +270,9 @@ namespace nullDCNetplayLauncher
             var State = e.GamePadState;
             var Capabilities = controller.CapabilitiesGamePad;
 
+            var jState = e.JoystickState;
+            var jCapabilities = controller.CapabilitiesJoystick;
+
             PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
                 p =>
                 {
@@ -279,8 +285,55 @@ namespace nullDCNetplayLauncher
                     return p.PropertyType == typeof(Boolean);
                 }).ToArray();
 
+            for (int i = 0; i < jCapabilities.ButtonCount; i++)
+            {
+                string assign;
+                if (int.TryParse(CurrentButtonAssignment, out _))
+                {
+                    assign = $"Button_{CurrentButtonAssignment}";
+                }
+                else
+                {
+                    assign = CurrentButtonAssignment;
+                }
+                if (jOldState.GetButton(i) != jState.GetButton(i))
+                {
+                    jWorkingMapping[assign] = $"button_{i + 1}";
+                }
+            }
+
+            if (!jOldState.GetHat(JoystickHat.Hat0).Equals(jState.GetHat(JoystickHat.Hat0)))
+            {
+                string assign;
+                if (int.TryParse(CurrentButtonAssignment, out _))
+                {
+                    assign = $"Button_{CurrentButtonAssignment}";
+                }
+                else
+                {
+                    assign = CurrentButtonAssignment;
+                }
+                switch (jState.GetHat(JoystickHat.Hat0).Position)
+                {
+                    case HatPosition.Up:
+                        jWorkingMapping[assign] = "hat_0_up";
+                        break;
+                    case HatPosition.Down:
+                        jWorkingMapping[assign] = "hat_0_down";
+                        break;
+                    case HatPosition.Left:
+                        jWorkingMapping[assign] = "hat_0_left";
+                        break;
+                    case HatPosition.Right:
+                        jWorkingMapping[assign] = "hat_0_right";
+                        break;
+                }
+            }
+
             foreach (PropertyInfo buttonProperty in AvailableButtonProperties)
             {
+
+                // GamePad logic
                 var CurrentButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
                 var OldButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
                 if (!Object.ReferenceEquals(OldState, null))
@@ -303,6 +356,7 @@ namespace nullDCNetplayLauncher
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
                     CurrentlyAssigned = true;
                 }
+
             }
 
             foreach (PropertyInfo buttonProperty in AvailableDPadProperties)
@@ -368,6 +422,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
                 WorkingMapping["IsRight"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Right"] = "axis_w_positive";
+                }
             }
 
             if (oldLeftX == 1 && newLeftX == 0)
@@ -380,6 +438,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
                 WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Left"] = "axis_w_negative";
+                }
             }
 
             if (oldLeftX == -1 && newLeftX == 0)
@@ -392,6 +454,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
                 WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Up"] = "axis_z_negative";
+                }
             }
 
             if (oldLeftY == 1 && newLeftY == 0)
@@ -404,6 +470,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
                 WorkingMapping["IsDown"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Down"] = "axis_z_positive";
+                }
             }
 
             if (oldLeftY == -1 && newLeftY == 0)
@@ -413,6 +483,7 @@ namespace nullDCNetplayLauncher
             }
 
             OldState = State;
+            jOldState = jState;
         }
 
         private List<JoystickUpdate> SetJoystickButton(SharpDX.DirectInput.Joystick joystick, string button)
@@ -471,8 +542,22 @@ namespace nullDCNetplayLauncher
             string successText;
 
             // only writes qkoJAMMA joystick configuration if 11 buttons minimum are assigned
-            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count >= 11)
+            //  && ButtonAssignments.Count >= 11
+            if (!ZDetected && jWorkingMapping.Count >= 11)
             {
+                string[] qkoFields = { "Start", "Test", "Up", "Down", "Left", "Right",
+                                        "Button_1", "Button_2", "Button_3", "Button_4",
+                                        "Button_5", "Button_6", "Coin"};
+
+                ButtonAssignmentText = "";
+                foreach (string field in qkoFields)
+                {
+                    if(jWorkingMapping.ContainsKey(field))
+                    {
+                        ButtonAssignmentText += $"{jWorkingMapping[field]}={field}\n";
+                    }
+                }
+
                 NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
@@ -524,6 +609,7 @@ namespace nullDCNetplayLauncher
 
                 ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
                 OldState = args.GamePadState;
+                jOldState = args.JoystickState;
 
                 if (!IsUnnamed)
                 {
@@ -564,10 +650,8 @@ namespace nullDCNetplayLauncher
                             }
                             else
                             {
-                            */
                                 ButtonAssignmentText += $"none={buttonName}\n";
                                 ButtonAssignments.Add(button, joystickUpdate);
-                            /*
                             }
                             */
                             if (directionalButtons.Any(button.Contains))
@@ -633,6 +717,8 @@ namespace nullDCNetplayLauncher
                 NetplayLaunchForm.controller.clock.Stop();
             }
             */
+
+            jWorkingMapping = new Dictionary<string, string>();
 
             OldEnableMapper = NetplayLaunchForm.EnableMapper;
             SetupUnfinished = true;

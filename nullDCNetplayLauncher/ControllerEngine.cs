@@ -61,6 +61,8 @@ namespace nullDCNetplayLauncher
 
         public GamePadCapabilities CapabilitiesGamePad { get { return GamePad.GetCapabilities(this.ActiveDevice); } }
 
+        public JoystickCapabilities CapabilitiesJoystick { get { return Joystick.GetCapabilities(this.ActiveDevice); } }
+
         protected virtual void OnGamePadAction(ActionEventArgs e)
         {
             EventHandler<ActionEventArgs> handler = GamePadAction;
@@ -105,6 +107,8 @@ namespace nullDCNetplayLauncher
         public int Instance { get; set; }
 
         public GamePadState GamePadState { get { return GamePad.GetState(this.Instance); } }
+
+        public JoystickState JoystickState { get { return Joystick.GetState(this.Instance); } }
 
     }
 }
