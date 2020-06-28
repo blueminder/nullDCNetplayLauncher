@@ -29,8 +29,6 @@ namespace nullDCNetplayLauncher
         {
             controller = new ControllerEngine();
 
-            
-
             launcher = new Launcher();
             presets = ConnectionPreset.ReadPresetsFile();
 

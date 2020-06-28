@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using XInputDotNetPure;
 
 namespace nullDCNetplayLauncher
 {
@@ -34,7 +35,8 @@ namespace nullDCNetplayLauncher
 
         private ControllerEngine controller;
         private Dictionary<string, string> KeyboardQkcMapping;
-        private GamePadState OldState;
+        private OpenTK.Input.GamePadState OTKOldState;
+        private XInputDotNetPure.GamePadState XOldState;
 
         public GamePadMapper()
         {
@@ -51,96 +53,234 @@ namespace nullDCNetplayLauncher
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
         }
 
-        PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
-            p =>
-            {
-                return p.Name != "IsAnyButtonPressed";
-            }).ToArray();
+        public void InputRoll(object sender, EventArgs e)
+        {
+            XInputGamePadInputRoll();
+            //OpenTKGamePadInputRoll();
+        }
 
-        PropertyInfo[] AvailableDPadProperties = typeof(GamePadDPad).GetProperties().Where(
+        PropertyInfo[] AvailableXButtonProperties = typeof(XInputDotNetPure.GamePadButtons).GetProperties().Where(
+    p =>
+    {
+        return p.Name != "IsAnyButtonPressed";
+    }).ToArray();
+
+        PropertyInfo[] AvailableXDPadProperties = typeof(XInputDotNetPure.GamePadDPad).GetProperties().Where(
             p =>
             {
                 return p.PropertyType == typeof(Boolean);
             }).ToArray();
 
-        public void InputRoll(object sender, EventArgs e)
+        public void XInputGamePadInputRoll()
         {
-            var State = GamePad.GetState(0);
-            var Capabilities = controller.CapabilitiesGamePad;
+            var State = XInputDotNetPure.GamePad.GetState(PlayerIndex.Two);
 
-            foreach (PropertyInfo buttonProperty in AvailableButtonProperties)
+            foreach (PropertyInfo buttonProperty in AvailableXButtonProperties)
             {
-                ButtonState CurrentButtonState = (ButtonState)buttonProperty.GetValue(State.Buttons);
-                ButtonState OldButtonState = (ButtonState)buttonProperty.GetValue(State.Buttons);
-                if (!Object.ReferenceEquals(OldState, null))
+                XInputDotNetPure.ButtonState CurrentButtonState = (XInputDotNetPure.ButtonState)buttonProperty.GetValue(State.Buttons);
+                XInputDotNetPure.ButtonState OldButtonState = (XInputDotNetPure.ButtonState)buttonProperty.GetValue(State.Buttons);
+                if (!Object.ReferenceEquals(XOldState, null))
                 {
-                    OldButtonState = (ButtonState)buttonProperty.GetValue(OldState.Buttons);
+                    OldButtonState = (XInputDotNetPure.ButtonState)buttonProperty.GetValue(XOldState.Buttons);
                 }
 
-                if (CurrentButtonState == ButtonState.Pressed &&
-                (Object.ReferenceEquals(OldState, null) || OldButtonState == ButtonState.Released))
+                if (CurrentButtonState == XInputDotNetPure.ButtonState.Pressed &&
+                (Object.ReferenceEquals(XOldState, null) || OldButtonState == XInputDotNetPure.ButtonState.Released))
                 {
                     CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
                 }
-                if (CurrentButtonState == ButtonState.Released &&
-                    (!Object.ReferenceEquals(OldState, null) && OldButtonState == ButtonState.Pressed))
+                if (CurrentButtonState == XInputDotNetPure.ButtonState.Released &&
+                    (!Object.ReferenceEquals(XOldState, null) && OldButtonState == XInputDotNetPure.ButtonState.Pressed))
                 {
                     CallButtonMapping(buttonProperty.Name, false);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                 }
             }
 
-            foreach (PropertyInfo buttonProperty in AvailableDPadProperties)
-            {
-                Boolean CurrentDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
-                Boolean OldDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
-                if (!Object.ReferenceEquals(OldState, null))
-                {
-                    OldDPadState = (Boolean)buttonProperty.GetValue(OldState.DPad);
-                }
+            PropertyInfo[] AvailableXTriggerProperties = typeof(XInputDotNetPure.GamePadTriggers).GetProperties().ToArray();
 
-                if (CurrentDPadState == true &&
-                (Object.ReferenceEquals(OldState, null) || OldDPadState == false))
-                {
-                    CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
-                }
-                if (CurrentDPadState == false &&
-                    (!Object.ReferenceEquals(OldState, null) && OldDPadState == true))
-                {
-                    CallButtonMapping(buttonProperty.Name, false);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
-                }
-            }
-
-            PropertyInfo[] AvailableTriggerProperties = typeof(GamePadTriggers).GetProperties().ToArray();
-
-            foreach (PropertyInfo buttonProperty in AvailableTriggerProperties)
+            foreach (PropertyInfo buttonProperty in AvailableXTriggerProperties)
             {
                 float CurrentTriggerState = (float)buttonProperty.GetValue(State.Triggers);
                 float OldTriggerState = (float)buttonProperty.GetValue(State.Triggers);
-                if (!Object.ReferenceEquals(OldState, null))
+                if (!Object.ReferenceEquals(XOldState, null))
                 {
-                    OldTriggerState = (float)buttonProperty.GetValue(OldState.Triggers);
+                    OldTriggerState = (float)buttonProperty.GetValue(XOldState.Triggers);
                 }
 
                 if (CurrentTriggerState == 1 &&
-                (Object.ReferenceEquals(OldState, null) || OldTriggerState == 0))
+                (Object.ReferenceEquals(XOldState, null) || OldTriggerState == 0))
                 {
                     CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
                 }
                 if (CurrentTriggerState == 0 &&
-                    (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))
+                    (!Object.ReferenceEquals(XOldState, null) && OldTriggerState == 1))
                 {
                     CallButtonMapping(buttonProperty.Name, false);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
                 }
             }
 
-            var oldLeftX = Math.Round(OldState.ThumbSticks.Left.X);
-            var oldLeftY = Math.Round(OldState.ThumbSticks.Left.Y);
+            var oldUp = Convert.ToBoolean(XOldState.DPad.Up);
+            var oldDown = Convert.ToBoolean(XOldState.DPad.Down);
+            var oldLeft = Convert.ToBoolean(XOldState.DPad.Left);
+            var oldRight = Convert.ToBoolean(XOldState.DPad.Right);
+
+            var newUp = Convert.ToBoolean(State.DPad.Up);
+            var newDown = Convert.ToBoolean(State.DPad.Down);
+            var newLeft = Convert.ToBoolean(State.DPad.Left);
+            var newRight = Convert.ToBoolean(State.DPad.Right);
+
+            var oldLeftX = Math.Round(XOldState.ThumbSticks.Left.X);
+            var oldLeftY = Math.Round(XOldState.ThumbSticks.Left.Y);
+
+            var newLeftX = Math.Round(State.ThumbSticks.Left.X);
+            var newLeftY = Math.Round(State.ThumbSticks.Left.Y);
+
+            if (oldLeftX == 0 && newLeftX == 1 || oldRight == true && newRight == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Pushed");
+                CallButtonMapping("IsRight", true);
+            }
+
+            if (oldLeftX == 1 && newLeftX == 0 || oldRight == false && newRight == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Released");
+                CallButtonMapping("IsRight", false);
+            }
+
+            if (oldLeftX == 0 && newLeftX == -1 || oldLeft == true && newLeft == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Pushed");
+                CallButtonMapping("IsLeft", true);
+            }
+
+            if (oldLeftX == -1 && newLeftX == 0 || oldLeft == false && newLeft == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Released");
+                CallButtonMapping("IsLeft", false);
+            }
+
+            if (oldLeftY == 0 && newLeftY == 1 || oldUp == true && newUp == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Pushed");
+                CallButtonMapping("IsUp", true);
+            }
+
+            if (oldLeftY == 1 && newLeftY == 0 || oldUp == false && newUp == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Released");
+                CallButtonMapping("IsUp", false);
+            }
+
+            if (oldLeftY == 0 && newLeftY == -1 || oldDown == true && newDown == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Pushed");
+                CallButtonMapping("IsDown", true);
+            }
+
+            if (oldLeftY == -1 && newLeftY == 0 || oldDown == false && newDown == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Released");
+                CallButtonMapping("IsDown", false);
+            }
+
+            XOldState = State;
+        }
+
+
+        PropertyInfo[] AvailableOTKButtonProperties = typeof(OpenTK.Input.GamePadButtons).GetProperties().Where(
+            p =>
+            {
+                return p.Name != "IsAnyButtonPressed";
+            }).ToArray();
+
+        PropertyInfo[] AvailableOTKDPadProperties = typeof(OpenTK.Input.GamePadDPad).GetProperties().Where(
+            p =>
+            {
+                return p.PropertyType == typeof(Boolean);
+            }).ToArray();
+
+        public void OpenTKGamePadInputRoll()
+        {
+            var State = OpenTK.Input.GamePad.GetState(0);
+            var Capabilities = controller.CapabilitiesGamePad;
+
+            foreach (PropertyInfo buttonProperty in AvailableOTKButtonProperties)
+            {
+                OpenTK.Input.ButtonState CurrentButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
+                OpenTK.Input.ButtonState OldButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
+                if (!Object.ReferenceEquals(OTKOldState, null))
+                {
+                    OldButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(OTKOldState.Buttons);
+                }
+
+                if (CurrentButtonState == OpenTK.Input.ButtonState.Pressed &&
+                (Object.ReferenceEquals(OTKOldState, null) || OldButtonState == OpenTK.Input.ButtonState.Released))
+                {
+                    CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                }
+                if (CurrentButtonState == OpenTK.Input.ButtonState.Released &&
+                    (!Object.ReferenceEquals(OTKOldState, null) && OldButtonState == OpenTK.Input.ButtonState.Pressed))
+                {
+                    CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                }
+            }
+
+            foreach (PropertyInfo buttonProperty in AvailableOTKDPadProperties)
+            {
+                Boolean CurrentDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
+                Boolean OldDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
+                if (!Object.ReferenceEquals(OTKOldState, null))
+                {
+                    OldDPadState = (Boolean)buttonProperty.GetValue(OTKOldState.DPad);
+                }
+
+                if (CurrentDPadState == true &&
+                (Object.ReferenceEquals(OTKOldState, null) || OldDPadState == false))
+                {
+                    CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                }
+                if (CurrentDPadState == false &&
+                    (!Object.ReferenceEquals(OTKOldState, null) && OldDPadState == true))
+                {
+                    CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                }
+            }
+
+            PropertyInfo[] AvailableOTKTriggerProperties = typeof(OpenTK.Input.GamePadTriggers).GetProperties().ToArray();
+
+            foreach (PropertyInfo buttonProperty in AvailableOTKTriggerProperties)
+            {
+                float CurrentTriggerState = (float)buttonProperty.GetValue(State.Triggers);
+                float OldTriggerState = (float)buttonProperty.GetValue(State.Triggers);
+                if (!Object.ReferenceEquals(OTKOldState, null))
+                {
+                    OldTriggerState = (float)buttonProperty.GetValue(OTKOldState.Triggers);
+                }
+
+                if (CurrentTriggerState == 1 &&
+                (Object.ReferenceEquals(OTKOldState, null) || OldTriggerState == 0))
+                {
+                    CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
+                }
+                if (CurrentTriggerState == 0 &&
+                    (!Object.ReferenceEquals(OTKOldState, null) && OldTriggerState == 1))
+                {
+                    CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
+                }
+            }
+
+            var oldLeftX = Math.Round(OTKOldState.ThumbSticks.Left.X);
+            var oldLeftY = Math.Round(OTKOldState.ThumbSticks.Left.Y);
 
             var newLeftX = Math.Round(State.ThumbSticks.Left.X);
             var newLeftY = Math.Round(State.ThumbSticks.Left.Y);
@@ -193,44 +333,7 @@ namespace nullDCNetplayLauncher
                 CallButtonMapping("IsDown", false);
             }
 
-            OldState = State;
-        }
-
-        public String GetThumbStickDirection(double X, double Y)
-        {
-            var roundX = Math.Round(X);
-            var roundY = Math.Round(Y);
-
-            if(roundX == 0)
-            {
-                if (roundY == 1)
-                    return "Up";
-                else if (roundY == -1)
-                    return "Down";
-            }
-            else if (roundY == 0)
-            {
-                if (roundX == -1)
-                    return "Left";
-                else if (roundX == 1)
-                    return "Right";
-            }
-            else if (roundX == 1)
-            {
-                if (roundY == -1)
-                    return "DownRight";
-                else if (roundY == 1)
-                    return "UpRight";
-            }
-            else if (roundX == -1)
-            {
-                if (roundY == -1)
-                    return "DownLeft";
-                else if (roundY == 1)
-                    return "UpLeft";
-            }
-            System.Diagnostics.Debug.WriteLine($"{roundX} {roundY}");
-            return "Center";
+            OTKOldState = State;
         }
 
         [DllImport("user32.dll")]
