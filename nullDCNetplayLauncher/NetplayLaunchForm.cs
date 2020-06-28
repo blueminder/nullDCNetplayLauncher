@@ -200,9 +200,8 @@ namespace nullDCNetplayLauncher
         public static void StartMapper()
         {
             EnableMapper = true;
-            gpm = new GamePadMapper();
+            gpm = new GamePadMapper(controller);
             Application.Idle += gpm.InputRoll;
-            gpm.InitializeController(NetplayLaunchForm.ActiveForm, null);
         }
 
         public static void StopMapper(bool detach = false)
@@ -210,6 +209,7 @@ namespace nullDCNetplayLauncher
             EnableMapper = false;
             if (gpm != null)
             {
+                gpm.StopClock();
                 Application.Idle -= gpm.InputRoll;
                 gpm.Dispose();
             }
