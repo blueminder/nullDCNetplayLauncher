@@ -535,12 +535,15 @@ namespace nullDCNetplayLauncher
 
                     if (IsDirection(button) && AnalogSet)
                     {
+                        /*
                         String analogAssignment = null;
                         while (analogAssignment is null)
                         {
                             analogAssignment = SetJoystickAnalog(joystick);
                         }
+                        
                         ButtonAssignmentText += $"{analogAssignment}={buttonName}\n";
+                        */
                     }
                     else
                     {
@@ -548,6 +551,7 @@ namespace nullDCNetplayLauncher
 
                         if (!ZDetected)
                         {
+                            /*
                             if (joystickUpdate.Count > 0)
                             {
                                 var buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
@@ -560,10 +564,12 @@ namespace nullDCNetplayLauncher
                             }
                             else
                             {
+                            */
                                 ButtonAssignmentText += $"none={buttonName}\n";
                                 ButtonAssignments.Add(button, joystickUpdate);
+                            /*
                             }
-
+                            */
                             if (directionalButtons.Any(button.Contains))
                             {
                                 Thread.Sleep(700);
