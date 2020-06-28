@@ -56,8 +56,8 @@ namespace nullDCNetplayLauncher
                 StartMapper();
             }
 
-            InitializeComponent(StartTray);
-            //InitializeComponent();
+            //InitializeComponent(StartTray);
+            InitializeComponent();
 
             if (StartTray)
                 this.WindowState = FormWindowState.Minimized;
@@ -206,7 +206,7 @@ namespace nullDCNetplayLauncher
 
         public static void StopMapper(bool detach = false)
         {
-            EnableMapper = false;
+            // EnableMapper = false;
             if (gpm != null)
             {
                 gpm.StopClock();
@@ -367,7 +367,7 @@ namespace nullDCNetplayLauncher
         private void btnController_Click(object sender, EventArgs e)
         {
             StopMapper(true);
-            UserControl cc = new ControllerControl(controller);
+            ControllerControl cc = new ControllerControl(controller);
             Form window = new Form
             {
                 Text = "Controller Setup",
@@ -382,8 +382,9 @@ namespace nullDCNetplayLauncher
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
 
-            if (EnableMapper)
+            if (EnableMapper || cc.OldEnableMapper && cc.SetupUnfinished)
             {
+                cc.SetupUnfinished = false;
                 Launcher.mappings = GamePadMapping.ReadMappingsFile();
                 try
                 {

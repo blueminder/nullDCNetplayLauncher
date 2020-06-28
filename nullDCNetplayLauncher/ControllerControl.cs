@@ -31,6 +31,9 @@ namespace nullDCNetplayLauncher
         bool Skip;
         bool IsUnnamed;
 
+        public bool OldEnableMapper;
+        public bool SetupUnfinished;
+
         GamePadMapping WorkingMapping;
 
         private ControllerEngine controller;
@@ -54,6 +57,7 @@ namespace nullDCNetplayLauncher
             rm = Properties.Resources.ResourceManager;
             AnalogSet = false;
             Skip = false;
+            SetupUnfinished = false;
             joystickBgWorker = new BackgroundWorker();
             InitializeJoystick();
             InitializeJoystickBgWorker();
@@ -497,6 +501,8 @@ namespace nullDCNetplayLauncher
 
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+
+            SetupUnfinished = false;
         }
 
         private bool IsDirection(string button)
@@ -622,6 +628,9 @@ namespace nullDCNetplayLauncher
             }
             */
 
+            OldEnableMapper = NetplayLaunchForm.EnableMapper;
+            SetupUnfinished = true;
+
             showSetupButtons();
             btnCancel.Enabled = true;
             btnSetup.Enabled = false;
@@ -632,6 +641,7 @@ namespace nullDCNetplayLauncher
 
         private void btnSetup_Click(object sender, EventArgs e)
         {
+            NetplayLaunchForm.EnableMapper = false;
             // reset button assignments on click
             ButtonAssignments = new Dictionary<string, List<JoystickUpdate>>();
             ButtonAssignmentText = "";
@@ -641,6 +651,7 @@ namespace nullDCNetplayLauncher
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            SetupUnfinished = true;
             ((Form)this.TopLevelControl).Close();
         }
 
