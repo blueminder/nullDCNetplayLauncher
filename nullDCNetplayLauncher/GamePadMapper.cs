@@ -1,5 +1,4 @@
-﻿using OpenTK;
-using OpenTK.Input;
+﻿using OpenTK.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,8 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Windows;
-using System.Windows.Threading;
 
 namespace nullDCNetplayLauncher
 {
@@ -39,23 +36,19 @@ namespace nullDCNetplayLauncher
         private Dictionary<string, string> KeyboardQkcMapping;
         private GamePadState OldState;
 
-        public GamePadMapper(ControllerEngine controllerEngine)
+        public GamePadMapper()
         {
-            controller = controllerEngine;
+            controller = new ControllerEngine();
+            controller.clock.Start();
             KeyboardQkcMapping = ReadKeyboardQkc();
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
             //hWindow = Launcher.NullDCWindowHandle();
         }
 
+
         public void InitializeController(Object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
-            controller.GamePadAction += controller_GamePadAction;
-        }
-
-        public void DetachController()
-        {
-            controller.GamePadAction -= controller_GamePadAction;
         }
 
         PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
@@ -70,9 +63,9 @@ namespace nullDCNetplayLauncher
                 return p.PropertyType == typeof(Boolean);
             }).ToArray();
 
-        private void controller_GamePadAction(object sender, ActionEventArgs e)
-        {   
-            var State = e.GamePadState;
+        public void InputRoll(object sender, EventArgs e)
+        {
+            var State = GamePad.GetState(0);
             var Capabilities = controller.CapabilitiesGamePad;
 
             foreach (PropertyInfo buttonProperty in AvailableButtonProperties)
@@ -83,7 +76,7 @@ namespace nullDCNetplayLauncher
                 {
                     OldButtonState = (ButtonState)buttonProperty.GetValue(OldState.Buttons);
                 }
-                
+
                 if (CurrentButtonState == ButtonState.Pressed &&
                 (Object.ReferenceEquals(OldState, null) || OldButtonState == ButtonState.Released))
                 {
@@ -97,7 +90,7 @@ namespace nullDCNetplayLauncher
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                 }
             }
-            
+
             foreach (PropertyInfo buttonProperty in AvailableDPadProperties)
             {
                 Boolean CurrentDPadState = (Boolean)buttonProperty.GetValue(State.DPad);
@@ -152,7 +145,7 @@ namespace nullDCNetplayLauncher
             var newLeftX = Math.Round(State.ThumbSticks.Left.X);
             var newLeftY = Math.Round(State.ThumbSticks.Left.Y);
 
-            if(oldLeftX == 0 && newLeftX == 1)
+            if (oldLeftX == 0 && newLeftX == 1)
             {
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
                 CallButtonMapping("IsRight", true);
@@ -304,25 +297,25 @@ namespace nullDCNetplayLauncher
         public void PushKey(byte key)
         {
             Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            if (processes.Length > 0)
-            {
+            //if (processes.Length > 0)
+            //{
                 //Process ndc = processes[0];
                 //IntPtr ptr = ndc.MainWindowHandle;
 
                 //SetFocus(ptr);
 
                 keybd_event(key, 0, 0, 0);
-            }
+            //}
         }
 
         public void ReleaseKey(byte key)
         {
-            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            if (processes.Length > 0)
-            {
+            //Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            //if (processes.Length > 0)
+            //{
                 const uint KEYEVENTF_KEYUP = 0x0002;
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
-            }
+            //}
         }
 
         public Dictionary<string, string> ReadKeyboardQkc()
@@ -341,5 +334,4 @@ namespace nullDCNetplayLauncher
         }
     }
 
-    
 }

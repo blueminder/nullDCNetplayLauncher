@@ -42,7 +42,7 @@ namespace nullDCNetplayLauncher
         // GamePadAction: Triggered when the oldgstate is different from the current GamePadState
         public event EventHandler<ActionEventArgs> GamePadAction;
 
-        private int clockspeed = 12;
+        private int clockspeed = 16;
 
         public ControllerEngine()
         {
