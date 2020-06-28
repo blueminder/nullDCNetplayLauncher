@@ -38,32 +38,38 @@ namespace nullDCNetplayLauncher
         private OpenTK.Input.GamePadState OTKOldState;
         private XInputDotNetPure.GamePadState XOldState;
 
-        public GamePadMapper()
+        public GamePadMapper(ControllerEngine controllerEngine)
         {
-            controller = new ControllerEngine();
-            controller.clock.Start();
+            controller = controllerEngine;
+            StartClock();
             KeyboardQkcMapping = ReadKeyboardQkc();
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
             //hWindow = Launcher.NullDCWindowHandle();
         }
 
-
-        public void InitializeController(Object sender, EventArgs e)
+        public void StartClock()
         {
-            System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
+            controller.clock.Start();
+        }
+
+        public void StopClock()
+        {
+            controller.clock.Stop();
         }
 
         public void InputRoll(object sender, EventArgs e)
         {
-            XInputGamePadInputRoll();
-            //OpenTKGamePadInputRoll();
+            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+                XInputGamePadInputRoll();
+            else
+                OpenTKGamePadInputRoll();
         }
 
         PropertyInfo[] AvailableXButtonProperties = typeof(XInputDotNetPure.GamePadButtons).GetProperties().Where(
-    p =>
-    {
-        return p.Name != "IsAnyButtonPressed";
-    }).ToArray();
+            p =>
+            {
+                return p.Name != "IsAnyButtonPressed";
+            }).ToArray();
 
         PropertyInfo[] AvailableXDPadProperties = typeof(XInputDotNetPure.GamePadDPad).GetProperties().Where(
             p =>
@@ -73,7 +79,7 @@ namespace nullDCNetplayLauncher
 
         public void XInputGamePadInputRoll()
         {
-            var State = XInputDotNetPure.GamePad.GetState(PlayerIndex.Two);
+            var State = XInputDotNetPure.GamePad.GetState(PlayerIndex.One);
 
             foreach (PropertyInfo buttonProperty in AvailableXButtonProperties)
             {
