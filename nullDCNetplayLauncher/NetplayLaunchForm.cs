@@ -1,18 +1,11 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
-using System.Net.Configuration;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace nullDCNetplayLauncher
@@ -35,6 +28,8 @@ namespace nullDCNetplayLauncher
         public NetplayLaunchForm(bool tray = false)
         {
             controller = new ControllerEngine();
+
+            
 
             launcher = new Launcher();
             presets = ConnectionPreset.ReadPresetsFile();
@@ -207,19 +202,17 @@ namespace nullDCNetplayLauncher
         public static void StartMapper()
         {
             EnableMapper = true;
-            controller.clock.Start();
-            gpm = new GamePadMapper(controller);
+            gpm = new GamePadMapper();
+            Application.Idle += gpm.InputRoll;
             gpm.InitializeController(NetplayLaunchForm.ActiveForm, null);
         }
 
         public static void StopMapper(bool detach = false)
         {
             EnableMapper = false;
-            controller.clock.Stop();
             if (gpm != null)
             {
-                if (detach)
-                    gpm.DetachController();
+                Application.Idle -= gpm.InputRoll;
                 gpm.Dispose();
             }
         }
