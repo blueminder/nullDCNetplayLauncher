@@ -26,8 +26,8 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        /// private void InitializeComponent()
-        private void InitializeComponent(bool StartTray)
+        private void InitializeComponent()
+        //private void InitializeComponent(bool StartTray)
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NetplayLaunchForm));
@@ -168,8 +168,8 @@
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NetplayLaunchForm";
-            if (StartTray)
-                this.ShowInTaskbar = false;
+            //if (StartTray)
+                //this.ShowInTaskbar = false;
             this.Text = "NullDC Netplay";
             this.Resize += new System.EventHandler(this.NetplayLaunchForm_Resize);
             this.panel1.ResumeLayout(false);
