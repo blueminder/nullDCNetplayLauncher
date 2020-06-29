@@ -405,7 +405,7 @@ namespace nullDCNetplayLauncher
 
         public void PushKey(byte key)
         {
-            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            //Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
             //if (processes.Length > 0)
             //{
                 //Process ndc = processes[0];
