@@ -82,7 +82,7 @@ namespace nullDCNetplayLauncher
         private void ControllerControl_Load(object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("FOO " + controller.CapabilitiesGamePad.ToString());
-            controller.GamePadAction += controller_GamePadAction;
+            
             if(controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
             {
                 lblController.Text = "Controller Detected";
@@ -725,13 +725,25 @@ namespace nullDCNetplayLauncher
                     {
                         ButtonAssignmentText += $"{jWorkingMapping[field]}={field}\n";
                     }
+                    else
+                    {
+                        ButtonAssignmentText += $"none={field}\n";
+                    }
                 }
 
                 NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
-                File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc", ButtonAssignmentText);
+                var qjcPath = Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc";
+                if (File.Exists(qjcPath))
+                {
+                    File.SetAttributes(qjcPath, FileAttributes.Normal);
+                }
+                File.WriteAllText(qjcPath, ButtonAssignmentText);
+                // prevent qkoJAMMA from changing controls on skipped face buttons or coin
+                // skipped controls work fine up until the moment you exit the nulldc first time
+                File.SetAttributes(qjcPath, FileAttributes.ReadOnly);
                 successText = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
             else
@@ -757,6 +769,7 @@ namespace nullDCNetplayLauncher
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
 
             SetupUnfinished = false;
+            controller.GamePadAction -= controller_GamePadAction;
         }
 
         private bool IsDirection(string button)
@@ -777,6 +790,7 @@ namespace nullDCNetplayLauncher
                 worker.ReportProgress(button_index);
                 CurrentButtonAssignment = button;
                 CurrentlyAssigned = false;
+                Skip = false;
 
                 ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
                 OldState = args.GamePadState;
@@ -795,7 +809,7 @@ namespace nullDCNetplayLauncher
                         Thread.Sleep(700);
                     }
                 }
-                while (CurrentlyAssigned == false)
+                while (CurrentlyAssigned == false && Skip == false)
                 {
                     Thread.Sleep(700);
                 }
@@ -843,6 +857,7 @@ namespace nullDCNetplayLauncher
 
         private void BeginSetup()
         {
+            controller.GamePadAction += controller_GamePadAction;
             // disable gamepad mapper if enabled
             /*
             if (NetplayLaunchForm.EnableMapper)
@@ -858,6 +873,7 @@ namespace nullDCNetplayLauncher
             SetupUnfinished = true;
 
             showSetupButtons();
+            btnSkip.Enabled = true;
             btnCancel.Enabled = true;
             btnSetup.Enabled = false;
             joystickBgWorker.WorkerSupportsCancellation = true;
@@ -877,6 +893,7 @@ namespace nullDCNetplayLauncher
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            controller.GamePadAction -= controller_GamePadAction;
             SetupUnfinished = true;
             ((Form)this.TopLevelControl).Close();
         }
@@ -892,12 +909,14 @@ namespace nullDCNetplayLauncher
         private void showSetupButtons()
         {
             btnSetup.Visible = true;
+            btnSkip.Visible = true;
             btnCancel.Visible = true;
         }
 
         private void hideAllButtons()
         {
             btnSetup.Visible = false;
+            btnSkip.Visible = false;
             btnCancel.Visible = false;
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
@@ -1005,5 +1024,6 @@ namespace nullDCNetplayLauncher
                 ZDetected = true;
             }
         }
+
     }
 }
