@@ -712,7 +712,7 @@ namespace nullDCNetplayLauncher
 
             // only writes qkoJAMMA joystick configuration if 11 buttons minimum are assigned
             //  && ButtonAssignments.Count >= 11
-            if (!ZDetected && jWorkingMapping.Count >= 11)
+            if (!ZDetected && !IsUnnamed && jWorkingMapping.Count >= 11)
             {
                 string[] qkoFields = { "Start", "Test", "Up", "Down", "Left", "Right",
                                         "Button_1", "Button_2", "Button_3", "Button_4",
