@@ -16,6 +16,7 @@ using System.Threading;
 using System.Reflection;
 using OpenTK.Input;
 using System.Text.RegularExpressions;
+using XInputDotNetPure;
 
 namespace nullDCNetplayLauncher
 {
@@ -38,8 +39,11 @@ namespace nullDCNetplayLauncher
         Dictionary<string, string> jWorkingMapping;
 
         private ControllerEngine controller;
-        private GamePadState OldState;
+        
+        private OpenTK.Input.GamePadState OldState;
         private OpenTK.Input.JoystickState jOldState;
+        private XInputDotNetPure.GamePadState XOldState;
+        
 
         string[] directionalButtons;
         string[] faceButtons;
@@ -265,6 +269,8 @@ namespace nullDCNetplayLauncher
             return null;
         }
 
+
+
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
             var State = e.GamePadState;
@@ -273,13 +279,13 @@ namespace nullDCNetplayLauncher
             var jState = e.JoystickState;
             var jCapabilities = controller.CapabilitiesJoystick;
 
-            PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
+            PropertyInfo[] AvailableButtonProperties = typeof(OpenTK.Input.GamePadButtons).GetProperties().Where(
                 p =>
                 {
                     return p.Name != "IsAnyButtonPressed";
                 }).ToArray();
 
-            PropertyInfo[] AvailableDPadProperties = typeof(GamePadDPad).GetProperties().Where(
+            PropertyInfo[] AvailableDPadProperties = typeof(OpenTK.Input.GamePadDPad).GetProperties().Where(
                 p =>
                 {
                     return p.PropertyType == typeof(Boolean);
@@ -385,7 +391,7 @@ namespace nullDCNetplayLauncher
                 }
             }
 
-            PropertyInfo[] AvailableTriggerProperties = typeof(GamePadTriggers).GetProperties().ToArray();
+            PropertyInfo[] AvailableTriggerProperties = typeof(OpenTK.Input.GamePadTriggers).GetProperties().ToArray();
 
             foreach (PropertyInfo buttonProperty in AvailableTriggerProperties)
             {
