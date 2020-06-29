@@ -164,7 +164,7 @@ namespace nullDCNetplayLauncher
                 if (games.Count() > 0)
                 {
                     var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
-                    path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.LocalName());
+                    path = Path.Combine(Launcher.rootDir, DistroDir, games.First().Root, games.First().Name, lst.LocalName());
                 }
 
                 if (!File.Exists(path))
@@ -178,6 +178,7 @@ namespace nullDCNetplayLauncher
                     {
                         path = lstCandidates.First();
                     }
+
                     else
                     {
                         path = null;
