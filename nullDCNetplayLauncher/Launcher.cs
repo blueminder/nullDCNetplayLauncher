@@ -586,7 +586,11 @@ namespace nullDCNetplayLauncher
             string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
             var launcherCfgText = File.ReadAllText(launcherCfgPath);
-            
+
+            string cfgPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg";
+            string cfgText = File.ReadAllText(cfgPath);
+
+
             string player1_actual;
             try
             {
@@ -607,6 +611,10 @@ namespace nullDCNetplayLauncher
             var player1ActualEntry = player1_actual.Split('=')[1];
 
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+
+            cfgText = cfgText.Replace("player1=joy1", player1_actual);
+            File.WriteAllText(cfgPath, cfgText);
+
         }
 
         public static void LoadRegionSettings()
@@ -706,6 +714,7 @@ namespace nullDCNetplayLauncher
             File.WriteAllBytes(cfgPath,
                                Properties.Resources.nullDC_cfg);
             Console.WriteLine("NullDC Configuration Restored");
+
         }
 
         public static void RestoreLauncherCfg(bool force = false)

@@ -58,6 +58,8 @@ namespace nullDCNetplayLauncher
         [STAThread]
         static void Main(string[] args)
         {
+            Launcher.RestoreLauncherCfg();
+
             if (args.Length > 0 && args[0].StartsWith("--"))
             {
                 ShowConsoleWindow();
