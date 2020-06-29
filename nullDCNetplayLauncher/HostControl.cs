@@ -29,6 +29,18 @@ namespace nullDCNetplayLauncher
             cboPresetName.DataSource = presets.ConnectionPresets;
 
             btnDeletePreset.Enabled = presets.ConnectionPresets.Count > 1;
+
+            Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
+            RegionOptions["Japan"] = "japan";
+            RegionOptions["USA"] = "usa";
+
+            cboRegion.DataSource = new BindingSource(RegionOptions, null);
+            cboRegion.DisplayMember = "Key";
+            cboRegion.ValueMember = "Value";
+
+            var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+            if (!File.Exists(us_bios_path) && !File.Exists($"{us_bios_path}.inactive"))
+                cboRegion.Enabled = false;
         }
 
         private void HostControl_Load(object sender, EventArgs e)
@@ -62,6 +74,7 @@ namespace nullDCNetplayLauncher
                 toEdit.Port = txtHostPort.Text;
                 toEdit.Delay = numDelay.Value;
                 toEdit.Method = Convert.ToInt32(cboMethod.SelectedValue);
+                toEdit.Region = cboRegion.SelectedValue.ToString();
             }
             else
             {
@@ -71,6 +84,7 @@ namespace nullDCNetplayLauncher
                 toAdd.Port = txtHostPort.Text;
                 toAdd.Delay = numDelay.Value;
                 toAdd.Method = Convert.ToInt32(cboMethod.SelectedValue);
+                toAdd.Region = cboRegion.SelectedValue.ToString();
                 presets.ConnectionPresets.Add(toAdd);
             }
 
@@ -122,6 +136,7 @@ namespace nullDCNetplayLauncher
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
                 cboMethod.SelectedValue = toLoad.Method;
+                cboRegion.SelectedValue = toLoad.Region;
             }
         }
 
@@ -149,16 +164,21 @@ namespace nullDCNetplayLauncher
 
         private void btnGenHostCode_Click(object sender, EventArgs e)
         {
+            if (cboRegion.SelectedValue.ToString() != "japan")
+                cboRegion.BackColor = Color.Honeydew;
+            
             var hostCode = Launcher.GenerateHostCode(cboHostIP.Text,
                                                      txtHostPort.Text,
                                                      Convert.ToInt32(numDelay.Value).ToString(),
-                                                     Convert.ToInt32(cboMethod.SelectedValue).ToString());
+                                                     Convert.ToInt32(cboMethod.SelectedValue).ToString(),
+                                                     cboRegion.SelectedValue.ToString());
             txtHostCode.Text = hostCode;
             txtHostCode.BackColor = Color.Honeydew;
         }
 
         private void btnLaunchGame_Click(object sender, EventArgs e)
         {
+            Launcher.SwitchRegion(cboRegion.SelectedValue.ToString());
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: true,
@@ -282,6 +302,11 @@ namespace nullDCNetplayLauncher
         private void cboHostIP_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtHostCode.Text = "";
+        }
+
+        private void cboRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cboRegion.BackColor = Color.White;
         }
     }
 }

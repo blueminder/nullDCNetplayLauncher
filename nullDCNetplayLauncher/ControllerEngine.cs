@@ -42,7 +42,7 @@ namespace nullDCNetplayLauncher
         // GamePadAction: Triggered when the oldgstate is different from the current GamePadState
         public event EventHandler<ActionEventArgs> GamePadAction;
 
-        private int clockspeed = 12;
+        private int clockspeed = 16;
 
         public ControllerEngine()
         {
@@ -60,6 +60,8 @@ namespace nullDCNetplayLauncher
         public int ActiveDevice { get; set; }
 
         public GamePadCapabilities CapabilitiesGamePad { get { return GamePad.GetCapabilities(this.ActiveDevice); } }
+
+        public JoystickCapabilities CapabilitiesJoystick { get { return Joystick.GetCapabilities(this.ActiveDevice); } }
 
         protected virtual void OnGamePadAction(ActionEventArgs e)
         {
@@ -105,6 +107,8 @@ namespace nullDCNetplayLauncher
         public int Instance { get; set; }
 
         public GamePadState GamePadState { get { return GamePad.GetState(this.Instance); } }
+
+        public JoystickState JoystickState { get { return Joystick.GetState(this.Instance); } }
 
     }
 }

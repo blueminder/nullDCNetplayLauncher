@@ -50,6 +50,8 @@
             this.lblHostIP = new System.Windows.Forms.Label();
             this.txtHostPort = new System.Windows.Forms.TextBox();
             this.lblGuestPort = new System.Windows.Forms.Label();
+            this.cboRegion = new System.Windows.Forms.ComboBox();
+            this.lblRegion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitGuest)).BeginInit();
             this.splitGuest.Panel1.SuspendLayout();
             this.splitGuest.Panel2.SuspendLayout();
@@ -85,7 +87,7 @@
             // 
             this.splitGuest.Panel2.Controls.Add(this.grpAdvanced);
             this.splitGuest.Panel2Collapsed = true;
-            this.splitGuest.Size = new System.Drawing.Size(216, 300);
+            this.splitGuest.Size = new System.Drawing.Size(216, 310);
             this.splitGuest.SplitterDistance = 162;
             this.splitGuest.SplitterWidth = 1;
             this.splitGuest.TabIndex = 72;
@@ -202,6 +204,8 @@
             // 
             this.grpAdvanced.AutoSize = true;
             this.grpAdvanced.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.grpAdvanced.Controls.Add(this.cboRegion);
+            this.grpAdvanced.Controls.Add(this.lblRegion);
             this.grpAdvanced.Controls.Add(this.txtHostIP);
             this.grpAdvanced.Controls.Add(this.cboMethod);
             this.grpAdvanced.Controls.Add(this.lblMethod);
@@ -216,7 +220,7 @@
             this.grpAdvanced.Margin = new System.Windows.Forms.Padding(2);
             this.grpAdvanced.Name = "grpAdvanced";
             this.grpAdvanced.Padding = new System.Windows.Forms.Padding(4);
-            this.grpAdvanced.Size = new System.Drawing.Size(150, 46);
+            this.grpAdvanced.Size = new System.Drawing.Size(216, 147);
             this.grpAdvanced.TabIndex = 59;
             this.grpAdvanced.TabStop = false;
             this.grpAdvanced.Text = "Advanced Options";
@@ -308,6 +312,23 @@
             this.lblGuestPort.TabIndex = 66;
             this.lblGuestPort.Text = "Host Port";
             // 
+            // cboRegion
+            // 
+            this.cboRegion.FormattingEnabled = true;
+            this.cboRegion.Location = new System.Drawing.Point(83, 116);
+            this.cboRegion.Name = "cboRegion";
+            this.cboRegion.Size = new System.Drawing.Size(105, 21);
+            this.cboRegion.TabIndex = 76;
+            // 
+            // lblRegion
+            // 
+            this.lblRegion.AutoSize = true;
+            this.lblRegion.Location = new System.Drawing.Point(28, 119);
+            this.lblRegion.Name = "lblRegion";
+            this.lblRegion.Size = new System.Drawing.Size(41, 13);
+            this.lblRegion.TabIndex = 75;
+            this.lblRegion.Text = "Region";
+            // 
             // JoinControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,9 +338,9 @@
             this.Controls.Add(this.splitGuest);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.MaximumSize = new System.Drawing.Size(216, 500);
-            this.MinimumSize = new System.Drawing.Size(216, 300);
+            this.MinimumSize = new System.Drawing.Size(216, 310);
             this.Name = "JoinControl";
-            this.Size = new System.Drawing.Size(216, 300);
+            this.Size = new System.Drawing.Size(216, 310);
             this.Load += new System.EventHandler(this.JoinControl_Load);
             this.splitGuest.Panel1.ResumeLayout(false);
             this.splitGuest.Panel1.PerformLayout();
@@ -357,5 +378,7 @@
         private System.Windows.Forms.Label lblHostCode;
         private System.Windows.Forms.Button btnPaste;
         private System.Windows.Forms.TextBox txtHostIP;
+        private System.Windows.Forms.ComboBox cboRegion;
+        private System.Windows.Forms.Label lblRegion;
     }
 }

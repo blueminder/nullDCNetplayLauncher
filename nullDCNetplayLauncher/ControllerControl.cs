@@ -16,6 +16,7 @@ using System.Threading;
 using System.Reflection;
 using OpenTK.Input;
 using System.Text.RegularExpressions;
+using XInputDotNetPure;
 
 namespace nullDCNetplayLauncher
 {
@@ -31,10 +32,18 @@ namespace nullDCNetplayLauncher
         bool Skip;
         bool IsUnnamed;
 
+        public bool OldEnableMapper;
+        public bool SetupUnfinished;
+
         GamePadMapping WorkingMapping;
+        Dictionary<string, string> jWorkingMapping;
 
         private ControllerEngine controller;
-        private GamePadState OldState;
+        
+        private OpenTK.Input.GamePadState OldState;
+        private OpenTK.Input.JoystickState jOldState;
+        private XInputDotNetPure.GamePadState XOldState;
+        
 
         string[] directionalButtons;
         string[] faceButtons;
@@ -54,6 +63,7 @@ namespace nullDCNetplayLauncher
             rm = Properties.Resources.ResourceManager;
             AnalogSet = false;
             Skip = false;
+            SetupUnfinished = false;
             joystickBgWorker = new BackgroundWorker();
             InitializeJoystick();
             InitializeJoystickBgWorker();
@@ -66,12 +76,13 @@ namespace nullDCNetplayLauncher
             buttonNames = directionalButtons.Concat(faceButtons).Concat(optionButtons).ToArray();
 
             WorkingMapping = new GamePadMapping();
+            jWorkingMapping = new Dictionary<string, string>();
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("FOO " + controller.CapabilitiesGamePad.ToString());
-            controller.GamePadAction += controller_GamePadAction;
+            
             if(controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
             {
                 lblController.Text = "Controller Detected";
@@ -258,25 +269,240 @@ namespace nullDCNetplayLauncher
             return null;
         }
 
+
+        PropertyInfo[] AvailableXButtonProperties = typeof(XInputDotNetPure.GamePadButtons).GetProperties().Where(
+            p =>
+            {
+                return p.Name != "IsAnyButtonPressed";
+            }).ToArray();
+
+        PropertyInfo[] AvailableXDPadProperties = typeof(XInputDotNetPure.GamePadDPad).GetProperties().Where(
+            p =>
+            {
+                return p.PropertyType == typeof(Boolean);
+            }).ToArray();
+
+        public void XInputGamePadInputRoll(object sender, ActionEventArgs e)
+        {
+            var State = XInputDotNetPure.GamePad.GetState(PlayerIndex.One);
+
+            var defaultXInputs = new Dictionary<string, string>()
+            {
+                { "X", "1"},
+                { "Y", "2"},
+                { "LeftTrigger", "3"},
+                { "A", "4"},
+                { "B", "5"},
+                { "RightTrigger", "6"},
+                { "Start", "Start"},
+                { "LeftShoulder", "Coin"},
+                { "RightShoulder", "Test"}
+            };
+
+            foreach (PropertyInfo buttonProperty in AvailableXButtonProperties)
+            {
+                XInputDotNetPure.ButtonState CurrentButtonState = (XInputDotNetPure.ButtonState)buttonProperty.GetValue(State.Buttons);
+                XInputDotNetPure.ButtonState OldButtonState = (XInputDotNetPure.ButtonState)buttonProperty.GetValue(State.Buttons);
+                if (!Object.ReferenceEquals(XOldState, null))
+                {
+                    OldButtonState = (XInputDotNetPure.ButtonState)buttonProperty.GetValue(XOldState.Buttons);
+                }
+
+                if (CurrentButtonState == XInputDotNetPure.ButtonState.Pressed &&
+                (Object.ReferenceEquals(XOldState, null) || OldButtonState == XInputDotNetPure.ButtonState.Released))
+                {
+                    //CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                }
+                if (CurrentButtonState == XInputDotNetPure.ButtonState.Released &&
+                    (!Object.ReferenceEquals(XOldState, null) && OldButtonState == XInputDotNetPure.ButtonState.Pressed))
+                {
+                    //CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    CurrentlyAssigned = true;
+                }
+            }
+
+            PropertyInfo[] AvailableXTriggerProperties = typeof(XInputDotNetPure.GamePadTriggers).GetProperties().ToArray();
+
+            foreach (PropertyInfo buttonProperty in AvailableXTriggerProperties)
+            {
+                float CurrentTriggerState = (float)buttonProperty.GetValue(State.Triggers);
+                float OldTriggerState = (float)buttonProperty.GetValue(State.Triggers);
+                if (!Object.ReferenceEquals(XOldState, null))
+                {
+                    OldTriggerState = (float)buttonProperty.GetValue(XOldState.Triggers);
+                }
+
+                if (CurrentTriggerState == 1 &&
+                (Object.ReferenceEquals(XOldState, null) || OldTriggerState == 0))
+                {
+                    //CallButtonMapping(buttonProperty.Name, true);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
+                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                }
+                if (CurrentTriggerState == 0 &&
+                    (!Object.ReferenceEquals(XOldState, null) && OldTriggerState == 1))
+                {
+                    //CallButtonMapping(buttonProperty.Name, false);
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
+                    CurrentlyAssigned = true;
+                }
+            }
+
+            var oldUp = Convert.ToBoolean(XOldState.DPad.Up);
+            var oldDown = Convert.ToBoolean(XOldState.DPad.Down);
+            var oldLeft = Convert.ToBoolean(XOldState.DPad.Left);
+            var oldRight = Convert.ToBoolean(XOldState.DPad.Right);
+
+            var newUp = Convert.ToBoolean(State.DPad.Up);
+            var newDown = Convert.ToBoolean(State.DPad.Down);
+            var newLeft = Convert.ToBoolean(State.DPad.Left);
+            var newRight = Convert.ToBoolean(State.DPad.Right);
+
+            var oldLeftX = Math.Round(XOldState.ThumbSticks.Left.X);
+            var oldLeftY = Math.Round(XOldState.ThumbSticks.Left.Y);
+
+            var newLeftX = Math.Round(State.ThumbSticks.Left.X);
+            var newLeftY = Math.Round(State.ThumbSticks.Left.Y);
+
+            if (oldLeftX == 0 && newLeftX == 1 || oldRight == true && newRight == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Pushed");
+                WorkingMapping["IsRight"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftX == 1 && newLeftX == 0 || oldRight == false && newRight == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Right Released");
+                CurrentlyAssigned = true;
+            }
+
+            if (oldLeftX == 0 && newLeftX == -1 || oldLeft == true && newLeft == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Pushed");
+                WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftX == -1 && newLeftX == 0 || oldLeft == false && newLeft == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Left Released");
+                CurrentlyAssigned = true;
+            }
+
+            if (oldLeftY == 0 && newLeftY == 1 || oldUp == true && newUp == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Pushed");
+                WorkingMapping["IsUp"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftY == 1 && newLeftY == 0 || oldUp == false && newUp == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Up Released");
+                //CallButtonMapping("IsUp", false);
+                WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                CurrentlyAssigned = true;
+            }
+
+            if (oldLeftY == 0 && newLeftY == -1 || oldDown == true && newDown == false)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Pushed");
+                WorkingMapping["IsDown"] = CurrentButtonAssignment;
+            }
+
+            if (oldLeftY == -1 && newLeftY == 0 || oldDown == false && newDown == true)
+            {
+                System.Diagnostics.Debug.WriteLine("Down Released");
+                CurrentlyAssigned = true;
+            }
+
+            XOldState = State;
+        }
+
         private void controller_GamePadAction(object sender, ActionEventArgs e)
+        {
+            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+            {
+                ZDetected = true;
+                XInputGamePadInputRoll(sender, e);
+            }
+            else
+            {
+                OpenTKGamePadInputRoll(sender, e);
+            }
+                
+        }
+
+        private void OpenTKGamePadInputRoll(object sender, ActionEventArgs e)
         {
             var State = e.GamePadState;
             var Capabilities = controller.CapabilitiesGamePad;
 
-            PropertyInfo[] AvailableButtonProperties = typeof(GamePadButtons).GetProperties().Where(
+            var jState = e.JoystickState;
+            var jCapabilities = controller.CapabilitiesJoystick;
+
+            PropertyInfo[] AvailableButtonProperties = typeof(OpenTK.Input.GamePadButtons).GetProperties().Where(
                 p =>
                 {
                     return p.Name != "IsAnyButtonPressed";
                 }).ToArray();
 
-            PropertyInfo[] AvailableDPadProperties = typeof(GamePadDPad).GetProperties().Where(
+            PropertyInfo[] AvailableDPadProperties = typeof(OpenTK.Input.GamePadDPad).GetProperties().Where(
                 p =>
                 {
                     return p.PropertyType == typeof(Boolean);
                 }).ToArray();
 
+            for (int i = 0; i < jCapabilities.ButtonCount; i++)
+            {
+                string assign;
+                if (int.TryParse(CurrentButtonAssignment, out _))
+                {
+                    assign = $"Button_{CurrentButtonAssignment}";
+                }
+                else
+                {
+                    assign = CurrentButtonAssignment;
+                }
+                if (jOldState.GetButton(i) != jState.GetButton(i))
+                {
+                    jWorkingMapping[assign] = $"button_{i + 1}";
+                }
+            }
+
+            if (!jOldState.GetHat(JoystickHat.Hat0).Equals(jState.GetHat(JoystickHat.Hat0)))
+            {
+                string assign;
+                if (int.TryParse(CurrentButtonAssignment, out _))
+                {
+                    assign = $"Button_{CurrentButtonAssignment}";
+                }
+                else
+                {
+                    assign = CurrentButtonAssignment;
+                }
+                switch (jState.GetHat(JoystickHat.Hat0).Position)
+                {
+                    case HatPosition.Up:
+                        jWorkingMapping[assign] = "hat_0_up";
+                        break;
+                    case HatPosition.Down:
+                        jWorkingMapping[assign] = "hat_0_down";
+                        break;
+                    case HatPosition.Left:
+                        jWorkingMapping[assign] = "hat_0_left";
+                        break;
+                    case HatPosition.Right:
+                        jWorkingMapping[assign] = "hat_0_right";
+                        break;
+                }
+            }
+
             foreach (PropertyInfo buttonProperty in AvailableButtonProperties)
             {
+
+                // GamePad logic
                 var CurrentButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
                 var OldButtonState = (OpenTK.Input.ButtonState)buttonProperty.GetValue(State.Buttons);
                 if (!Object.ReferenceEquals(OldState, null))
@@ -299,6 +525,7 @@ namespace nullDCNetplayLauncher
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
                     CurrentlyAssigned = true;
                 }
+
             }
 
             foreach (PropertyInfo buttonProperty in AvailableDPadProperties)
@@ -327,7 +554,7 @@ namespace nullDCNetplayLauncher
                 }
             }
 
-            PropertyInfo[] AvailableTriggerProperties = typeof(GamePadTriggers).GetProperties().ToArray();
+            PropertyInfo[] AvailableTriggerProperties = typeof(OpenTK.Input.GamePadTriggers).GetProperties().ToArray();
 
             foreach (PropertyInfo buttonProperty in AvailableTriggerProperties)
             {
@@ -364,6 +591,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
                 WorkingMapping["IsRight"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Right"] = "axis_w_positive";
+                }
             }
 
             if (oldLeftX == 1 && newLeftX == 0)
@@ -376,6 +607,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
                 WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Left"] = "axis_w_negative";
+                }
             }
 
             if (oldLeftX == -1 && newLeftX == 0)
@@ -388,6 +623,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
                 WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Up"] = "axis_z_negative";
+                }
             }
 
             if (oldLeftY == 1 && newLeftY == 0)
@@ -400,6 +639,10 @@ namespace nullDCNetplayLauncher
             {
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
                 WorkingMapping["IsDown"] = CurrentButtonAssignment;
+                if (AnalogSet)
+                {
+                    jWorkingMapping["Down"] = "axis_z_positive";
+                }
             }
 
             if (oldLeftY == -1 && newLeftY == 0)
@@ -409,6 +652,7 @@ namespace nullDCNetplayLauncher
             }
 
             OldState = State;
+            jOldState = jState;
         }
 
         private List<JoystickUpdate> SetJoystickButton(SharpDX.DirectInput.Joystick joystick, string button)
@@ -467,13 +711,39 @@ namespace nullDCNetplayLauncher
             string successText;
 
             // only writes qkoJAMMA joystick configuration if 11 buttons minimum are assigned
-            if (!ZDetected && !IsUnnamed && ButtonAssignments.Count >= 11)
+            //  && ButtonAssignments.Count >= 11
+            if (!ZDetected && !IsUnnamed && jWorkingMapping.Count >= 11)
             {
+                string[] qkoFields = { "Start", "Test", "Up", "Down", "Left", "Right",
+                                        "Button_1", "Button_2", "Button_3", "Button_4",
+                                        "Button_5", "Button_6", "Coin"};
+
+                ButtonAssignmentText = "";
+                foreach (string field in qkoFields)
+                {
+                    if(jWorkingMapping.ContainsKey(field))
+                    {
+                        ButtonAssignmentText += $"{jWorkingMapping[field]}={field}\n";
+                    }
+                    else
+                    {
+                        ButtonAssignmentText += $"none={field}\n";
+                    }
+                }
+
                 NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
-                File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc", ButtonAssignmentText);
+                var qjcPath = Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc";
+                if (File.Exists(qjcPath))
+                {
+                    File.SetAttributes(qjcPath, FileAttributes.Normal);
+                }
+                File.WriteAllText(qjcPath, ButtonAssignmentText);
+                // prevent qkoJAMMA from changing controls on skipped face buttons or coin
+                // skipped controls work fine up until the moment you exit the nulldc first time
+                File.SetAttributes(qjcPath, FileAttributes.ReadOnly);
                 successText = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
             else
@@ -497,6 +767,9 @@ namespace nullDCNetplayLauncher
 
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+
+            SetupUnfinished = false;
+            controller.GamePadAction -= controller_GamePadAction;
         }
 
         private bool IsDirection(string button)
@@ -510,14 +783,18 @@ namespace nullDCNetplayLauncher
             var button_index = 0;
             if(!chkForceMapper.Checked)
                 ZDetected = false;
+            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+                ZDetected = true;
             foreach (string button in buttonNames)
             {
                 worker.ReportProgress(button_index);
                 CurrentButtonAssignment = button;
                 CurrentlyAssigned = false;
+                Skip = false;
 
                 ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
                 OldState = args.GamePadState;
+                jOldState = args.JoystickState;
 
                 if (!IsUnnamed)
                 {
@@ -527,45 +804,12 @@ namespace nullDCNetplayLauncher
                     if (isNumeric)
                         buttonName = "Button_" + button;
 
-                    if (IsDirection(button) && AnalogSet)
+                    if (directionalButtons.Any(button.Contains))
                     {
-                        String analogAssignment = null;
-                        while (analogAssignment is null)
-                        {
-                            analogAssignment = SetJoystickAnalog(joystick);
-                        }
-                        ButtonAssignmentText += $"{analogAssignment}={buttonName}\n";
-                    }
-                    else
-                    {
-                        var joystickUpdate = SetJoystickButton(joystick, button);
-
-                        if (!ZDetected)
-                        {
-                            if (joystickUpdate.Count > 0)
-                            {
-                                var buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
-                                while (buttonAssignment == null)
-                                {
-                                    buttonAssignment = JoystickUpdateToQko(joystickUpdate[0]);
-                                }
-                                ButtonAssignmentText += $"{buttonAssignment}={buttonName}\n";
-                                ButtonAssignments.Add(button, joystickUpdate);
-                            }
-                            else
-                            {
-                                ButtonAssignmentText += $"none={buttonName}\n";
-                                ButtonAssignments.Add(button, joystickUpdate);
-                            }
-
-                            if (directionalButtons.Any(button.Contains))
-                            {
-                                Thread.Sleep(700);
-                            }
-                        }
+                        Thread.Sleep(700);
                     }
                 }
-                while (CurrentlyAssigned == false)
+                while (CurrentlyAssigned == false && Skip == false)
                 {
                     Thread.Sleep(700);
                 }
@@ -613,6 +857,7 @@ namespace nullDCNetplayLauncher
 
         private void BeginSetup()
         {
+            controller.GamePadAction += controller_GamePadAction;
             // disable gamepad mapper if enabled
             /*
             if (NetplayLaunchForm.EnableMapper)
@@ -622,7 +867,13 @@ namespace nullDCNetplayLauncher
             }
             */
 
+            jWorkingMapping = new Dictionary<string, string>();
+
+            OldEnableMapper = NetplayLaunchForm.EnableMapper;
+            SetupUnfinished = true;
+
             showSetupButtons();
+            btnSkip.Enabled = true;
             btnCancel.Enabled = true;
             btnSetup.Enabled = false;
             joystickBgWorker.WorkerSupportsCancellation = true;
@@ -632,6 +883,7 @@ namespace nullDCNetplayLauncher
 
         private void btnSetup_Click(object sender, EventArgs e)
         {
+            NetplayLaunchForm.EnableMapper = false;
             // reset button assignments on click
             ButtonAssignments = new Dictionary<string, List<JoystickUpdate>>();
             ButtonAssignmentText = "";
@@ -641,6 +893,8 @@ namespace nullDCNetplayLauncher
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            controller.GamePadAction -= controller_GamePadAction;
+            SetupUnfinished = true;
             ((Form)this.TopLevelControl).Close();
         }
 
@@ -655,12 +909,14 @@ namespace nullDCNetplayLauncher
         private void showSetupButtons()
         {
             btnSetup.Visible = true;
+            btnSkip.Visible = true;
             btnCancel.Visible = true;
         }
 
         private void hideAllButtons()
         {
             btnSetup.Visible = false;
+            btnSkip.Visible = false;
             btnCancel.Visible = false;
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
@@ -768,5 +1024,6 @@ namespace nullDCNetplayLauncher
                 ZDetected = true;
             }
         }
+
     }
 }

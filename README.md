@@ -1,5 +1,5 @@
-# NullDC-NAOMI Netplay Launcher Distribution 0.6.4.2
-Configuration optimized by blueminder *(June 27, 2020)*
+# NullDC-NAOMI Netplay Launcher Distribution 0.6.5
+Configuration optimized by blueminder *(June 29, 2020)*
 
 **Special Thanks**
 
@@ -26,7 +26,9 @@ Be sure the following is installed:
 
 Be sure to have the following files gathered prior to testing:
 
-1. NAOMI BIOS (`naomi_bios.bin`)
+1. NAOMI BIOS Files
+   - Japanese BIOS: `naomi_bios.bin` (EPR-21576D)
+   - USA BIOS: `naomi_boot.bin` (EPR-21577D)
 2. NAOMI ROMs in the format of a ZIP file containing `.lst` & `.bin` files.
 
 ## Installing ROMs

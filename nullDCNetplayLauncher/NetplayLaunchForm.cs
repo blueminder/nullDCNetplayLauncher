@@ -1,18 +1,11 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
-using System.Net.Configuration;
-using System.Resources;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
 using System.Windows.Forms;
 
 namespace nullDCNetplayLauncher
@@ -70,6 +63,7 @@ namespace nullDCNetplayLauncher
                 this.WindowState = FormWindowState.Minimized;
 
             ReloadRomList();
+            Launcher.LoadRegionSettings();
 
             if (StartTray)
             {
@@ -142,14 +136,16 @@ namespace nullDCNetplayLauncher
             if (Launcher.GamesJson != null)
             {
                 var RootDir = Launcher.rootDir;
+
+                var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID.Contains("naomi")).ToList();
+
                 if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin")))
                 {
-                    var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi");
                     if (DataGamesJson != null && DataGamesJson.Count() > 0)
                     {
-                        var dataEntry = DataGamesJson.First();
+                        List<Launcher.Game> dataEntries = DataGamesJson.ToList();
                         DialogResult dialogResult = MessageBox.Show(
-                            "BIOS is not detected. Would you like to retrieve one?",
+                            "BIOS is not detected. Would you like to retrieve a reference set?",
                             "Missing BIOS",
                             MessageBoxButtons.YesNo);
 
@@ -158,10 +154,37 @@ namespace nullDCNetplayLauncher
                             Program.ShowConsoleWindow();
                             Console.Clear();
 
-                            NetworkQuery.DownloadReferenceUrl(dataEntry);
+                            foreach (Launcher.Game dataEntry in dataEntries)
+                            {
+                                NetworkQuery.DownloadReferenceUrl(dataEntry, false);
+                                Console.WriteLine("");
+                            }
+
 
                             Program.HideConsoleWindow();
                         }
+                    }
+                }
+
+                DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi_usa").ToList();
+                if (DataGamesJson.Count() > 0
+                    && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin"))
+                    && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin.inactive")))
+                {
+                    List<Launcher.Game> dataEntries = DataGamesJson.ToList();
+                    DialogResult dialogResult = MessageBox.Show(
+                        "USA BIOS is not detected. Would you like to retrieve one?",
+                        "Missing BIOS",
+                        MessageBoxButtons.YesNo);
+
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        Program.ShowConsoleWindow();
+                        Console.Clear();
+
+                        NetworkQuery.DownloadReferenceUrl(dataEntries.First(), false);
+
+                        Program.HideConsoleWindow();
                     }
                 }
             }
@@ -177,19 +200,17 @@ namespace nullDCNetplayLauncher
         public static void StartMapper()
         {
             EnableMapper = true;
-            controller.clock.Start();
             gpm = new GamePadMapper(controller);
-            gpm.InitializeController(NetplayLaunchForm.ActiveForm, null);
+            Application.Idle += gpm.InputRoll;
         }
 
         public static void StopMapper(bool detach = false)
         {
-            EnableMapper = false;
-            controller.clock.Stop();
+            // EnableMapper = false;
             if (gpm != null)
             {
-                if (detach)
-                    gpm.DetachController();
+                gpm.StopClock();
+                Application.Idle -= gpm.InputRoll;
                 gpm.Dispose();
             }
         }
@@ -346,7 +367,7 @@ namespace nullDCNetplayLauncher
         private void btnController_Click(object sender, EventArgs e)
         {
             StopMapper(true);
-            UserControl cc = new ControllerControl(controller);
+            ControllerControl cc = new ControllerControl(controller);
             Form window = new Form
             {
                 Text = "Controller Setup",
@@ -361,8 +382,9 @@ namespace nullDCNetplayLauncher
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
 
-            if (EnableMapper)
+            if (EnableMapper || cc.OldEnableMapper && cc.SetupUnfinished)
             {
+                cc.SetupUnfinished = false;
                 Launcher.mappings = GamePadMapping.ReadMappingsFile();
                 try
                 {

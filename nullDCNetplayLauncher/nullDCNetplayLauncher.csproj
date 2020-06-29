@@ -126,6 +126,9 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
+    <Reference Include="XInputDotNetPure">
+      <HintPath>Costura32\XInputDotNetPure.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NetworkQuery.cs" />
@@ -201,6 +204,9 @@
       <DependentUpon>DragLoadControl.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="FodyWeavers.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -283,7 +289,10 @@
     <None Include="Resources\naomi.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
     <Content Include="naomi.ico" />
+    <EmbeddedResource Include="Costura32\XInputDotNetPure.dll" />
+    <EmbeddedResource Include="Costura32\XInputInterface.dll" />
     <None Include="Resources\GamePadMappingList.xml" />
     <None Include="Resources\round_not_listed_location_black_18dp.png" />
     <None Include="Resources\round_not_listed_location_black_18dp.ico" />

@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
@@ -41,6 +42,8 @@ namespace nullDCNetplayLauncher
             NetQuery = new NetworkQuery();
 
             GamesJson = null;
+
+            LoadRegionSettings();
 
             try
             {
@@ -161,7 +164,7 @@ namespace nullDCNetplayLauncher
                 if (games.Count() > 0)
                 {
                     var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
-                    path = Path.Combine(DistroDir, games.First().Root, games.First().Name, lst.LocalName());
+                    path = Path.Combine(Launcher.rootDir, DistroDir, games.First().Root, games.First().Name, lst.LocalName());
                 }
 
                 if (!File.Exists(path))
@@ -175,6 +178,7 @@ namespace nullDCNetplayLauncher
                     {
                         path = lstCandidates.First();
                     }
+
                     else
                     {
                         path = null;
@@ -407,18 +411,22 @@ namespace nullDCNetplayLauncher
             return String.Join("\\", Enumerable.Reverse(splitPath).Take(3).Reverse().ToList<string>());
         }
 
-        public static string GenerateHostCode(string ip, string port, string delay, string method="0")
+        public static string GenerateHostCode(string ip, string port, string delay, string method="0", string region="japan")
         {
             string combinedHostInfo;
-            if (method == "0")
+            if (method == "0" && region == "japan")
             {
                 combinedHostInfo = ip + "|" + port + "|" + delay;
             }
-            else
+            else if (region == "japan")
             {
                 combinedHostInfo = ip + "|" + port + "|" + delay + "|" + method;
             }
-            
+            else
+            {
+                combinedHostInfo = ip + "|" + port + "|" + delay + "|" + method + "|" + region;
+            }
+
             var infoBytes = System.Text.Encoding.UTF8.GetBytes(combinedHostInfo);
             return System.Convert.ToBase64String(infoBytes);
         }
@@ -429,6 +437,7 @@ namespace nullDCNetplayLauncher
             public string Port { get; set; }
             public string Delay { get; set; }
             public string Method { get; set; }
+            public string Region { get; set; }
         }
 
         public static HostInfo DecodeHostCode(string hostCode)
@@ -443,6 +452,7 @@ namespace nullDCNetplayLauncher
                 decodedHostInfo.Port = hostInfoArray[1];
                 decodedHostInfo.Delay = hostInfoArray[2];
                 decodedHostInfo.Method = "0";
+                decodedHostInfo.Region = "japan";
             }
             if (hostInfoArray.Length == 4)
             {
@@ -450,6 +460,15 @@ namespace nullDCNetplayLauncher
                 decodedHostInfo.Port = hostInfoArray[1];
                 decodedHostInfo.Delay = hostInfoArray[2];
                 decodedHostInfo.Method = hostInfoArray[3];
+                decodedHostInfo.Region = "japan";
+            }
+            if (hostInfoArray.Length == 5)
+            {
+                decodedHostInfo.IP = hostInfoArray[0];
+                decodedHostInfo.Port = hostInfoArray[1];
+                decodedHostInfo.Delay = hostInfoArray[2];
+                decodedHostInfo.Method = hostInfoArray[3];
+                decodedHostInfo.Region = hostInfoArray[4];
             }
             return decodedHostInfo;
         }
@@ -568,7 +587,11 @@ namespace nullDCNetplayLauncher
             string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
             var launcherCfgText = File.ReadAllText(launcherCfgPath);
-            
+
+            string cfgPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg";
+            string cfgText = File.ReadAllText(cfgPath);
+
+
             string player1_actual;
             try
             {
@@ -588,12 +611,55 @@ namespace nullDCNetplayLauncher
             }
             var player1ActualEntry = player1_actual.Split('=')[1];
 
-            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            cfgText = cfgText.Replace("player1=joy1", "player1=" + player1ActualEntry);
-            
-
-            File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+
+            cfgText = cfgText.Replace("player1=joy1", player1_actual);
+            File.WriteAllText(cfgPath, cfgText);
+
+        }
+
+        public static void LoadRegionSettings()
+        {
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+            var launcherCfgText = File.ReadAllText(launcherCfgPath);
+
+            string region = "japan";
+            try
+            {
+                var region_line = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
+                region = region_line.Split('=')[1];
+            }
+            catch
+            {
+                launcherCfgText += $"\nregion={region}";
+                // strips newlines
+                launcherCfgText = Regex.Replace(launcherCfgText, @"^\s*$\n|\r", string.Empty, RegexOptions.Multiline).TrimEnd();
+                launcherCfgText += $"\n";
+                File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherCfgText);
+            }
+
+            SwitchRegion(region);
+        }
+
+        public static void SwitchRegion(string region)
+        {
+            if (region == "japan")
+            {
+                var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                if (File.Exists(us_bios_path))
+                {
+                    File.Move(us_bios_path, $"{us_bios_path}.inactive");
+                }
+            }
+            else if (region == "usa")
+            {
+                var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                if (File.Exists($"{us_bios_path}.inactive"))
+                {
+                    File.Move($"{us_bios_path}.inactive", us_bios_path);
+                }
+            }
         }
 
         public static int[] LoadWindowSettings()
@@ -649,6 +715,7 @@ namespace nullDCNetplayLauncher
             File.WriteAllBytes(cfgPath,
                                Properties.Resources.nullDC_cfg);
             Console.WriteLine("NullDC Configuration Restored");
+
         }
 
         public static void RestoreLauncherCfg(bool force = false)
