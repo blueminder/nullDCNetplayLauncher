@@ -850,6 +850,7 @@ namespace nullDCNetplayLauncher
 
                 NetplayLaunchForm.EnableMapper = false;
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
+                launcherText = launcherText.Replace(player1_old, "player1=joy1");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
                 var qjcPath = Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc";
@@ -861,6 +862,7 @@ namespace nullDCNetplayLauncher
                 // prevent qkoJAMMA from changing controls on skipped face buttons or coin
                 // skipped controls work fine up until the moment you exit the nulldc first time
                 File.SetAttributes(qjcPath, FileAttributes.ReadOnly);
+
                 successText = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
             else
@@ -869,6 +871,8 @@ namespace nullDCNetplayLauncher
 
                 NetplayLaunchForm.EnableMapper = true;
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+                launcherText = launcherText.Replace(player1_old, "player1=keyboard");
+
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
                 successText = $"\nNew Keyboard Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";

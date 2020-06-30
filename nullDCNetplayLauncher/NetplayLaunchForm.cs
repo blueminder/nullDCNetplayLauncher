@@ -427,41 +427,45 @@ namespace nullDCNetplayLauncher
             string RomDir = NullDir + "roms\\";
 
             bool ReferenceFound = false;
-            Launcher.Game SelectedGame = Launcher.GamesJson.Where(g => g.Name == cboGameSelect.Text).FirstOrDefault();
-            if (SelectedGame != null)
-                ReferenceFound = (SelectedGame.ReferenceUrl != null);
-            if ((string)cboGameSelect.Text != "" && (string)cboGameSelect.SelectedValue == "" && ReferenceFound)
+            if (Launcher.GamesJson != null && Launcher.GamesJson.Count > 0)
             {
-                btnOffline.Enabled = false;
-                btnJoin.Enabled = false;
-                btnHost.Enabled = false;
-                DialogResult dialogResult = MessageBox.Show(
-                    $"{cboGameSelect.Text} not installed.\nWould you like to retrieve it?", 
-                    "Missing ROM", 
-                    MessageBoxButtons.YesNo);
-                switch(dialogResult)
+                Launcher.Game SelectedGame = Launcher.GamesJson.Where(g => g.Name == cboGameSelect.Text).FirstOrDefault();
+                if (SelectedGame != null)
+                    ReferenceFound = (SelectedGame.ReferenceUrl != null);
+
+
+                if ((string)cboGameSelect.Text != "" && (string)cboGameSelect.SelectedValue == "" && ReferenceFound)
                 {
-                    case (DialogResult.Yes):
-                        Program.ShowConsoleWindow();
-                        Console.Clear();
-                        NetworkQuery.DownloadReferenceUrl(SelectedGame);
-                        Program.HideConsoleWindow();
-                        var previous = cboGameSelect.SelectedIndex;
-                        ReloadRomList();
-                        cboGameSelect.SelectedIndex = previous;
-                        break;
-                    case (DialogResult.No):
-                        break;
+                    btnOffline.Enabled = false;
+                    btnJoin.Enabled = false;
+                    btnHost.Enabled = false;
+                    DialogResult dialogResult = MessageBox.Show(
+                        $"{cboGameSelect.Text} not installed.\nWould you like to retrieve it?",
+                        "Missing ROM",
+                        MessageBoxButtons.YesNo);
+                    switch (dialogResult)
+                    {
+                        case (DialogResult.Yes):
+                            Program.ShowConsoleWindow();
+                            Console.Clear();
+                            NetworkQuery.DownloadReferenceUrl(SelectedGame);
+                            Program.HideConsoleWindow();
+                            var previous = cboGameSelect.SelectedIndex;
+                            ReloadRomList();
+                            cboGameSelect.SelectedIndex = previous;
+                            break;
+                        case (DialogResult.No):
+                            break;
+                    }
                 }
-            }
-            else if (cboGameSelect.SelectedValue != null)
-            {
-                btnOffline.Enabled = true;
-                btnJoin.Enabled = true;
-                btnHost.Enabled = true;
-                Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
-            }
-                
+                else if (cboGameSelect.SelectedValue != null)
+                {
+                    btnOffline.Enabled = true;
+                    btnJoin.Enabled = true;
+                    btnHost.Enabled = true;
+                    Launcher.SelectedGame = cboGameSelect.SelectedValue.ToString();
+                }
+            }    
 
         }
 
