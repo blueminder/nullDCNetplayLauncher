@@ -90,6 +90,19 @@ namespace nullDCNetplayLauncher
                 lblController.Text = "Controller Detected";
             }
             chkForceMapper.Visible = true;
+
+            if (controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
+            {
+                lblController.Text = "Controller Detected";
+            }
+            chkForceMapper.Visible = true;
+
+            // if XInput or GamePad not detected, Keyboard Mapper not activated
+            if (!XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected
+                && !OpenTK.Input.GamePad.GetState(0).IsConnected)
+            {
+                chkForceMapper.Enabled = false;
+            }
         }
 
         private void ControllerControl_Close(object sender, EventArgs e)
@@ -461,7 +474,7 @@ namespace nullDCNetplayLauncher
             var defaultDInputButtons = new Dictionary<int, string>()
             {
                 { 1, "A"},
-                { 2, "B",},
+                { 2, "B"},
                 { 3, "X"},
                 { 4, "Y"},
                 { 5, "LeftShoulder"},
@@ -485,7 +498,7 @@ namespace nullDCNetplayLauncher
             {
                 if (DOldState.Buttons[i] != State.Buttons[i])
                 {
-                    WorkingMapping[defaultDInputButtons[i]] = CurrentButtonAssignment;
+                    //WorkingMapping[defaultDInputButtons[i + 1]] = CurrentButtonAssignment;
                     jWorkingMapping[assign] = $"button_{i + 1}";
                     CurrentlyAssigned = true;
                 }
@@ -516,8 +529,8 @@ namespace nullDCNetplayLauncher
 
                     if(!string.IsNullOrEmpty(qkoDirection))
                     {
-                        var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
-                        WorkingMapping[field] = CapitalizeFirstLetter(qkoDirection);
+                        //var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
+                        //WorkingMapping[field] = CapitalizeFirstLetter(qkoDirection);
                         jWorkingMapping[assign] = $"hat_{hatNum}_{qkoDirection}";
                         System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
                         CurrentlyAssigned = true;
