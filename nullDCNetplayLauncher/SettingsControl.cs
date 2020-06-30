@@ -49,7 +49,6 @@ namespace nullDCNetplayLauncher
             InputOptions[""] = "";
             InputOptions["Keyboard"] = "keyboard";
             InputOptions["Joystick 1"] = "joy1";
-            InputOptions["Joystick 2"] = "joy2";
 
             cboPlayer1.DataSource = new BindingSource(InputOptions, null);
             cboPlayer1.DisplayMember = "Key";
