@@ -135,6 +135,14 @@ namespace nullDCNetplayLauncher
                 {
                     if (File.Exists(Launcher.rootDir + "games.json"))
                     {
+                        // disables usa bios for fightcade launching to ensure same region on both sides
+                        // will add region command line option soon
+                        var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                        if (File.Exists(us_bios_path))
+                        {
+                            File.Move(us_bios_path, $"{us_bios_path}.inactive");
+                        }
+
                         romPath = Launcher.GetRomPathFromGameId(arguments["gameid"]);
                         if (romPath == null)
                         {
