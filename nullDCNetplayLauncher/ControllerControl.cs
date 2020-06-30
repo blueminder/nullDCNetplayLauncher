@@ -437,14 +437,14 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
-            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+            if (OpenTK.Input.GamePad.GetState(0).IsConnected)
+            {
+                OpenTKGamePadInputRoll(sender, e);
+            }
+            else if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
                 XInputGamePadInputRoll(sender, e);
-            }
-            else if (OpenTK.Input.GamePad.GetState(0).IsConnected)
-            {
-                OpenTKGamePadInputRoll(sender, e);
             }
             else
             {
@@ -912,7 +912,8 @@ namespace nullDCNetplayLauncher
                 ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
                 OldState = args.GamePadState;
                 jOldState = args.JoystickState;
-                DOldState = joystick.GetCurrentState();
+                if (joystick != null)
+                    DOldState = joystick.GetCurrentState();
 
                 if (!IsUnnamed)
                 {
