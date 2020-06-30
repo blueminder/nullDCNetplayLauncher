@@ -17,6 +17,7 @@ using System.Reflection;
 using OpenTK.Input;
 using System.Text.RegularExpressions;
 using XInputDotNetPure;
+using System.Globalization;
 
 namespace nullDCNetplayLauncher
 {
@@ -43,6 +44,7 @@ namespace nullDCNetplayLauncher
         private OpenTK.Input.GamePadState OldState;
         private OpenTK.Input.JoystickState jOldState;
         private XInputDotNetPure.GamePadState XOldState;
+        private SharpDX.DirectInput.JoystickState DOldState;
         
 
         string[] directionalButtons;
@@ -234,20 +236,20 @@ namespace nullDCNetplayLauncher
         }
 
         // special thanks to MarioBrotha's joystick input code for analog detection
-        private string SetJoystickAnalog(SharpDX.DirectInput.Joystick joystick)
+        private string SetJoystickAnalog(SharpDX.DirectInput.JoystickState joystickState)
         {
             int LEFT_UP = 0;
             int RIGHT_DOWN = 65535;
             int[] directionInput = { LEFT_UP, RIGHT_DOWN };
 
-            int Xaxis = joystick.GetCurrentState().X;
-            int Yaxis = joystick.GetCurrentState().Y;
+            int Xaxis = joystickState.X;
+            int Yaxis = joystickState.Y;
 
             // wait for valid analog input
             while (directionInput.Contains(Xaxis) || directionInput.Contains(Yaxis))
             {
-                Xaxis = joystick.GetCurrentState().X;
-                Yaxis = joystick.GetCurrentState().Y;
+                Xaxis = joystickState.X;
+                Yaxis = joystickState.Y;
 
                 if (Xaxis == LEFT_UP) // left
                 {
@@ -427,12 +429,114 @@ namespace nullDCNetplayLauncher
                 ZDetected = true;
                 XInputGamePadInputRoll(sender, e);
             }
-            else
+            else if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
                 OpenTKGamePadInputRoll(sender, e);
             }
+            else
+            {
+                // DirectInput fallback for working PS3 and triggerless 
+                // controllers not picked up by XInput or OpenTK
+                DInputRoll(sender, e);
+            }
                 
         }
+
+        public string CapitalizeFirstLetter(string s)
+        {
+            if (String.IsNullOrEmpty(s))
+                return s;
+            if (s.Length == 1)
+                return s.ToUpper();
+            return s.Remove(1).ToUpper() + s.Substring(1);
+        }
+
+        private void DInputRoll(object sender, ActionEventArgs e)
+        {
+            var State = new SharpDX.DirectInput.JoystickState();
+            joystick.GetCurrentState(ref State);
+
+            // according to directinputhid mapping
+            // https://docs.microsoft.com/en-us/windows/win32/xinput/directinput-and-xusb-devices
+            var defaultDInputButtons = new Dictionary<int, string>()
+            {
+                { 1, "A"},
+                { 2, "B",},
+                { 3, "X"},
+                { 4, "Y"},
+                { 5, "LeftShoulder"},
+                { 6, "RightShoulder"},
+                { 7, "Back"},
+                { 8, "Start"},
+            };
+
+            string assign;
+            if (int.TryParse(CurrentButtonAssignment, out _))
+            {
+                assign = $"Button_{CurrentButtonAssignment}";
+            }
+            else
+            {
+                assign = CurrentButtonAssignment;
+            }
+
+            
+            for (int i = 0; i < State.Buttons.Length; i++)
+            {
+                if (DOldState.Buttons[i] != State.Buttons[i])
+                {
+                    WorkingMapping[defaultDInputButtons[i]] = CurrentButtonAssignment;
+                    jWorkingMapping[assign] = $"button_{i + 1}";
+                    CurrentlyAssigned = true;
+                }
+            }
+
+            for (int hatNum = 0; hatNum < State.PointOfViewControllers.Length; hatNum++)
+            {
+                if (DOldState.PointOfViewControllers[hatNum] != State.PointOfViewControllers[hatNum])
+                {
+                    var value = State.PointOfViewControllers[hatNum];
+
+                    string qkoDirection = "";
+                    switch (value)
+                    {
+                        case 0:
+                            qkoDirection = "up";
+                            break;
+                        case 18000:
+                            qkoDirection = "down";
+                            break;
+                        case 27000:
+                            qkoDirection = "left";
+                            break;
+                        case 9000:
+                            qkoDirection = "right";
+                            break;
+                    }
+
+                    if(!string.IsNullOrEmpty(qkoDirection))
+                    {
+                        var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
+                        WorkingMapping[field] = CapitalizeFirstLetter(qkoDirection);
+                        jWorkingMapping[assign] = $"hat_{hatNum}_{qkoDirection}";
+                        System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
+                        CurrentlyAssigned = true;
+                    }
+                    
+                }
+                
+            }
+            
+            if(AnalogSet && !string.IsNullOrEmpty(SetJoystickAnalog(State)))
+            {
+                jWorkingMapping[assign] = SetJoystickAnalog(State);
+                System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
+                CurrentlyAssigned = true;
+            }
+
+            DOldState = State;
+        }
+
 
         private void OpenTKGamePadInputRoll(object sender, ActionEventArgs e)
         {
@@ -795,6 +899,7 @@ namespace nullDCNetplayLauncher
                 ActionEventArgs args = new ActionEventArgs(controller.ActiveDevice);
                 OldState = args.GamePadState;
                 jOldState = args.JoystickState;
+                DOldState = joystick.GetCurrentState();
 
                 if (!IsUnnamed)
                 {
@@ -803,12 +908,16 @@ namespace nullDCNetplayLauncher
 
                     if (isNumeric)
                         buttonName = "Button_" + button;
+                }
 
+                if (!IsUnnamed || AnalogSet)
+                {
                     if (directionalButtons.Any(button.Contains))
                     {
                         Thread.Sleep(700);
                     }
                 }
+                
                 while (CurrentlyAssigned == false && Skip == false)
                 {
                     Thread.Sleep(700);
