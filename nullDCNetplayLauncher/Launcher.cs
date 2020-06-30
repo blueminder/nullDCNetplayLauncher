@@ -159,12 +159,28 @@ namespace nullDCNetplayLauncher
                 var GamesJsonTxt = File.ReadAllText(GameJsonPath);
 
                 var GamesJson = JsonConvert.DeserializeObject<List<Launcher.Game>>(GamesJsonTxt);
-                var games = GamesJson.Where(g => g.ID == $"nulldc_{gameid}");
+                var games = GamesJson.Where(g => g.ID == $"nulldc_{gameid}" || g.GameID == $"nulldc_{gameid}");
 
                 if (games.Count() > 0)
                 {
-                    var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
-                    path = Path.Combine(Launcher.rootDir, DistroDir, games.First().Root, games.First().Name, lst.LocalName());
+                    if (games.First().Name.Contains("\\"))
+                    {
+                        var entry = games.First().Name.Split(new[] { "\\" }, StringSplitOptions.None);
+                        var folder = entry[0];
+                        var lst = entry[1];
+
+                        var full_folder_path = Path.Combine(Launcher.rootDir, DistroDir, "roms", folder);
+                        path = Path.Combine(full_folder_path, lst);
+
+                        if (!File.Exists(path))
+                            path = full_folder_path;
+                    }
+                    else
+                    {
+                        var lst = games.First().Assets.Where(a => a.LocalName().EndsWith(".lst")).First();
+                        path = Path.Combine(Launcher.rootDir, DistroDir, games.First().Root, games.First().Name, lst.LocalName());
+                    }
+                    
                 }
 
                 if (!File.Exists(path))
@@ -818,6 +834,9 @@ namespace nullDCNetplayLauncher
 
         public class Game
         {
+            [JsonProperty("gameid")]
+            public string GameID { get; set; }
+
             [JsonProperty("id")]
             public string ID { get; set; }
 
@@ -832,7 +851,7 @@ namespace nullDCNetplayLauncher
 
             [JsonProperty("root")]
             public string Root { get; set; }
-            
+
         }
 
         public class Asset
