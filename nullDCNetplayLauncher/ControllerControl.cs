@@ -901,12 +901,10 @@ namespace nullDCNetplayLauncher
 
         private void picArcadeStick_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            DrawInput("1", e);
-            DrawInput("2", e);
-            DrawInput("3", e);
-            DrawInput("4", e);
-            DrawInput("5", e);
-            DrawInput("6", e);
+            DrawInput("up", e);
+            DrawInput("down", e);
+            DrawInput("left", e);
+            DrawInput("right", e);
         }
 
         private void DrawInput(string input, System.Windows.Forms.PaintEventArgs e)
@@ -945,27 +943,37 @@ namespace nullDCNetplayLauncher
             }
             else if (input == "up")
             {
-                x = 20;
-                y = 55;
+                x = 22;
+                y = 60;
             }
             else if (input == "down")
             {
-                x = 20;
+                x = 22;
                 y = 90;
             }
             else if (input == "left")
             {
-                x = 20;
-                y = 55;
+                x = 10;
+                y = 75;
             }
             else if (input == "right")
             {
-                x = 20;
-                y = 55;
+                x = 35;
+                y = 75;
             }
 
             int width = 45;
             int height = 45;
+
+            if (input == "up"
+                || input == "down"
+                || input == "left"
+                || input == "right")
+            {
+                width = 35;
+                height = 35;
+            }
+            
 
             SolidBrush b = new SolidBrush(Color.Red);
             Graphics g = e.Graphics;
