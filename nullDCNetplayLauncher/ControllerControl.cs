@@ -311,6 +311,8 @@ namespace nullDCNetplayLauncher
         {
             var State = XInputDotNetPure.GamePad.GetState(PlayerIndex.One);
 
+            var TestMapping = Launcher.ActiveGamePadMapping.ToDictionary();
+
             var defaultXInputs = new Dictionary<string, string>()
             {
                 { "X", "1"},
@@ -338,14 +340,28 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
-                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name]);
+                    }
+                    else
+                    {
+                        WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    }
                 }
                 if (CurrentButtonState == XInputDotNetPure.ButtonState.Released &&
                     (!Object.ReferenceEquals(XOldState, null) && OldButtonState == XInputDotNetPure.ButtonState.Pressed))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
-                    CurrentlyAssigned = true;
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name]);
+                    }
+                    else
+                    {
+                        CurrentlyAssigned = true;
+                    }
                 }
             }
 
@@ -365,14 +381,28 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
-                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name + "Trigger"]);
+                    }
+                    else
+                    {
+                        WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    }
                 }
                 if (CurrentTriggerState == 0 &&
                     (!Object.ReferenceEquals(XOldState, null) && OldTriggerState == 1))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
                     System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
-                    CurrentlyAssigned = true;
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name + "Trigger"]);
+                    }
+                    else
+                    {
+                        CurrentlyAssigned = true;
+                    }
                 }
             }
 
@@ -397,7 +427,8 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Add("right");
+                    var currentButton = TestMapping["Right"];
+                    CurrentlyPressedButtons.Add(TestMapping["Right"]);
                 }
                 else
                 {
@@ -410,7 +441,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Right Released");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Remove("right");
+                    CurrentlyPressedButtons.Remove(TestMapping["Right"]);
                 }
                 else
                 {
@@ -423,7 +454,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Add("left");
+                    CurrentlyPressedButtons.Add(TestMapping["Left"]);
                 }
                 else
                 {
@@ -436,7 +467,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Left Released");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Remove("left");
+                    CurrentlyPressedButtons.Remove(TestMapping["Left"]);
                 }
                 else
                 {
@@ -449,7 +480,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Add("up");
+                    CurrentlyPressedButtons.Add(TestMapping["Up"]);
                 }
                 else
                 {
@@ -462,7 +493,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Up Released");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Remove("up");
+                    CurrentlyPressedButtons.Remove(TestMapping["Up"]);
                 }
                 else
                 {
@@ -477,7 +508,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Add("down");
+                    CurrentlyPressedButtons.Add(TestMapping["Down"]);
                 }
                 else
                 {
@@ -490,7 +521,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Down Released");
                 if (TestModeActivated)
                 {
-                    CurrentlyPressedButtons.Remove("down");
+                    CurrentlyPressedButtons.Remove(TestMapping["Down"]);
                 }
                 else
                 {
@@ -972,22 +1003,38 @@ namespace nullDCNetplayLauncher
 
         private void picArcadeStick_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            foreach(string button in CurrentlyPressedButtons)
+            // according to directinputhid mapping
+            // https://docs.microsoft.com/en-us/windows/win32/xinput/directinput-and-xusb-devices
+            var defaultDInputButtons = new Dictionary<string, string>()
             {
-                if(button == "up" 
-                    || button == "down")
+                {"A", "1"},
+                {"B", "2"},
+                {"X", "3"},
+                {"Y", "4"},
+                {"LeftShoulder", "5"},
+                {"RightShoulder", "6"},
+                {"Back", "Coin"},
+                {"Start", "Start"},
+            };
+
+            Dictionary<string, string> mapping = defaultDInputButtons;
+
+            foreach (string button in CurrentlyPressedButtons)
+            {
+                if(button == "Up" 
+                    || button == "Down")
                 {
-                    if (CurrentlyPressedButtons.Contains("left"))
-                        DrawInput(button + "left", e);
-                    else if (CurrentlyPressedButtons.Contains("right"))
-                        DrawInput(button + "right", e);
+                    if (CurrentlyPressedButtons.Contains("Left"))
+                        DrawInput(button + "Left", e);
+                    else if (CurrentlyPressedButtons.Contains("Right"))
+                        DrawInput(button + "Right", e);
                     else
                         DrawInput(button, e);
                 }
-                else if (button == "left"
-                    || button == "right")
+                else if (button == "Left"
+                    || button == "Right")
                 {
-                    if (!CurrentlyPressedButtons.Contains("up") && !CurrentlyPressedButtons.Contains("down"))
+                    if (!CurrentlyPressedButtons.Contains("Up") && !CurrentlyPressedButtons.Contains("Down"))
                     {
                         DrawInput(button, e);
                     }
@@ -1001,44 +1048,49 @@ namespace nullDCNetplayLauncher
 
         private void DrawInput(string input, System.Windows.Forms.PaintEventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine(input);
+            if (input.Length == 0)
+                return;
+            if (input.StartsWith("Is"))
+            {
+                input = new string(input.ToCharArray(2, input.Length - 2));
+            }
             int x = 0;
             int y = 0;
-            if (input.Contains("up"))
+            if (input.Contains("Up"))
             {
                 x = 22;
                 y = 60;
-                if (input.Contains("left"))
+                if (input.Contains("Left"))
                 {
                     x = 10;
                     y = 65;
-                } else if (input.Contains("right"))
+                } else if (input.Contains("Right"))
                 {
                     x = 35;
                     y = 65;
                 }
             }
-            else if (input.Contains("down"))
+            else if (input.Contains("Down"))
             {
                 x = 22;
                 y = 90;
-                if (input.Contains("left"))
+                if (input.Contains("Left"))
                 {
                     x = 10;
                     y = 90;
                 }
-                else if (input.Contains("right"))
+                else if (input.Contains("Right"))
                 {
                     x = 35;
                     y = 90;
                 }
             }
-            else if (input == "left")
+            else if (input == "Left" && !input.Contains("Trigger"))
             {
                 x = 10;
                 y = 75;
             }
-            else if (input == "right")
+            else if (input == "Right" && !input.Contains("Trigger"))
             {
                 x = 35;
                 y = 75;
@@ -1073,36 +1125,35 @@ namespace nullDCNetplayLauncher
                 x = 219;
                 y = 80;
             }
-            else if (input == "start")
+            else if (input == "Start")
             {
                 x = 23;
                 y = 160;
             }
-            else if (input == "coin")
+            else if (input == "Coin")
             {
                 x = 115;
                 y = 160;
             }
-            else if (input == "test")
+            else if (input == "Test")
             {
                 x = 206;
                 y = 160;
             }
 
-
             int width = 45;
             int height = 45;
 
-            if (input.Contains("up")
-                || input.Contains("down")
-                || input.Contains("left")
-                || input.Contains("right"))
+            if ((input.Contains("Up")
+                || input.Contains("Down")
+                || input.Contains("Left")
+                || input.Contains("Right")) && !input.Contains("Trigger"))
             {
                 width = 35;
                 height = 35;
             }
 
-            if (input == "start" || input == "coin" || input == "test")
+            if (input == "Start" || input == "Coin" || input == "Test")
             {
                 width = 52;
                 height = 12;
@@ -1110,7 +1161,7 @@ namespace nullDCNetplayLauncher
 
             SolidBrush b = new SolidBrush(Color.Red);
             Graphics g = e.Graphics;
-            if (input == "start" || input == "coin" || input == "test")
+            if (input == "Start" || input == "Coin" || input == "Test")
                 g.FillRectangle(b, x, y, width, height);
             else
                 g.FillEllipse(b, x, y, width, height);

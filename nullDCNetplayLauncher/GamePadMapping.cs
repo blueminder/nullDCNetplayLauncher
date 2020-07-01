@@ -33,6 +33,29 @@ namespace nullDCNetplayLauncher
 
         public Boolean Default { get; set; } = false;
 
+        public Dictionary<string, string> ToDictionary()
+        {
+            Dictionary<string, string> rDict = new Dictionary<string, string>();
+            rDict.Add("Y", Y);
+            rDict.Add("A", A);
+            rDict.Add("Back", Back);
+            rDict.Add("X", X);
+            rDict.Add("B", B);
+            rDict.Add("Start", Start);
+            rDict.Add("LeftStick", LeftStick);
+            rDict.Add("RightStick", RightStick);
+            rDict.Add("LeftShoulder", LeftShoulder);
+            rDict.Add("RightShoulder", RightShoulder);
+            rDict.Add("LeftTrigger", LeftTrigger);
+            rDict.Add("RightTrigger", RightTrigger);
+            rDict.Add("Up", IsUp);
+            rDict.Add("Down", IsDown);
+            rDict.Add("Left", IsLeft);
+            rDict.Add("Right", IsRight);
+
+            return rDict;
+        }
+
         public object this[string propertyName]
         {
             get
