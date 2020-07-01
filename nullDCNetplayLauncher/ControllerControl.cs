@@ -61,6 +61,8 @@ namespace nullDCNetplayLauncher
         bool TestModeActivated;
         List<string> CurrentlyPressedButtons;
 
+        bool SetupModeActivated;
+
         public ControllerControl(ControllerEngine controllerEngine)
         {
             InitializeComponent();
@@ -83,6 +85,8 @@ namespace nullDCNetplayLauncher
 
             WorkingMapping = new GamePadMapping();
             jWorkingMapping = new Dictionary<string, string>();
+
+            SetupModeActivated = false;
 
             // for test mode
             TestModeActivated = true;
@@ -344,7 +348,7 @@ namespace nullDCNetplayLauncher
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name]);
                     }
-                    else
+                    else if (SetupModeActivated)
                     {
                         WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
                     }
@@ -358,7 +362,7 @@ namespace nullDCNetplayLauncher
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name]);
                     }
-                    else
+                    else if (SetupModeActivated)
                     {
                         CurrentlyAssigned = true;
                     }
@@ -385,7 +389,7 @@ namespace nullDCNetplayLauncher
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name + "Trigger"]);
                     }
-                    else
+                    else if (SetupModeActivated)
                     {
                         WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
                     }
@@ -399,7 +403,7 @@ namespace nullDCNetplayLauncher
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name + "Trigger"]);
                     }
-                    else
+                    else if (SetupModeActivated)
                     {
                         CurrentlyAssigned = true;
                     }
@@ -537,15 +541,18 @@ namespace nullDCNetplayLauncher
             /*
             if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
+            */
                 OpenTKGamePadInputRoll(sender, e);
+                picArcadeStick.Refresh();
+            /*
             }
             else if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
-                */
+                
                 XInputGamePadInputRoll(sender, e);
                 picArcadeStick.Refresh();
-            /*
+            
             }
             else
             {
@@ -661,6 +668,8 @@ namespace nullDCNetplayLauncher
             var jState = e.JoystickState;
             var jCapabilities = controller.CapabilitiesJoystick;
 
+            var TestMapping = Launcher.ActiveGamePadMapping.ToDictionary();
+
             PropertyInfo[] AvailableButtonProperties = typeof(OpenTK.Input.GamePadButtons).GetProperties().Where(
                 p =>
                 {
@@ -673,48 +682,51 @@ namespace nullDCNetplayLauncher
                     return p.PropertyType == typeof(Boolean);
                 }).ToArray();
 
-            for (int i = 0; i < jCapabilities.ButtonCount; i++)
+            if (SetupModeActivated)
             {
-                string assign;
-                if (int.TryParse(CurrentButtonAssignment, out _))
+                for (int i = 0; i < jCapabilities.ButtonCount; i++)
                 {
-                    assign = $"Button_{CurrentButtonAssignment}";
+                    string assign;
+                    if (int.TryParse(CurrentButtonAssignment, out _))
+                    {
+                        assign = $"Button_{CurrentButtonAssignment}";
+                    }
+                    else
+                    {
+                        assign = CurrentButtonAssignment;
+                    }
+                    if (jOldState.GetButton(i) != jState.GetButton(i))
+                    {
+                        jWorkingMapping[assign] = $"button_{i + 1}";
+                    }
                 }
-                else
-                {
-                    assign = CurrentButtonAssignment;
-                }
-                if (jOldState.GetButton(i) != jState.GetButton(i))
-                {
-                    jWorkingMapping[assign] = $"button_{i + 1}";
-                }
-            }
 
-            if (!jOldState.GetHat(JoystickHat.Hat0).Equals(jState.GetHat(JoystickHat.Hat0)))
-            {
-                string assign;
-                if (int.TryParse(CurrentButtonAssignment, out _))
+                if (!jOldState.GetHat(JoystickHat.Hat0).Equals(jState.GetHat(JoystickHat.Hat0)))
                 {
-                    assign = $"Button_{CurrentButtonAssignment}";
-                }
-                else
-                {
-                    assign = CurrentButtonAssignment;
-                }
-                switch (jState.GetHat(JoystickHat.Hat0).Position)
-                {
-                    case HatPosition.Up:
-                        jWorkingMapping[assign] = "hat_0_up";
-                        break;
-                    case HatPosition.Down:
-                        jWorkingMapping[assign] = "hat_0_down";
-                        break;
-                    case HatPosition.Left:
-                        jWorkingMapping[assign] = "hat_0_left";
-                        break;
-                    case HatPosition.Right:
-                        jWorkingMapping[assign] = "hat_0_right";
-                        break;
+                    string assign;
+                    if (int.TryParse(CurrentButtonAssignment, out _))
+                    {
+                        assign = $"Button_{CurrentButtonAssignment}";
+                    }
+                    else
+                    {
+                        assign = CurrentButtonAssignment;
+                    }
+                    switch (jState.GetHat(JoystickHat.Hat0).Position)
+                    {
+                        case HatPosition.Up:
+                            jWorkingMapping[assign] = "hat_0_up";
+                            break;
+                        case HatPosition.Down:
+                            jWorkingMapping[assign] = "hat_0_down";
+                            break;
+                        case HatPosition.Left:
+                            jWorkingMapping[assign] = "hat_0_left";
+                            break;
+                        case HatPosition.Right:
+                            jWorkingMapping[assign] = "hat_0_right";
+                            break;
+                    }
                 }
             }
 
@@ -733,16 +745,29 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldButtonState == OpenTK.Input.ButtonState.Released))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
-                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    }
                 }
                 if (CurrentButtonState == OpenTK.Input.ButtonState.Released &&
                     (!Object.ReferenceEquals(OldState, null) && OldButtonState == OpenTK.Input.ButtonState.Pressed))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                   // System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
-                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
-                    CurrentlyAssigned = true;
+                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        CurrentlyAssigned = true;
+                    }
                 }
 
             }
@@ -761,15 +786,35 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
-                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
-                    CurrentlyAssigned = true;
+                    
+                    if (TestModeActivated)
+                    {
+                        var input = buttonProperty.Name;
+                        if (input.StartsWith("Is"))
+                            input = new string(input.ToCharArray(2, input.Length - 2));
+                        CurrentlyPressedButtons.Add(TestMapping[input]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    }
                 }
                 if (CurrentDPadState == false &&
                     (!Object.ReferenceEquals(OldState, null) && OldDPadState == true))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
-                    CurrentlyAssigned = true;
+                    if (TestModeActivated)
+                    {
+                        var input = buttonProperty.Name;
+                        if (input.StartsWith("Is"))
+                            input = new string(input.ToCharArray(2, input.Length - 2));
+                        CurrentlyPressedButtons.Remove(TestMapping[input]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        CurrentlyAssigned = true;
+                    }
                 }
             }
 
@@ -789,14 +834,28 @@ namespace nullDCNetplayLauncher
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Pressed");
-                    WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name + "Trigger"]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        WorkingMapping[buttonProperty.Name] = CurrentButtonAssignment;
+                    }
                 }
                 if (CurrentTriggerState == 0 &&
                     (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
                     System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Released");
-                    CurrentlyAssigned = true;
+                    if (TestModeActivated)
+                    {
+                        CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name + "Trigger"]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        CurrentlyAssigned = true;
+                    }
                 }
             }
 
@@ -1003,22 +1062,6 @@ namespace nullDCNetplayLauncher
 
         private void picArcadeStick_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            // according to directinputhid mapping
-            // https://docs.microsoft.com/en-us/windows/win32/xinput/directinput-and-xusb-devices
-            var defaultDInputButtons = new Dictionary<string, string>()
-            {
-                {"A", "1"},
-                {"B", "2"},
-                {"X", "3"},
-                {"Y", "4"},
-                {"LeftShoulder", "5"},
-                {"RightShoulder", "6"},
-                {"Back", "Coin"},
-                {"Start", "Start"},
-            };
-
-            Dictionary<string, string> mapping = defaultDInputButtons;
-
             foreach (string button in CurrentlyPressedButtons)
             {
                 if(button == "Up" 
@@ -1051,9 +1094,7 @@ namespace nullDCNetplayLauncher
             if (input.Length == 0)
                 return;
             if (input.StartsWith("Is"))
-            {
                 input = new string(input.ToCharArray(2, input.Length - 2));
-            }
             int x = 0;
             int y = 0;
             if (input.Contains("Up"))
