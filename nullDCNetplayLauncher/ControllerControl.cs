@@ -57,6 +57,10 @@ namespace nullDCNetplayLauncher
         string CurrentButtonAssignment;
         Boolean CurrentlyAssigned = false;
 
+        // for test mode
+        bool TestModeActivated;
+        List<string> CurrentlyPressedButtons;
+
         public ControllerControl(ControllerEngine controllerEngine)
         {
             InitializeComponent();
@@ -79,6 +83,12 @@ namespace nullDCNetplayLauncher
 
             WorkingMapping = new GamePadMapping();
             jWorkingMapping = new Dictionary<string, string>();
+
+            // for test mode
+            TestModeActivated = true;
+            CurrentlyPressedButtons = new List<string>();
+
+            controller.GamePadAction += controller_GamePadAction;
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
@@ -385,51 +395,107 @@ namespace nullDCNetplayLauncher
             if (oldLeftX == 0 && newLeftX == 1 || oldRight == true && newRight == false)
             {
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
-                WorkingMapping["IsRight"] = CurrentButtonAssignment;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Add("right");
+                }
+                else
+                {
+                    WorkingMapping["IsRight"] = CurrentButtonAssignment;
+                }
             }
 
             if (oldLeftX == 1 && newLeftX == 0 || oldRight == false && newRight == true)
             {
                 System.Diagnostics.Debug.WriteLine("Right Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove("right");
+                }
+                else
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             if (oldLeftX == 0 && newLeftX == -1 || oldLeft == true && newLeft == false)
             {
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
-                WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Add("left");
+                }
+                else
+                {
+                    WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+                }
             }
 
             if (oldLeftX == -1 && newLeftX == 0 || oldLeft == false && newLeft == true)
             {
                 System.Diagnostics.Debug.WriteLine("Left Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove("left");
+                }
+                else
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             if (oldLeftY == 0 && newLeftY == 1 || oldUp == true && newUp == false)
             {
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
-                WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Add("up");
+                }
+                else
+                {
+                    WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                }
             }
 
             if (oldLeftY == 1 && newLeftY == 0 || oldUp == false && newUp == true)
             {
                 System.Diagnostics.Debug.WriteLine("Up Released");
-                //CallButtonMapping("IsUp", false);
-                WorkingMapping["IsUp"] = CurrentButtonAssignment;
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove("up");
+                }
+                else
+                {
+                    //CallButtonMapping("IsUp", false);
+                    WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                    CurrentlyAssigned = true;
+                }
             }
 
             if (oldLeftY == 0 && newLeftY == -1 || oldDown == true && newDown == false)
             {
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
-                WorkingMapping["IsDown"] = CurrentButtonAssignment;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Add("down");
+                }
+                else
+                {
+                    WorkingMapping["IsDown"] = CurrentButtonAssignment;
+                }
             }
 
             if (oldLeftY == -1 && newLeftY == 0 || oldDown == false && newDown == true)
             {
                 System.Diagnostics.Debug.WriteLine("Down Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove("down");
+                }
+                else
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             XOldState = State;
@@ -437,6 +503,7 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
+            /*
             if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
                 OpenTKGamePadInputRoll(sender, e);
@@ -444,7 +511,10 @@ namespace nullDCNetplayLauncher
             else if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
+                */
                 XInputGamePadInputRoll(sender, e);
+                picArcadeStick.Refresh();
+            /*
             }
             else
             {
@@ -452,7 +522,8 @@ namespace nullDCNetplayLauncher
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
             }
-                
+            */
+
         }
 
         public string CapitalizeFirstLetter(string s)
@@ -901,19 +972,66 @@ namespace nullDCNetplayLauncher
 
         private void picArcadeStick_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            DrawInput("start", e);
-            DrawInput("coin", e);
-            DrawInput("test", e);
+            foreach(string button in CurrentlyPressedButtons)
+            {
+                if(button == "up" 
+                    || button == "down")
+                {
+                    if (CurrentlyPressedButtons.Contains("left"))
+                        DrawInput(button + "left", e);
+                    else if (CurrentlyPressedButtons.Contains("right"))
+                        DrawInput(button + "right", e);
+                    else
+                        DrawInput(button, e);
+                }
+                else if (button == "left"
+                    || button == "right")
+                {
+                    if (!CurrentlyPressedButtons.Contains("up") && !CurrentlyPressedButtons.Contains("down"))
+                    {
+                        DrawInput(button, e);
+                    }
+                }
+                else
+                {
+                    DrawInput(button, e);
+                }
+            }
         }
 
         private void DrawInput(string input, System.Windows.Forms.PaintEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine(input);
             int x = 0;
             int y = 0;
-            if (input == "down")
+            if (input.Contains("up"))
+            {
+                x = 22;
+                y = 60;
+                if (input.Contains("left"))
+                {
+                    x = 10;
+                    y = 65;
+                } else if (input.Contains("right"))
+                {
+                    x = 35;
+                    y = 65;
+                }
+            }
+            else if (input.Contains("down"))
             {
                 x = 22;
                 y = 90;
+                if (input.Contains("left"))
+                {
+                    x = 10;
+                    y = 90;
+                }
+                else if (input.Contains("right"))
+                {
+                    x = 35;
+                    y = 90;
+                }
             }
             else if (input == "left")
             {
@@ -975,10 +1093,10 @@ namespace nullDCNetplayLauncher
             int width = 45;
             int height = 45;
 
-            if (input == "up"
-                || input == "down"
-                || input == "left"
-                || input == "right")
+            if (input.Contains("up")
+                || input.Contains("down")
+                || input.Contains("left")
+                || input.Contains("right"))
             {
                 width = 35;
                 height = 35;
@@ -990,7 +1108,7 @@ namespace nullDCNetplayLauncher
                 height = 12;
             }
 
-                SolidBrush b = new SolidBrush(Color.Red);
+            SolidBrush b = new SolidBrush(Color.Red);
             Graphics g = e.Graphics;
             if (input == "start" || input == "coin" || input == "test")
                 g.FillRectangle(b, x, y, width, height);
@@ -1090,7 +1208,7 @@ namespace nullDCNetplayLauncher
 
         private void BeginSetup()
         {
-            controller.GamePadAction += controller_GamePadAction;
+            //controller.GamePadAction += controller_GamePadAction;
             // disable gamepad mapper if enabled
             /*
             if (NetplayLaunchForm.EnableMapper)
