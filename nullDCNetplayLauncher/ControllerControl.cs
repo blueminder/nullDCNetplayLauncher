@@ -901,17 +901,31 @@ namespace nullDCNetplayLauncher
 
         private void picArcadeStick_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            DrawInput("up", e);
-            DrawInput("down", e);
-            DrawInput("left", e);
-            DrawInput("right", e);
+            DrawInput("start", e);
+            DrawInput("coin", e);
+            DrawInput("test", e);
         }
 
         private void DrawInput(string input, System.Windows.Forms.PaintEventArgs e)
         {
             int x = 0;
             int y = 0;
-            if(input == "1")
+            if (input == "down")
+            {
+                x = 22;
+                y = 90;
+            }
+            else if (input == "left")
+            {
+                x = 10;
+                y = 75;
+            }
+            else if (input == "right")
+            {
+                x = 35;
+                y = 75;
+            }
+            else if (input == "1")
             {
                 x = 112;
                 y = 28;
@@ -941,26 +955,22 @@ namespace nullDCNetplayLauncher
                 x = 219;
                 y = 80;
             }
-            else if (input == "up")
+            else if (input == "start")
             {
-                x = 22;
-                y = 60;
+                x = 23;
+                y = 160;
             }
-            else if (input == "down")
+            else if (input == "coin")
             {
-                x = 22;
-                y = 90;
+                x = 115;
+                y = 160;
             }
-            else if (input == "left")
+            else if (input == "test")
             {
-                x = 10;
-                y = 75;
+                x = 206;
+                y = 160;
             }
-            else if (input == "right")
-            {
-                x = 35;
-                y = 75;
-            }
+
 
             int width = 45;
             int height = 45;
@@ -973,11 +983,20 @@ namespace nullDCNetplayLauncher
                 width = 35;
                 height = 35;
             }
-            
 
-            SolidBrush b = new SolidBrush(Color.Red);
+            if (input == "start" || input == "coin" || input == "test")
+            {
+                width = 52;
+                height = 12;
+            }
+
+                SolidBrush b = new SolidBrush(Color.Red);
             Graphics g = e.Graphics;
-            g.FillEllipse(b, x, y, width, height);
+            if (input == "start" || input == "coin" || input == "test")
+                g.FillRectangle(b, x, y, width, height);
+            else
+                g.FillEllipse(b, x, y, width, height);
+            
         }
 
         private bool IsDirection(string button)
