@@ -59,6 +59,7 @@
             this.picArcadeStick.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picArcadeStick.TabIndex = 1;
             this.picArcadeStick.TabStop = false;
+            this.picArcadeStick.Paint += new System.Windows.Forms.PaintEventHandler(this.picArcadeStick_Paint);
             // 
             // btnSetup
             // 

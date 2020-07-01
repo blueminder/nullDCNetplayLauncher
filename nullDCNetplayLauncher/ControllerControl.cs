@@ -893,6 +893,85 @@ namespace nullDCNetplayLauncher
             controller.GamePadAction -= controller_GamePadAction;
         }
 
+        public void TestButtonMode()
+        {
+            picArcadeStick.Image = global::nullDCNetplayLauncher.Properties.Resources.base_full;
+            
+        }
+
+        private void picArcadeStick_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+        {
+            DrawInput("1", e);
+            DrawInput("2", e);
+            DrawInput("3", e);
+            DrawInput("4", e);
+            DrawInput("5", e);
+            DrawInput("6", e);
+        }
+
+        private void DrawInput(string input, System.Windows.Forms.PaintEventArgs e)
+        {
+            int x = 0;
+            int y = 0;
+            if(input == "1")
+            {
+                x = 112;
+                y = 28;
+            }
+            else if(input == "2")
+            {
+                x = 169;
+                y = 4;
+            }
+            else if (input == "3")
+            {
+                x = 230;
+                y = 14;
+            }
+            else if (input == "4")
+            {
+                x = 100;
+                y = 93;
+            }
+            else if (input == "5")
+            {
+                x = 158;
+                y = 70;
+            }
+            else if (input == "6")
+            {
+                x = 219;
+                y = 80;
+            }
+            else if (input == "up")
+            {
+                x = 20;
+                y = 55;
+            }
+            else if (input == "down")
+            {
+                x = 20;
+                y = 90;
+            }
+            else if (input == "left")
+            {
+                x = 20;
+                y = 55;
+            }
+            else if (input == "right")
+            {
+                x = 20;
+                y = 55;
+            }
+
+            int width = 45;
+            int height = 45;
+
+            SolidBrush b = new SolidBrush(Color.Red);
+            Graphics g = e.Graphics;
+            g.FillEllipse(b, x, y, width, height);
+        }
+
         private bool IsDirection(string button)
         {
             return (bool) directionalButtons.Contains(button);
@@ -1006,16 +1085,20 @@ namespace nullDCNetplayLauncher
             joystickBgWorker.WorkerSupportsCancellation = true;
             if (!joystickBgWorker.IsBusy)
                 joystickBgWorker.RunWorkerAsync();
+
         }
 
         private void btnSetup_Click(object sender, EventArgs e)
         {
+            //DrawButton("1", 120, 120);
+            /*
             NetplayLaunchForm.EnableMapper = false;
             // reset button assignments on click
             ButtonAssignments = new Dictionary<string, List<JoystickUpdate>>();
             ButtonAssignmentText = "";
             hideAllButtons();
             showDPadOrAnalogScreen();
+            */
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
