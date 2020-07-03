@@ -116,8 +116,13 @@ namespace nullDCNetplayLauncher
             }
             chkForceMapper.Visible = true;
 
+            if (NetplayLaunchForm.EnableMapper && Launcher.ActiveGamePadMapping.Name == JoystickName)
+            {
+                chkForceMapper.Checked = true;
+            }
+
             /*
-            // if XInput or GamePad not detected, Keyboard Mapper not activated
+            // if XInput or GamePad not detected
             if (!XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected
                 && !OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
