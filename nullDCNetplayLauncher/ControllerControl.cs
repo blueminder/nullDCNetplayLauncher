@@ -62,6 +62,7 @@ namespace nullDCNetplayLauncher
         bool TestModeActivated;
         HashSet<string> CurrentlyPressedButtons;
         HashSet<string> LastPressedButtons;
+        Dictionary<string, string> TestMapping = Launcher.ActiveGamePadMapping.ToDictionary();
 
         bool SetupModeActivated;
 
@@ -115,12 +116,14 @@ namespace nullDCNetplayLauncher
             }
             chkForceMapper.Visible = true;
 
+            /*
             // if XInput or GamePad not detected, Keyboard Mapper not activated
             if (!XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected
                 && !OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
                 chkForceMapper.Enabled = false;
             }
+            */
 
             ActiveQjcDefinitions = ReadFromQjc();
         }
@@ -128,6 +131,8 @@ namespace nullDCNetplayLauncher
         private void ControllerControl_Close(object sender, EventArgs e)
         {
             System.Diagnostics.Debug.WriteLine("BAR " + controller.CapabilitiesGamePad.ToString());
+
+            controller.GamePadAction -= controller_GamePadAction;
 
             if (NetplayLaunchForm.EnableMapper == false)
             {
@@ -320,8 +325,6 @@ namespace nullDCNetplayLauncher
         public void XInputGamePadInputRoll(object sender, ActionEventArgs e)
         {
             var State = XInputDotNetPure.GamePad.GetState(PlayerIndex.One);
-
-            var TestMapping = Launcher.ActiveGamePadMapping.ToDictionary();
 
             var defaultXInputs = new Dictionary<string, string>()
             {
@@ -544,6 +547,7 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
+            /*
             
             if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
@@ -557,11 +561,13 @@ namespace nullDCNetplayLauncher
             }
             else
             {
+            */
                 // DirectInput fallback for working PS3 and triggerless 
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
-                
-            }
+            
+                /*
+            }*/
             picArcadeStick.Refresh();
 
         }
@@ -592,6 +598,14 @@ namespace nullDCNetplayLauncher
                 { 6, "RightShoulder"},
                 { 7, "Back"},
                 { 8, "Start"},
+                { 9, "LeftStick" },
+                { 10, "RightStick" },
+                { 11, "Button11" },
+                { 12, "Button12" },
+                { 13, "Button13" },
+                { 14, "Button14" },
+                { 15, "Button15" },
+
             };
 
             string assign;
@@ -614,7 +628,16 @@ namespace nullDCNetplayLauncher
             {
                 if (DOldState.Buttons[i] != State.Buttons[i])
                 {
-                    if (TestModeActivated)
+                    if (TestModeActivated && chkForceMapper.Checked)
+                    {
+                        var mapping = Launcher.ActiveGamePadMapping.ToDictionary();
+                        var gamepadButton = defaultDInputButtons[i+1];
+                        if (State.Buttons[i] && !DOldState.Buttons[i] && mapping.ContainsKey(gamepadButton))
+                            CurrentlyPressedButtons.Add(mapping[gamepadButton]);
+                        else if (!State.Buttons[i] && DOldState.Buttons[i] && mapping.ContainsKey(gamepadButton))
+                            CurrentlyPressedButtons.Remove(mapping[gamepadButton]);
+                    }
+                    else if (TestModeActivated)
                     {
                         if (State.Buttons[i] && !DOldState.Buttons[i] && ActiveQjcDefinitions.Keys.Contains($"{i + 1}"))
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"{i + 1}"]);
@@ -729,8 +752,6 @@ namespace nullDCNetplayLauncher
 
             var jState = e.JoystickState;
             var jCapabilities = controller.CapabilitiesJoystick;
-
-            var TestMapping = Launcher.ActiveGamePadMapping.ToDictionary();
 
             PropertyInfo[] AvailableButtonProperties = typeof(OpenTK.Input.GamePadButtons).GetProperties().Where(
                 p =>
@@ -1130,7 +1151,7 @@ namespace nullDCNetplayLauncher
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
 
             SetupUnfinished = false;
-            controller.GamePadAction -= controller_GamePadAction;
+            
         }
 
         public void TestButtonMode()
