@@ -629,13 +629,14 @@ namespace nullDCNetplayLauncher
                 return;
             }
 
+            var mapping = Launcher.ActiveGamePadMapping.ToDictionary();
+
             for (int i = 0; i < State.Buttons.Length; i++)
             {
                 if (DOldState.Buttons[i] != State.Buttons[i])
                 {
                     if (TestModeActivated && chkForceMapper.Checked)
                     {
-                        var mapping = Launcher.ActiveGamePadMapping.ToDictionary();
                         var gamepadButton = defaultDInputButtons[i+1];
                         if (State.Buttons[i] && !DOldState.Buttons[i] && mapping.ContainsKey(gamepadButton))
                             CurrentlyPressedButtons.Add(mapping[gamepadButton]);
@@ -693,8 +694,40 @@ namespace nullDCNetplayLauncher
 
                     System.Diagnostics.Debug.WriteLine(value);
 
+
                     var qkoAssignment = $"hat_{hatNum}_{qkoDirection}";
-                    if (TestModeActivated && ActiveQjcDefinitions.Keys.Contains(qkoAssignment) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
+                    if (TestModeActivated && chkForceMapper.Checked && mapping.ContainsKey(CapitalizeFirstLetter(qkoDirection)) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
+                    {
+
+                        var dirs = new List<string> { "Up", "Down", "Left", "Right" };
+                        foreach (string dir in dirs)
+                        {
+                            CurrentlyPressedButtons.Remove(dir);
+                        }
+
+                        if (value > 0 && value < 18000)
+                        {
+                            CurrentlyPressedButtons.Add(mapping["Right"]);
+                        }
+
+                        if (value > 18000 && value < 36000)
+                        {
+                            CurrentlyPressedButtons.Add(mapping["Left"]);
+                        }
+
+                        if (value > 27000 && value < 36000 || value >= 0 && value < 9000)
+                        {
+                            CurrentlyPressedButtons.Add(mapping["Up"]);
+                        }
+
+                        if (value > 9000 && value < 27000)
+                        {
+                            CurrentlyPressedButtons.Add(mapping["Down"]);
+                        }
+
+                        picArcadeStick.Refresh();
+                    }
+                    else if (TestModeActivated && ActiveQjcDefinitions.Keys.Contains(qkoAssignment) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
                     {
 
                         var dirs = new List<string> { "Up", "Down", "Left", "Right" };
