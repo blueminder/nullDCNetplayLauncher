@@ -1093,14 +1093,26 @@ namespace nullDCNetplayLauncher
         private Dictionary<string, string> ReadFromQjc()
         {
             var qjcDefinitions = new Dictionary<string, string>();
-            string[] qjcLines = File.ReadAllLines(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc"));
-            foreach (string line in qjcLines)
+            var qjcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc");
+            if (File.Exists(qjcPath))
+                qjcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc");
+            else if (File.Exists(qjcPath.Replace(" ", "_")))
+                qjcPath = qjcPath.Replace(" ", "_");
+            else
+                qjcPath = null;
+
+            if(qjcPath != null)
             {
-                var key = line.Split('=')[0].Replace("button_", "");
-                var value = line.Split('=')[1].Replace("Button_", "");
-                if (key != "none")
-                    qjcDefinitions.Add(key, value);
+                string[] qjcLines = File.ReadAllLines(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc"));
+                foreach (string line in qjcLines)
+                {
+                    var key = line.Split('=')[0].Replace("button_", "");
+                    var value = line.Split('=')[1].Replace("Button_", "");
+                    if (key != "none")
+                        qjcDefinitions.Add(key, value);
+                }
             }
+            
             return qjcDefinitions;
         }
 
