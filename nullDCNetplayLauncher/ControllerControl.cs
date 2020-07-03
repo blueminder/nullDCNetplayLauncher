@@ -18,6 +18,7 @@ using OpenTK.Input;
 using System.Text.RegularExpressions;
 using XInputDotNetPure;
 using System.Globalization;
+using System.Security.Policy;
 
 namespace nullDCNetplayLauncher
 {
@@ -59,9 +60,12 @@ namespace nullDCNetplayLauncher
 
         // for test mode
         bool TestModeActivated;
-        List<string> CurrentlyPressedButtons;
+        HashSet<string> CurrentlyPressedButtons;
+        HashSet<string> LastPressedButtons;
 
         bool SetupModeActivated;
+
+        Dictionary<string, string> ActiveQjcDefinitions;
 
         public ControllerControl(ControllerEngine controllerEngine)
         {
@@ -90,7 +94,7 @@ namespace nullDCNetplayLauncher
 
             // for test mode
             TestModeActivated = true;
-            CurrentlyPressedButtons = new List<string>();
+            CurrentlyPressedButtons = new HashSet<string>();
 
             controller.GamePadAction += controller_GamePadAction;
         }
@@ -117,6 +121,8 @@ namespace nullDCNetplayLauncher
             {
                 chkForceMapper.Enabled = false;
             }
+
+            ActiveQjcDefinitions = ReadFromQjc();
         }
 
         private void ControllerControl_Close(object sender, EventArgs e)
@@ -541,10 +547,8 @@ namespace nullDCNetplayLauncher
             /*
             if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
-            */
                 OpenTKGamePadInputRoll(sender, e);
                 picArcadeStick.Refresh();
-            /*
             }
             else if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
@@ -556,9 +560,13 @@ namespace nullDCNetplayLauncher
             }
             else
             {
+            */
+            
                 // DirectInput fallback for working PS3 and triggerless 
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
+                picArcadeStick.Refresh();
+            /*
             }
             */
 
@@ -602,14 +610,29 @@ namespace nullDCNetplayLauncher
                 assign = CurrentButtonAssignment;
             }
 
-            
+            if (DOldState == null)
+            {
+                DOldState = State;
+                return;
+            }
+
             for (int i = 0; i < State.Buttons.Length; i++)
             {
                 if (DOldState.Buttons[i] != State.Buttons[i])
                 {
-                    //WorkingMapping[defaultDInputButtons[i + 1]] = CurrentButtonAssignment;
-                    jWorkingMapping[assign] = $"button_{i + 1}";
-                    CurrentlyAssigned = true;
+                    if (TestModeActivated)
+                    {
+                        if (State.Buttons[i] && !DOldState.Buttons[i] && ActiveQjcDefinitions.Keys.Contains($"{i + 1}"))
+                            CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"{i + 1}"]);
+                        else if (!State.Buttons[i] && DOldState.Buttons[i] && ActiveQjcDefinitions.Keys.Contains($"{i + 1}"))
+                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"{i + 1}"]);
+                    }
+                    else if (SetupModeActivated)
+                    {
+                        WorkingMapping[defaultDInputButtons[i + 1]] = CurrentButtonAssignment;
+                        jWorkingMapping[assign] = $"button_{i + 1}";
+                        CurrentlyAssigned = true;
+                    }
                 }
             }
 
@@ -617,7 +640,17 @@ namespace nullDCNetplayLauncher
             {
                 if (DOldState.PointOfViewControllers[hatNum] != State.PointOfViewControllers[hatNum])
                 {
+
                     var value = State.PointOfViewControllers[hatNum];
+
+                    if(value == -1)
+                    {
+                        var dirs = new List<string> { "Up", "Down", "Left", "Right" };
+                        foreach (string dir in dirs)
+                        {
+                            CurrentlyPressedButtons.Remove(dir);
+                        }
+                    }
 
                     string qkoDirection = "";
                     switch (value)
@@ -636,11 +669,45 @@ namespace nullDCNetplayLauncher
                             break;
                     }
 
-                    if(!string.IsNullOrEmpty(qkoDirection))
+                    System.Diagnostics.Debug.WriteLine(value);
+
+                    var qkoAssignment = $"hat_{hatNum}_{qkoDirection}";
+                    if (TestModeActivated && ActiveQjcDefinitions.Keys.Contains(qkoAssignment) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
                     {
-                        //var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
-                        //WorkingMapping[field] = CapitalizeFirstLetter(qkoDirection);
-                        jWorkingMapping[assign] = $"hat_{hatNum}_{qkoDirection}";
+
+                        var dirs = new List<string> { "Up", "Down", "Left", "Right" };
+                        foreach (string dir in dirs)
+                        {
+                            CurrentlyPressedButtons.Remove(dir);
+                        }
+
+                        if (value > 0 && value < 18000)
+                        {
+                            CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_right"]);
+                        }
+
+                        if (value > 18000 && value < 36000)
+                        {
+                            CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_left"]);
+                        }
+
+                        if (value > 27000 && value < 36000 || value >= 0 && value < 9000)
+                        {
+                            CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_up"]);
+                        }
+
+                        if (value > 9000 && value < 27000)
+                        {
+                            CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_down"]);
+                        }
+
+                        picArcadeStick.Refresh();
+                    }
+                    else if (SetupModeActivated && !string.IsNullOrEmpty(qkoDirection))
+                    {
+                        var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
+                        WorkingMapping[field] = CapitalizeFirstLetter(qkoDirection);
+                        jWorkingMapping[assign] = qkoAssignment;
                         System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
                         CurrentlyAssigned = true;
                     }
@@ -656,6 +723,7 @@ namespace nullDCNetplayLauncher
                 CurrentlyAssigned = true;
             }
 
+            LastPressedButtons = CurrentlyPressedButtons;
             DOldState = State;
         }
 
@@ -967,6 +1035,20 @@ namespace nullDCNetplayLauncher
             }
             Console.WriteLine(ButtonPressRelease);
             return ButtonPressRelease;
+        }
+
+        private Dictionary<string, string> ReadFromQjc()
+        {
+            var qjcDefinitions = new Dictionary<string, string>();
+            string[] qjcLines = File.ReadAllLines(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc"));
+            foreach (string line in qjcLines)
+            {
+                var key = line.Split('=')[0].Replace("button_", "");
+                var value = line.Split('=')[1].Replace("Button_", "");
+                if (key != "none")
+                    qjcDefinitions.Add(key, value);
+            }
+            return qjcDefinitions;
         }
 
         private void InitializeJoystickBgWorker()
