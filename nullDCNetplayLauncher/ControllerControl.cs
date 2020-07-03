@@ -544,31 +544,25 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
-            /*
+            
             if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
                 OpenTKGamePadInputRoll(sender, e);
-                picArcadeStick.Refresh();
             }
             else if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
-                
                 XInputGamePadInputRoll(sender, e);
-                picArcadeStick.Refresh();
             
             }
             else
             {
-            */
-            
                 // DirectInput fallback for working PS3 and triggerless 
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
-                picArcadeStick.Refresh();
-            /*
+                
             }
-            */
+            picArcadeStick.Refresh();
 
         }
 
@@ -1070,6 +1064,9 @@ namespace nullDCNetplayLauncher
 
             string successText;
 
+            SetupModeActivated = false;
+            TestModeActivated = true;
+
             // only writes qkoJAMMA joystick configuration if 11 buttons minimum are assigned
             //  && ButtonAssignments.Count >= 11
             if (!ZDetected && !IsUnnamed && jWorkingMapping.Count >= 11)
@@ -1382,16 +1379,6 @@ namespace nullDCNetplayLauncher
 
         private void BeginSetup()
         {
-            //controller.GamePadAction += controller_GamePadAction;
-            // disable gamepad mapper if enabled
-            /*
-            if (NetplayLaunchForm.EnableMapper)
-            {
-                NetplayLaunchForm.EnableMapper = false;
-                NetplayLaunchForm.controller.clock.Stop();
-            }
-            */
-
             jWorkingMapping = new Dictionary<string, string>();
 
             OldEnableMapper = NetplayLaunchForm.EnableMapper;
@@ -1401,6 +1388,10 @@ namespace nullDCNetplayLauncher
             btnSkip.Enabled = true;
             btnCancel.Enabled = true;
             btnSetup.Enabled = false;
+
+            TestModeActivated = false;
+            SetupModeActivated = true;
+
             joystickBgWorker.WorkerSupportsCancellation = true;
             if (!joystickBgWorker.IsBusy)
                 joystickBgWorker.RunWorkerAsync();
@@ -1409,15 +1400,12 @@ namespace nullDCNetplayLauncher
 
         private void btnSetup_Click(object sender, EventArgs e)
         {
-            //DrawButton("1", 120, 120);
-            /*
             NetplayLaunchForm.EnableMapper = false;
             // reset button assignments on click
             ButtonAssignments = new Dictionary<string, List<JoystickUpdate>>();
             ButtonAssignmentText = "";
             hideAllButtons();
             showDPadOrAnalogScreen();
-            */
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
