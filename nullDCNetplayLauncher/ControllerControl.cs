@@ -552,7 +552,6 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
-            /*
             
             if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
@@ -562,17 +561,16 @@ namespace nullDCNetplayLauncher
             {
                 ZDetected = true;
                 XInputGamePadInputRoll(sender, e);
-            
+
             }
             else
             {
-            */
                 // DirectInput fallback for working PS3 and triggerless 
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
             
-                /*
-            }*/
+                
+            }
             picArcadeStick.Refresh();
 
         }
@@ -1179,6 +1177,8 @@ namespace nullDCNetplayLauncher
             else
             {
                 SaveMapping(JoystickName);
+
+                TestMapping = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == JoystickName).ToDictionary();
 
                 NetplayLaunchForm.EnableMapper = true;
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
