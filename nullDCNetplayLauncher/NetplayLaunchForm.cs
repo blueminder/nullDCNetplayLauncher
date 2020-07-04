@@ -139,7 +139,8 @@ namespace nullDCNetplayLauncher
 
                 var DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID.Contains("naomi")).ToList();
 
-                if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin")))
+                if (!File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_bios.bin"))
+                    && File.ReadAllText(Launcher.rootDir + "games.json").Contains("reference_url"))
                 {
                     if (DataGamesJson != null && DataGamesJson.Count() > 0)
                     {
@@ -169,7 +170,8 @@ namespace nullDCNetplayLauncher
                 DataGamesJson = Launcher.GamesJson.Where(g => g.Root == "data" && g.ID == "naomi_usa").ToList();
                 if (DataGamesJson.Count() > 0
                     && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin"))
-                    && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin.inactive")))
+                    && !File.Exists(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin.inactive"))
+                    && File.ReadAllText(Launcher.rootDir + "games.json").Contains("reference_url"))
                 {
                     List<Launcher.Game> dataEntries = DataGamesJson.ToList();
                     DialogResult dialogResult = MessageBox.Show(
