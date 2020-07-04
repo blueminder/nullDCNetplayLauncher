@@ -43,6 +43,7 @@
             this.btnHelp = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             // 
             // cboGameSelect
             // 
