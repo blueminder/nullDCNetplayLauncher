@@ -313,7 +313,10 @@ namespace nullDCNetplayLauncher
             string hostAddress = "127.0.0.1",
             string hostPort = "27886",
             string frameDelay = "1",
-            string frameMethod = "0")
+            string frameMethod = "0",
+            string replayEnabled = "0",
+            string replayPlayback = "0",
+            string replayFile = "")
         {
             string EmuDir = rootDir + "nulldc-1-0-4-en-win\\";
             string LauncherCfgPath = rootDir + "launcher.cfg";
@@ -336,6 +339,10 @@ namespace nullDCNetplayLauncher
                     limitfpscfg = "LimitFPS=2";
                 }
             }
+
+            replayEnabled = "Enabled=" + replayEnabled;
+            replayPlayback = "Playback=" + replayPlayback;
+            replayFile = "File=" + replayFile;
 
             string[] launchercfglines = File.ReadAllLines(LauncherCfgPath);
             string[] fpslines = File.ReadAllLines(AntilagPath);
@@ -388,6 +395,16 @@ namespace nullDCNetplayLauncher
                         writer.WriteLine(portcfg);
                         writer.WriteLine(delaycfg);
                         i = i + 5;
+                    }
+                    //section replay
+                    else if (lines[i].Contains("[Replay]"))
+                    {
+                        writer.WriteLine("[Replay]");
+                        //rewriting all the lines in this section
+                        writer.WriteLine(replayEnabled);
+                        writer.WriteLine(replayPlayback);
+                        writer.WriteLine(replayFile);
+                        i = i + 3;
                     }
                     else
                     {
