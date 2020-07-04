@@ -72,6 +72,7 @@ namespace nullDCNetplayLauncher
         private void btnLaunchGame_Click(object sender, EventArgs e)
         {
             Launcher.SwitchRegion(cboRegion.SelectedValue.ToString());
+            Launcher.CleanMalformedQjcFiles();
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: false,

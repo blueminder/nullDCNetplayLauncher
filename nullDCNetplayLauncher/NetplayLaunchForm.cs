@@ -368,6 +368,7 @@ namespace nullDCNetplayLauncher
 
         private void btnController_Click(object sender, EventArgs e)
         {
+            Launcher.CleanMalformedQjcFiles();
             StopMapper(true);
             ControllerControl cc = new ControllerControl(controller);
             Form window = new Form

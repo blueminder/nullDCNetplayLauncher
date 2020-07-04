@@ -192,6 +192,8 @@ namespace nullDCNetplayLauncher
                     offline = arguments["offline"] == "1";
                     hosting = false;
 
+                    Launcher.CleanMalformedQjcFiles();
+
                     Launcher.UpdateCFGFile(
                         netplayEnabled: !offline,
                         isHost: hosting);
@@ -244,6 +246,8 @@ namespace nullDCNetplayLauncher
                         var genHost = Launcher.GenerateHostCode(hostInfo.IP, hostInfo.Port, hostInfo.Delay, hostInfo.Method);
                         Console.WriteLine($"Generated Host Code: {genHost}");
                     }
+
+                    Launcher.CleanMalformedQjcFiles();
 
                     Launcher.UpdateCFGFile(
                         netplayEnabled: !offline,
