@@ -1146,18 +1146,21 @@ namespace nullDCNetplayLauncher
 
         private Dictionary<string, string> ReadFromQjc()
         {
+            // depending on controler and system, qkoJAMMA applies underscores or spaces to filename
+            // either format is acceptable
             var qjcDefinitions = new Dictionary<string, string>();
-            var qjcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc");
-            if (File.Exists(qjcPath))
-                qjcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc");
-            else if (File.Exists(qjcPath.Replace(" ", "_")))
-                qjcPath = qjcPath.Replace(" ", "_");
+            var expectedQjcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc");
+            var qjcPath = "";
+            if (File.Exists(expectedQjcPath))
+                qjcPath = expectedQjcPath;
+            else if (File.Exists(expectedQjcPath.Replace(" ", "_")))
+                qjcPath = expectedQjcPath.Replace(" ", "_");
             else
                 qjcPath = null;
 
             if(qjcPath != null)
             {
-                string[] qjcLines = File.ReadAllLines(Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"{JoystickName}.qjc"));
+                string[] qjcLines = File.ReadAllLines(qjcPath);
                 foreach (string line in qjcLines)
                 {
                     var key = line.Split('=')[0].Replace("button_", "");
