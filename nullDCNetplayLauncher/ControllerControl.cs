@@ -550,6 +550,12 @@ namespace nullDCNetplayLauncher
             XOldState = State;
         }
 
+        private bool Joy1Enabled()
+        {
+            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+            return launcherText.Contains("player1=joy1");
+        }
+
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
             
@@ -557,7 +563,11 @@ namespace nullDCNetplayLauncher
             {
                 ZDetected = true;
                 XInputGamePadInputRoll(sender, e);
-
+            }
+            else if (ReadFromQjc().Count > 0 && Joy1Enabled() && TestModeActivated)
+            {
+                // if qjc already exists and joystick enabled, use qjc for test mode
+                DInputRoll(sender, e);
             }
             else if (OpenTK.Input.GamePad.GetState(0).IsConnected)
             {
@@ -568,9 +578,8 @@ namespace nullDCNetplayLauncher
                 // DirectInput fallback for working PS3 and triggerless 
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
-            
-                
             }
+            
             picArcadeStick.Refresh();
 
         }
@@ -816,7 +825,7 @@ namespace nullDCNetplayLauncher
                     }
                     if (jOldState.GetButton(i) != jState.GetButton(i))
                     {
-                        //jWorkingMapping[assign] = $"button_{i + 1}";
+                        jWorkingMapping[assign] = $"button_{i + 1}";
                     }
                 }
 
@@ -834,16 +843,16 @@ namespace nullDCNetplayLauncher
                     switch (jState.GetHat(JoystickHat.Hat0).Position)
                     {
                         case HatPosition.Up:
-                            //jWorkingMapping[assign] = "hat_0_up";
+                            jWorkingMapping[assign] = "hat_0_up";
                             break;
                         case HatPosition.Down:
-                            //jWorkingMapping[assign] = "hat_0_down";
+                            jWorkingMapping[assign] = "hat_0_down";
                             break;
                         case HatPosition.Left:
-                            //jWorkingMapping[assign] = "hat_0_left";
+                            jWorkingMapping[assign] = "hat_0_left";
                             break;
                         case HatPosition.Right:
-                            //jWorkingMapping[assign] = "hat_0_right";
+                            jWorkingMapping[assign] = "hat_0_right";
                             break;
                     }
                 }
@@ -1232,6 +1241,8 @@ namespace nullDCNetplayLauncher
                 File.SetAttributes(qjcPath, FileAttributes.ReadOnly);
 
                 successText = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+
+                ActiveQjcDefinitions = ReadFromQjc();
             }
             else
             {
