@@ -41,15 +41,23 @@ namespace nullDCNetplayLauncher
 
                 if (Path.GetExtension(path).Equals(".bin"))
                 {
-                    lblDragInfo.Text = "Copying BIN...";
                     destpath += "data\\" + Path.GetFileName(files[0]);
                     if (File.Exists(destpath))
                     {
                         File.SetAttributes(destpath, FileAttributes.Normal);
                     }
-                    File.Copy(path, destpath, true);
-                    File.SetAttributes(destpath, FileAttributes.ReadOnly);
-                    lblDragInfo.Text = $"BIN copied to {Launcher.ExtractRelativePath(destpath)}";
+                    if (path == destpath)
+                    {
+                        MessageBox.Show("Your file is already in the correct place, you silly billy.");
+                        return;
+                    }  
+                    else
+                    {
+                        lblDragInfo.Text = "Copying BIN...";
+                        File.Copy(path, destpath, true);
+                        File.SetAttributes(destpath, FileAttributes.ReadOnly);
+                        lblDragInfo.Text = $"BIN copied to {Launcher.ExtractRelativePath(destpath)}";
+                    }  
                 }
                 else if (Path.GetExtension(path).Equals(".qjc"))
                 {
