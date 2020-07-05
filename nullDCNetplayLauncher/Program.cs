@@ -144,21 +144,21 @@ namespace nullDCNetplayLauncher
                         }
 
                         romPath = Launcher.GetRomPathFromGameId(arguments["gameid"]);
-                        if (romPath == null)
+                        if (string.IsNullOrEmpty(romPath))
                         {
-                            Console.WriteLine("Game not found. Please check your ROM directory, and try again.");
+                            MessageBox.Show($"Game ID '{arguments["gameid"]}' not found.\n\nPlease check your ROM directory and make sure your files match the provided games.json file.");
                             return;
                         }
                     }
                     else
                     {
-                        Console.WriteLine("Please provide a valid games.json file to use the launcher from command line.");
+                        MessageBox.Show("Please provide a valid games.json file to use the launcher from command line.");
                         return;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Please enter a valid LST path (--lst-path) or Game ID (--gameid) to continue.");
+                    MessageBox.Show("Please enter a valid LST path (--lst-path) or Game ID (--gameid) to continue.");
                     return;
                 }
 
@@ -232,7 +232,7 @@ namespace nullDCNetplayLauncher
                     }
                     else
                     {
-                        Console.WriteLine("No delay entered.");
+                        MessageBox.Show("No delay entered.");
                         return;
                     }
 
