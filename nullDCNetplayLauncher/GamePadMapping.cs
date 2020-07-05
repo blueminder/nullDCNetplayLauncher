@@ -31,7 +31,42 @@ namespace nullDCNetplayLauncher
         public string IsRight { get; set; } = "";
         public string BigButton { get; set; } = "";
 
+        public string Button11 { get; set; } = "";
+        public string Button12 { get; set; } = "";
+        public string Button13 { get; set; } = "";
+        public string Button14 { get; set; } = "";
+        public string Button15 { get; set; } = "";
+
+
         public Boolean Default { get; set; } = false;
+
+        public Dictionary<string, string> ToDictionary()
+        {
+            Dictionary<string, string> rDict = new Dictionary<string, string>();
+            rDict.Add("Y", Y);
+            rDict.Add("A", A);
+            rDict.Add("Back", Back);
+            rDict.Add("X", X);
+            rDict.Add("B", B);
+            rDict.Add("Start", Start);
+            rDict.Add("LeftStick", LeftStick);
+            rDict.Add("RightStick", RightStick);
+            rDict.Add("LeftShoulder", LeftShoulder);
+            rDict.Add("RightShoulder", RightShoulder);
+            rDict.Add("LeftTrigger", LeftTrigger);
+            rDict.Add("RightTrigger", RightTrigger);
+            rDict.Add("Up", IsUp);
+            rDict.Add("Down", IsDown);
+            rDict.Add("Left", IsLeft);
+            rDict.Add("Right", IsRight);
+            rDict.Add("Button11", Button11);
+            rDict.Add("Button12", Button12);
+            rDict.Add("Button13", Button13);
+            rDict.Add("Button14", Button14);
+            rDict.Add("Button15", Button15);
+
+            return rDict;
+        }
 
         public object this[string propertyName]
         {
