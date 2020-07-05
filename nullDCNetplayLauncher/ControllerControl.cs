@@ -987,65 +987,121 @@ namespace nullDCNetplayLauncher
             if (oldLeftX == 0 && newLeftX == 1)
             {
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
-                WorkingMapping["IsRight"] = CurrentButtonAssignment;
-                if (AnalogSet)
+                if (TestModeActivated)
                 {
-                    jWorkingMapping["Right"] = "axis_w_positive";
+                    CurrentlyPressedButtons.Add(TestMapping["Right"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    WorkingMapping["IsRight"] = CurrentButtonAssignment;
+                    if (AnalogSet)
+                    {
+                        jWorkingMapping["Right"] = "axis_w_positive";
+                    }
                 }
             }
 
             if (oldLeftX == 1 && newLeftX == 0)
             {
                 System.Diagnostics.Debug.WriteLine("Right Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove(TestMapping["Right"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             if (oldLeftX == 0 && newLeftX == -1)
             {
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
-                WorkingMapping["IsLeft"] = CurrentButtonAssignment;
-                if (AnalogSet)
+                if (TestModeActivated)
                 {
-                    jWorkingMapping["Left"] = "axis_w_negative";
+                    CurrentlyPressedButtons.Add(TestMapping["Left"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    WorkingMapping["IsLeft"] = CurrentButtonAssignment;
+                    if (AnalogSet)
+                    {
+                        jWorkingMapping["Left"] = "axis_w_negative";
+                    }
                 }
             }
 
             if (oldLeftX == -1 && newLeftX == 0)
             {
                 System.Diagnostics.Debug.WriteLine("Left Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove(TestMapping["Left"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             if (oldLeftY == 0 && newLeftY == 1)
             {
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
-                WorkingMapping["IsUp"] = CurrentButtonAssignment;
-                if (AnalogSet)
+                if (TestModeActivated)
                 {
-                    jWorkingMapping["Up"] = "axis_z_negative";
+                    CurrentlyPressedButtons.Add(TestMapping["Up"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    WorkingMapping["IsUp"] = CurrentButtonAssignment;
+                    if (AnalogSet)
+                    {
+                        jWorkingMapping["Up"] = "axis_z_negative";
+                    }
                 }
             }
 
             if (oldLeftY == 1 && newLeftY == 0)
             {
                 System.Diagnostics.Debug.WriteLine("Up Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove(TestMapping["Up"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             if (oldLeftY == 0 && newLeftY == -1)
             {
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
-                WorkingMapping["IsDown"] = CurrentButtonAssignment;
-                if (AnalogSet)
+                if (TestModeActivated)
                 {
-                    jWorkingMapping["Down"] = "axis_z_positive";
+                    CurrentlyPressedButtons.Add(TestMapping["Down"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    WorkingMapping["IsDown"] = CurrentButtonAssignment;
+                    if (AnalogSet)
+                    {
+                        jWorkingMapping["Down"] = "axis_z_positive";
+                    }
                 }
             }
 
             if (oldLeftY == -1 && newLeftY == 0)
             {
                 System.Diagnostics.Debug.WriteLine("Down Released");
-                CurrentlyAssigned = true;
+                if (TestModeActivated)
+                {
+                    CurrentlyPressedButtons.Remove(TestMapping["Down"]);
+                }
+                else if (SetupModeActivated)
+                {
+                    CurrentlyAssigned = true;
+                }
             }
 
             OldState = State;
