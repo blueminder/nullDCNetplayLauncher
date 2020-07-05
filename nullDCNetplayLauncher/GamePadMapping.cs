@@ -55,6 +55,7 @@ namespace nullDCNetplayLauncher
             rDict.Add("RightShoulder", RightShoulder);
             rDict.Add("LeftTrigger", LeftTrigger);
             rDict.Add("RightTrigger", RightTrigger);
+            rDict.Add("BigButton", BigButton);
             rDict.Add("Up", IsUp);
             rDict.Add("Down", IsDown);
             rDict.Add("Left", IsLeft);
@@ -135,6 +136,7 @@ namespace nullDCNetplayLauncher
                     LeftTrigger = "",
                     RightTrigger = "",
                     BigButton = "",
+                    Button11 = "Coin",
                 };
                 readMappingList = new GamePadMappingList();
                 readMappingList.GamePadMappings.Add(defaultMapping);

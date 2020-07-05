@@ -553,15 +553,15 @@ namespace nullDCNetplayLauncher
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
             
-            if (OpenTK.Input.GamePad.GetState(0).IsConnected)
-            {
-                OpenTKGamePadInputRoll(sender, e);
-            }
-            else if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
                 XInputGamePadInputRoll(sender, e);
 
+            }
+            else if (OpenTK.Input.GamePad.GetState(0).IsConnected)
+            {
+                OpenTKGamePadInputRoll(sender, e);
             }
             else
             {
@@ -816,7 +816,7 @@ namespace nullDCNetplayLauncher
                     }
                     if (jOldState.GetButton(i) != jState.GetButton(i))
                     {
-                        jWorkingMapping[assign] = $"button_{i + 1}";
+                        //jWorkingMapping[assign] = $"button_{i + 1}";
                     }
                 }
 
@@ -834,16 +834,16 @@ namespace nullDCNetplayLauncher
                     switch (jState.GetHat(JoystickHat.Hat0).Position)
                     {
                         case HatPosition.Up:
-                            jWorkingMapping[assign] = "hat_0_up";
+                            //jWorkingMapping[assign] = "hat_0_up";
                             break;
                         case HatPosition.Down:
-                            jWorkingMapping[assign] = "hat_0_down";
+                            //jWorkingMapping[assign] = "hat_0_down";
                             break;
                         case HatPosition.Left:
-                            jWorkingMapping[assign] = "hat_0_left";
+                            //jWorkingMapping[assign] = "hat_0_left";
                             break;
                         case HatPosition.Right:
-                            jWorkingMapping[assign] = "hat_0_right";
+                            //jWorkingMapping[assign] = "hat_0_right";
                             break;
                     }
                 }
@@ -996,7 +996,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsRight"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        jWorkingMapping["Right"] = "axis_w_positive";
+                        //jWorkingMapping["Right"] = "axis_w_positive";
                     }
                 }
             }
@@ -1026,7 +1026,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsLeft"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        jWorkingMapping["Left"] = "axis_w_negative";
+                        //jWorkingMapping["Left"] = "axis_w_negative";
                     }
                 }
             }
@@ -1056,7 +1056,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsUp"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        jWorkingMapping["Up"] = "axis_z_negative";
+                       //jWorkingMapping["Up"] = "axis_z_negative";
                     }
                 }
             }
@@ -1086,7 +1086,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsDown"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        jWorkingMapping["Down"] = "axis_z_positive";
+                        //jWorkingMapping["Down"] = "axis_z_positive";
                     }
                 }
             }
