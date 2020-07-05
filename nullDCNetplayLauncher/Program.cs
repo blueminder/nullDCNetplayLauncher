@@ -140,6 +140,10 @@ namespace nullDCNetplayLauncher
                         var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
                         if (File.Exists(us_bios_path))
                         {
+                            if (File.Exists($"{us_bios_path}.inactive"))
+                            {
+                                File.Delete($"{us_bios_path}.inactive");
+                            } 
                             File.Move(us_bios_path, $"{us_bios_path}.inactive");
                         }
 
