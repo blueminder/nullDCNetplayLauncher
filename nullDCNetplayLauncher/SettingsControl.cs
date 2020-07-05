@@ -306,22 +306,9 @@ namespace nullDCNetplayLauncher
             System.Diagnostics.Debug.WriteLine(cboGamePadMappings.SelectedValue);
         }
 
-        private async void btnUpdate_Click(object sender, EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
-            // anyone running on .NET < 4.6, TLS 1.2 needs to be explicitly assigned
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            var check = await _updateManager.CheckForUpdatesAsync();
-
-            if (!check.CanUpdate)
-            {
-                MessageBox.Show("There are no updates available.");
-                return;
-            }
-
-            await _updateManager.PrepareUpdateAsync(check.LastVersion);
-
-            _updateManager.LaunchUpdater(check.LastVersion);
-            Application.Exit();
+            NetplayLaunchForm.launcher.UpdateLauncher(false);
         }
 
     }

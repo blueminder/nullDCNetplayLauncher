@@ -13,7 +13,7 @@ namespace nullDCNetplayLauncher
 
     public partial class NetplayLaunchForm : Form
     {
-        Launcher launcher;
+        public static Launcher launcher;
         Dictionary<String, String> romDict;
         ConnectionPresetList presets;
         
@@ -34,9 +34,11 @@ namespace nullDCNetplayLauncher
 
             StartTray = tray;
 
-            if (!StartTray && !Launcher.FilesRestored)
+            if (!StartTray)
             {
-                Launcher.RestoreFiles();
+                launcher.UpdateLauncher(true);
+                if (!Launcher.FilesRestored)
+                    Launcher.RestoreFiles();
             }
             
             string launcherCfgText = "";
@@ -61,6 +63,7 @@ namespace nullDCNetplayLauncher
 
             if (StartTray)
                 this.WindowState = FormWindowState.Minimized;
+
 
             ReloadRomList();
             Launcher.LoadRegionSettings();

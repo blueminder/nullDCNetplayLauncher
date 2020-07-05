@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Onova;
+using Onova.Services;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,6 +9,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Runtime.Remoting.Messaging;
@@ -830,6 +833,40 @@ namespace nullDCNetplayLauncher
             }
 
             File.Delete(NullDcZipPath);
+        }
+
+        private readonly IUpdateManager _updateManager = new UpdateManager(
+                new GithubPackageResolver("blueminder", "nullDCNetplayLauncher", "*Distribution*"),
+                new ZipPackageExtractor());
+
+        public async void UpdateLauncher(bool prompt)
+        {
+            // anyone running on .NET < 4.6, TLS 1.2 needs to be explicitly assigned
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            var check = await _updateManager.CheckForUpdatesAsync();
+
+            if (!check.CanUpdate)
+            {
+                if (!prompt)
+                    MessageBox.Show("There are no updates available.");
+                return;
+            }
+
+            if (prompt)
+            {
+                DialogResult dialogResult = MessageBox.Show(
+                            $"NullDC-NAOMI Netplay Launcher {check.LastVersion} is available.\nWould you like to update?",
+                            "Update Available",
+                            MessageBoxButtons.YesNo);
+
+                if (dialogResult == DialogResult.No)
+                    return;
+            }
+
+            await _updateManager.PrepareUpdateAsync(check.LastVersion);
+
+            _updateManager.LaunchUpdater(check.LastVersion);
+            Application.Exit();
         }
 
         public class Game
