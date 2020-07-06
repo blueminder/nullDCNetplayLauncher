@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using XInputDotNetPure;
 using System.Globalization;
 using System.Security.Policy;
+using System.Runtime.InteropServices;
 
 namespace nullDCNetplayLauncher
 {
@@ -68,6 +69,11 @@ namespace nullDCNetplayLauncher
 
         Dictionary<string, string> ActiveQjcDefinitions;
 
+        Dictionary<string, bool> OldKeyState = null;
+        Dictionary<string, bool> KeyState = null;
+
+        Dictionary<string, int> ActiveQkc;
+
         public ControllerControl(ControllerEngine controllerEngine)
         {
             InitializeComponent();
@@ -101,9 +107,7 @@ namespace nullDCNetplayLauncher
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
-        {
-            System.Diagnostics.Debug.WriteLine("FOO " + controller.CapabilitiesGamePad.ToString());
-            
+        {   
             if(controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
             {
                 lblController.Text = "Controller Detected";
@@ -121,16 +125,8 @@ namespace nullDCNetplayLauncher
                 chkForceMapper.Checked = true;
             }
 
-            /*
-            // if XInput or GamePad not detected
-            if (!XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected
-                && !OpenTK.Input.GamePad.GetState(0).IsConnected)
-            {
-                chkForceMapper.Enabled = false;
-            }
-            */
-
             ActiveQjcDefinitions = ReadFromQjc();
+            ActiveQkc = ReadFromQkc();
         }
 
         private void ControllerControl_Close(object sender, EventArgs e)
@@ -582,9 +578,52 @@ namespace nullDCNetplayLauncher
                 // controllers not picked up by XInput or OpenTK
                 DInputRoll(sender, e);
             }
-            
+
+            KBRoll();
+
             picArcadeStick.Refresh();
 
+        }
+
+        [DllImport("user32.dll")]
+        static extern short GetKeyState(int nVirtKey);
+
+        public void KBRoll()
+        {
+            var AllKeys = new Dictionary<string, int>();
+
+            KeyState = new Dictionary<string, bool>();
+
+            if (OldKeyState == null)
+                OldKeyState = KeyState;
+
+            foreach (string key in ActiveQkc.Keys)
+            {
+                KeyState[key] = GetKeyState(ActiveQkc[key]) < 0;
+                if (KeyState[key] != OldKeyState[key])
+                {
+                    if(key == "Up")
+                        CurrentlyPressedButtons.Remove("Down");
+                    if (key == "Down")
+                        CurrentlyPressedButtons.Remove("Up");
+                    if (key == "Left")
+                        CurrentlyPressedButtons.Remove("Right");
+                    if (key == "Right")
+                        CurrentlyPressedButtons.Remove("Left");
+
+                    if (KeyState[key])
+                    {
+                        CurrentlyPressedButtons.Add(key);
+                    }
+                    else
+                    {
+                        CurrentlyPressedButtons.Remove(key);
+                    }
+                }
+                    
+            }
+
+            OldKeyState = KeyState;
         }
 
         public string CapitalizeFirstLetter(string s)
@@ -1243,6 +1282,44 @@ namespace nullDCNetplayLauncher
             }
             
             return qjcDefinitions;
+        }
+
+        private Dictionary<string, int> ReadFromQkc()
+        {
+            // depending on controler and system, qkoJAMMA applies underscores or spaces to filename
+            // either format is acceptable
+            var qkcDefinitions = new Dictionary<string, int>();
+            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"Keyboard.qkc");
+            var qkcPath = "";
+            if (File.Exists(expectedQkcPath))
+                qkcPath = expectedQkcPath;
+            else if (File.Exists(expectedQkcPath.Replace(" ", "_")))
+                qkcPath = expectedQkcPath.Replace(" ", "_");
+            else
+                qkcPath = null;
+
+            if (qkcPath != null)
+            {
+                string[] qkcLines = File.ReadAllLines(qkcPath);
+                foreach (string line in qkcLines)
+                {
+                    string key = line.Split('=')[1];
+                    string value = line.Split('=')[0].ToUpper();
+
+                    if (int.TryParse(value, out _))
+                        value = $"D{value}";
+
+                    key = key.Replace("Button_", "");
+
+                    int keyCode = (int)Enum.Parse(typeof(Keys), value);
+
+                    if (key != "none" && !qkcDefinitions.ContainsKey(key))
+                        qkcDefinitions[key] = keyCode;
+
+                }
+            }
+
+            return qkcDefinitions;
         }
 
         private void InitializeJoystickBgWorker()
