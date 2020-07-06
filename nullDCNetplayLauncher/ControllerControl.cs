@@ -558,13 +558,13 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
-            
+
             if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
                 XInputGamePadInputRoll(sender, e);
             }
-            else if (ReadFromQjc().Count > 0 && Joy1Enabled() && TestModeActivated)
+            else if (ReadFromQjc().Count > 0 && ((Joy1Enabled() && TestModeActivated) || (TestModeActivated && AnalogSet)))
             {
                 // if qjc already exists and joystick enabled, use qjc for test mode
                 DInputRoll(sender, e);
@@ -773,6 +773,7 @@ namespace nullDCNetplayLauncher
 
                         picArcadeStick.Refresh();
                     }
+                    
                     else if (SetupModeActivated && !string.IsNullOrEmpty(qkoDirection))
                     {
                         var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
@@ -785,12 +786,58 @@ namespace nullDCNetplayLauncher
                 }
                 
             }
-            
-            if(AnalogSet && !string.IsNullOrEmpty(SetJoystickAnalog(State)))
+
+            var analog = SetJoystickAnalog(State);
+            if (AnalogSet)
             {
-                jWorkingMapping[assign] = SetJoystickAnalog(State);
-                System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
-                CurrentlyAssigned = true;
+                if (TestModeActivated && string.IsNullOrEmpty(analog))
+                {
+                    var dirs = new List<string> { "Up", "Down", "Left", "Right" };
+                    foreach (string dir in dirs)
+                    {
+                        CurrentlyPressedButtons.Remove(dir);
+                    }
+                } else if (TestModeActivated && !string.IsNullOrEmpty(analog))
+                {
+                    var dirs = new List<string> { "Up", "Down", "Left", "Right" };
+                    foreach (string dir in dirs)
+                    {
+                        CurrentlyPressedButtons.Remove(dir);
+                    }
+
+                    if (analog == "axis_w_positive")
+                    {
+                        CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"axis_w_negative"]);
+                        CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"axis_w_positive"]);
+                    }
+
+                    if (analog == "axis_w_negative")
+                    {
+                        CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"axis_w_positive"]);
+                        CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"axis_w_negative"]);
+                    }
+
+                    if (analog == "axis_z_negative")
+                    {
+                        CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"axis_z_positive"]);
+                        CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"axis_z_negative"]);
+                    }
+
+                    if (analog == "axis_z_positive")
+                    {
+                        CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"axis_z_negative"]);
+                        CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"axis_z_positive"]);
+                    }
+
+                    picArcadeStick.Refresh();
+                }
+                else if(SetupModeActivated)
+                {
+                    jWorkingMapping[assign] = SetJoystickAnalog(State);
+                    System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
+                    CurrentlyAssigned = true;
+                }
+
             }
 
             LastPressedButtons = CurrentlyPressedButtons;
@@ -1006,6 +1053,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Left"]);
                     CurrentlyPressedButtons.Add(TestMapping["Right"]);
                 }
                 else if (SetupModeActivated)
@@ -1013,7 +1061,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsRight"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        //jWorkingMapping["Right"] = "axis_w_positive";
+                        jWorkingMapping["Right"] = "axis_w_positive";
                     }
                 }
             }
@@ -1036,6 +1084,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Right"]);
                     CurrentlyPressedButtons.Add(TestMapping["Left"]);
                 }
                 else if (SetupModeActivated)
@@ -1043,7 +1092,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsLeft"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        //jWorkingMapping["Left"] = "axis_w_negative";
+                        jWorkingMapping["Left"] = "axis_w_negative";
                     }
                 }
             }
@@ -1066,6 +1115,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Down"]);
                     CurrentlyPressedButtons.Add(TestMapping["Up"]);
                 }
                 else if (SetupModeActivated)
@@ -1073,7 +1123,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsUp"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                       //jWorkingMapping["Up"] = "axis_z_negative";
+                       jWorkingMapping["Up"] = "axis_z_negative";
                     }
                 }
             }
@@ -1096,6 +1146,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Up"]);
                     CurrentlyPressedButtons.Add(TestMapping["Down"]);
                 }
                 else if (SetupModeActivated)
@@ -1103,7 +1154,7 @@ namespace nullDCNetplayLauncher
                     WorkingMapping["IsDown"] = CurrentButtonAssignment;
                     if (AnalogSet)
                     {
-                        //jWorkingMapping["Down"] = "axis_z_positive";
+                        jWorkingMapping["Down"] = "axis_z_positive";
                     }
                 }
             }
@@ -1182,8 +1233,9 @@ namespace nullDCNetplayLauncher
                 {
                     var key = line.Split('=')[0].Replace("button_", "");
                     var value = line.Split('=')[1].Replace("Button_", "");
-                    if (key != "none")
-                        qjcDefinitions.Add(key, value);
+                    if (key != "none" && !qjcDefinitions.ContainsKey(key))
+                        qjcDefinitions[key] = value;
+                        
                 }
             }
             
