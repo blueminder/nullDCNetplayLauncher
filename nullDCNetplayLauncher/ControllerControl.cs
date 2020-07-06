@@ -445,7 +445,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Right Pushed");
                 if (TestModeActivated)
                 {
-                    var currentButton = TestMapping["Right"];
+                    CurrentlyPressedButtons.Remove(TestMapping["Left"]);
                     CurrentlyPressedButtons.Add(TestMapping["Right"]);
                 }
                 else
@@ -472,6 +472,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Left Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Right"]);
                     CurrentlyPressedButtons.Add(TestMapping["Left"]);
                 }
                 else
@@ -498,6 +499,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Up Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Down"]);
                     CurrentlyPressedButtons.Add(TestMapping["Up"]);
                 }
                 else
@@ -526,6 +528,7 @@ namespace nullDCNetplayLauncher
                 System.Diagnostics.Debug.WriteLine("Down Pushed");
                 if (TestModeActivated)
                 {
+                    CurrentlyPressedButtons.Remove(TestMapping["Up"]);
                     CurrentlyPressedButtons.Add(TestMapping["Down"]);
                 }
                 else
