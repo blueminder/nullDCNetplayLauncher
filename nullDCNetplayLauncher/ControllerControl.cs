@@ -680,7 +680,7 @@ namespace nullDCNetplayLauncher
                         {
                             CurrentlyPressedButtons.Remove(dir);
                         }
-                    }
+                    } 
 
                     string qkoDirection = "";
                     switch (value)
@@ -705,30 +705,34 @@ namespace nullDCNetplayLauncher
                     var qkoAssignment = $"hat_{hatNum}_{qkoDirection}";
                     if (TestModeActivated && chkForceMapper.Checked && mapping.ContainsKey(CapitalizeFirstLetter(qkoDirection)) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
                     {
-
+                        
                         var dirs = new List<string> { "Up", "Down", "Left", "Right" };
                         foreach (string dir in dirs)
                         {
                             CurrentlyPressedButtons.Remove(dir);
                         }
-
+                        
                         if (value > 0 && value < 18000)
                         {
+                            CurrentlyPressedButtons.Remove(mapping["Left"]);
                             CurrentlyPressedButtons.Add(mapping["Right"]);
                         }
 
                         if (value > 18000 && value < 36000)
                         {
+                            CurrentlyPressedButtons.Remove(mapping["Right"]);
                             CurrentlyPressedButtons.Add(mapping["Left"]);
                         }
 
-                        if (value > 27000 && value < 36000 || value >= 0 && value < 9000)
+                        if (value > 27000 && value < 36000 || value > 0 && value < 9000)
                         {
+                            CurrentlyPressedButtons.Remove(mapping["Down"]);
                             CurrentlyPressedButtons.Add(mapping["Up"]);
                         }
 
                         if (value > 9000 && value < 27000)
                         {
+                            CurrentlyPressedButtons.Remove(mapping["Up"]);
                             CurrentlyPressedButtons.Add(mapping["Down"]);
                         }
 
@@ -736,30 +740,34 @@ namespace nullDCNetplayLauncher
                     }
                     else if (TestModeActivated && ActiveQjcDefinitions.Keys.Contains(qkoAssignment) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
                     {
-
+                        
                         var dirs = new List<string> { "Up", "Down", "Left", "Right" };
                         foreach (string dir in dirs)
                         {
                             CurrentlyPressedButtons.Remove(dir);
                         }
-
+                        
                         if (value > 0 && value < 18000)
                         {
+                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_left"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_right"]);
                         }
 
                         if (value > 18000 && value < 36000)
                         {
+                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_right"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_left"]);
                         }
 
                         if (value > 27000 && value < 36000 || value >= 0 && value < 9000)
                         {
+                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_down"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_up"]);
                         }
 
                         if (value > 9000 && value < 27000)
                         {
+                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_up"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_down"]);
                         }
 
