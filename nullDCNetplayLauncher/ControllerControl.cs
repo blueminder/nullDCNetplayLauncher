@@ -40,6 +40,7 @@ namespace nullDCNetplayLauncher
 
         GamePadMapping WorkingMapping;
         Dictionary<string, string> jWorkingMapping;
+        Dictionary<string, string> kWorkingMapping;
 
         private ControllerEngine controller;
         
@@ -71,6 +72,7 @@ namespace nullDCNetplayLauncher
 
         Dictionary<string, bool> OldKeyState = null;
         Dictionary<string, bool> KeyState = null;
+        byte[] kOldState;
 
         Dictionary<string, int> ActiveQkc;
 
@@ -96,6 +98,7 @@ namespace nullDCNetplayLauncher
 
             WorkingMapping = new GamePadMapping();
             jWorkingMapping = new Dictionary<string, string>();
+            kWorkingMapping = new Dictionary<string, string>();
 
             SetupModeActivated = false;
 
@@ -588,6 +591,10 @@ namespace nullDCNetplayLauncher
         [DllImport("user32.dll")]
         static extern short GetKeyState(int nVirtKey);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetKeyboardState(byte[] lpKeyState);
+
         public void KBRoll()
         {
             var AllKeys = new Dictionary<string, int>();
@@ -600,19 +607,19 @@ namespace nullDCNetplayLauncher
             foreach (string key in ActiveQkc.Keys)
             {
                 KeyState[key] = GetKeyState(ActiveQkc[key]) < 0;
-                if (KeyState[key] != OldKeyState[key])
+                if (KeyState[key] != OldKeyState[key] && TestModeActivated)
                 {
-                    if(key == "Up")
-                        CurrentlyPressedButtons.Remove("Down");
-                    if (key == "Down")
-                        CurrentlyPressedButtons.Remove("Up");
-                    if (key == "Left")
-                        CurrentlyPressedButtons.Remove("Right");
-                    if (key == "Right")
-                        CurrentlyPressedButtons.Remove("Left");
-
                     if (KeyState[key])
                     {
+                        if (key == "Up")
+                            CurrentlyPressedButtons.Remove("Down");
+                        if (key == "Down")
+                            CurrentlyPressedButtons.Remove("Up");
+                        if (key == "Left")
+                            CurrentlyPressedButtons.Remove("Right");
+                        if (key == "Right")
+                            CurrentlyPressedButtons.Remove("Left");
+
                         CurrentlyPressedButtons.Add(key);
                     }
                     else
@@ -620,7 +627,30 @@ namespace nullDCNetplayLauncher
                         CurrentlyPressedButtons.Remove(key);
                     }
                 }
-                    
+            }
+
+            if (SetupModeActivated)
+            {
+                var kState = new byte[256];
+                if (kOldState == null)
+                    kOldState = kState;
+
+                GetKeyboardState(kState);
+                for (int i=0; i < 256; i++)
+                {
+                    // pressed
+                    if ((kState[i] & 0x80) != 0 && (kOldState[i] & 0x80) == 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine(i + "Pressed");
+                    }
+                    // released
+                    else if ((kState[i] & 0x80) == 0 && (kOldState[i] & 0x80) != 0)
+                    {
+                        System.Diagnostics.Debug.WriteLine(i + " Released");
+                    }
+                }
+
+                kOldState = kState;
             }
 
             OldKeyState = KeyState;
