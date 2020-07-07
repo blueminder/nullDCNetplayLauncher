@@ -70,8 +70,8 @@ namespace nullDCNetplayLauncher
 
         Dictionary<string, string> ActiveQjcDefinitions;
 
-        Dictionary<string, bool> OldKeyState = null;
-        Dictionary<string, bool> KeyState = null;
+        Dictionary<string, int> OldKeyState = null;
+        Dictionary<string, int> KeyState = null;
         byte[] kOldState;
 
         Dictionary<string, int> ActiveQkc;
@@ -107,6 +107,13 @@ namespace nullDCNetplayLauncher
             CurrentlyPressedButtons = new HashSet<string>();
 
             controller.GamePadAction += controller_GamePadAction;
+            Application.Idle += KeyboardAction;
+        }
+
+        private void KeyboardAction (object sender, EventArgs e)
+        {
+            KBRoll();
+            picArcadeStick.Refresh();
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
@@ -137,6 +144,7 @@ namespace nullDCNetplayLauncher
             System.Diagnostics.Debug.WriteLine("BAR " + controller.CapabilitiesGamePad.ToString());
 
             controller.GamePadAction -= controller_GamePadAction;
+            Application.Idle -= KeyboardAction;
 
             if (NetplayLaunchForm.EnableMapper == false)
             {
@@ -560,7 +568,6 @@ namespace nullDCNetplayLauncher
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
-
             if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
             {
                 ZDetected = true;
@@ -582,10 +589,7 @@ namespace nullDCNetplayLauncher
                 DInputRoll(sender, e);
             }
 
-            KBRoll();
-
             picArcadeStick.Refresh();
-
         }
 
         [DllImport("user32.dll")]
@@ -597,36 +601,34 @@ namespace nullDCNetplayLauncher
 
         public void KBRoll()
         {
-            
             if (TestModeActivated)
             {
-                KeyState = new Dictionary<string, bool>();
+                KeyState = new Dictionary<string, int>();
 
                 if (OldKeyState == null)
                     OldKeyState = KeyState;
 
                 foreach (string key in ActiveQkc.Keys)
                 {
-                    KeyState[key] = GetKeyState(ActiveQkc[key]) < 0;
-                    if (KeyState[key] != OldKeyState[key])
+                    KeyState[key] = GetKeyState(ActiveQkc[key]) & 0x800;
+                    if (KeyState[key] > 0)
                     {
-                        if (KeyState[key])
-                        {
-                            if (key == "Up")
-                                CurrentlyPressedButtons.Remove("Down");
-                            if (key == "Down")
-                                CurrentlyPressedButtons.Remove("Up");
-                            if (key == "Left")
-                                CurrentlyPressedButtons.Remove("Right");
-                            if (key == "Right")
-                                CurrentlyPressedButtons.Remove("Left");
+                        if (key == "Up")
+                            CurrentlyPressedButtons.Remove("Down");
+                        if (key == "Down")
+                            CurrentlyPressedButtons.Remove("Up");
+                        if (key == "Left")
+                            CurrentlyPressedButtons.Remove("Right");
+                        if (key == "Right")
+                            CurrentlyPressedButtons.Remove("Left");
 
-                            CurrentlyPressedButtons.Add(key);
-                        }
-                        else
-                        {
-                            CurrentlyPressedButtons.Remove(key);
-                        }
+                        CurrentlyPressedButtons.Add(key);
+                        System.Diagnostics.Debug.WriteLine(key + "Pressed");
+                    }
+                    else
+                    {
+                        CurrentlyPressedButtons.Remove(key);
+                        //System.Diagnostics.Debug.WriteLine(key + "Released");
                     }
                 }
             }
@@ -1321,10 +1323,15 @@ namespace nullDCNetplayLauncher
 
         private Dictionary<string, int> ReadFromQkc()
         {
-            // depending on controler and system, qkoJAMMA applies underscores or spaces to filename
+            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"Keyboard.qkc");
+
+            if (!File.Exists(expectedQkcPath))
+            {
+                Launcher.RestoreKeyboardQkc();
+            }
+            // depending on controller and system, qkoJAMMA applies underscores or spaces to filename
             // either format is acceptable
             var qkcDefinitions = new Dictionary<string, int>();
-            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"Keyboard.qkc");
             var qkcPath = "";
             if (File.Exists(expectedQkcPath))
                 qkcPath = expectedQkcPath;

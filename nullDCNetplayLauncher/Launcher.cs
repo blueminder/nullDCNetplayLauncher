@@ -776,6 +776,17 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        public static void RestoreKeyboardQkc(bool force = false)
+        {
+            var qkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", "Keyboard.qkc");
+
+            if (!File.Exists(qkcPath) || force)
+            {
+                File.WriteAllBytes(qkcPath,
+                                   Properties.Resources.Keyboard_qkc);
+            }
+        }
+
         public static void RestoreFiles(bool force = false)
         {
             Launcher.RestoreNullDcFresh(force);

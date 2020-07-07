@@ -199,6 +199,16 @@ namespace nullDCNetplayLauncher.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] Keyboard_qkc {
+            get {
+                object obj = ResourceManager.GetObject("Keyboard_qkc", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] launcher_cfg {
             get {
                 object obj = ResourceManager.GetObject("launcher_cfg", resourceCulture);
@@ -271,7 +281,7 @@ namespace nullDCNetplayLauncher.Properties {
         ///&lt;html&gt;
         ///&lt;head&gt;
         ///&lt;meta charset=&apos;UTF-8&apos;&gt;&lt;meta name=&apos;viewport&apos; content=&apos;width=device-width initial-scale=1&apos;&gt;
-        ///&lt;title&gt;README&lt;/title&gt;&lt;link href=&apos;https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&amp;subset=latin,latin-ext&apos; rel=&apos;stylesheet&apos; type=&apos;text/css&apos; /&gt;&lt;style type=&apos;text/css&apos;&gt;html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:&quot;Lucida Console&quot;,Consolas,&quot;Courier&quot;,monosp [rest of string was truncated]&quot;;.
+        ///&lt;title&gt;README&lt;/title&gt;&lt;link href=&apos;https://fonts.loli.net/css?family=Open+Sans:400italic,700italic,700,400&amp;subset=latin,latin-ext&apos; rel=&apos;stylesheet&apos; type=&apos;text/css&apos; /&gt;&lt;style type=&apos;text/css&apos;&gt;html {overflow-x: initial !important;}:root { --bg-color:#ffffff; --text-color:#333333; --select-text-bg-color:#B5D6FC; --select-text-font-color:auto; --monospace:&quot;Lucida Console&quot;,Consolas,&quot;Courier&quot;,mo [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string README_html {
             get {
