@@ -40,7 +40,7 @@ namespace nullDCNetplayLauncher
 
         GamePadMapping WorkingMapping;
         Dictionary<string, string> jWorkingMapping;
-        Dictionary<string, string> kWorkingMapping;
+        Dictionary<string, int> kWorkingMapping;
 
         private ControllerEngine controller;
         
@@ -98,7 +98,7 @@ namespace nullDCNetplayLauncher
 
             WorkingMapping = new GamePadMapping();
             jWorkingMapping = new Dictionary<string, string>();
-            kWorkingMapping = new Dictionary<string, string>();
+            kWorkingMapping = new Dictionary<string, int>();
 
             SetupModeActivated = false;
 
@@ -597,34 +597,36 @@ namespace nullDCNetplayLauncher
 
         public void KBRoll()
         {
-            var AllKeys = new Dictionary<string, int>();
-
-            KeyState = new Dictionary<string, bool>();
-
-            if (OldKeyState == null)
-                OldKeyState = KeyState;
-
-            foreach (string key in ActiveQkc.Keys)
+            
+            if (TestModeActivated)
             {
-                KeyState[key] = GetKeyState(ActiveQkc[key]) < 0;
-                if (KeyState[key] != OldKeyState[key] && TestModeActivated)
-                {
-                    if (KeyState[key])
-                    {
-                        if (key == "Up")
-                            CurrentlyPressedButtons.Remove("Down");
-                        if (key == "Down")
-                            CurrentlyPressedButtons.Remove("Up");
-                        if (key == "Left")
-                            CurrentlyPressedButtons.Remove("Right");
-                        if (key == "Right")
-                            CurrentlyPressedButtons.Remove("Left");
+                KeyState = new Dictionary<string, bool>();
 
-                        CurrentlyPressedButtons.Add(key);
-                    }
-                    else
+                if (OldKeyState == null)
+                    OldKeyState = KeyState;
+
+                foreach (string key in ActiveQkc.Keys)
+                {
+                    KeyState[key] = GetKeyState(ActiveQkc[key]) < 0;
+                    if (KeyState[key] != OldKeyState[key])
                     {
-                        CurrentlyPressedButtons.Remove(key);
+                        if (KeyState[key])
+                        {
+                            if (key == "Up")
+                                CurrentlyPressedButtons.Remove("Down");
+                            if (key == "Down")
+                                CurrentlyPressedButtons.Remove("Up");
+                            if (key == "Left")
+                                CurrentlyPressedButtons.Remove("Right");
+                            if (key == "Right")
+                                CurrentlyPressedButtons.Remove("Left");
+
+                            CurrentlyPressedButtons.Add(key);
+                        }
+                        else
+                        {
+                            CurrentlyPressedButtons.Remove(key);
+                        }
                     }
                 }
             }
@@ -636,17 +638,20 @@ namespace nullDCNetplayLauncher
                     kOldState = kState;
 
                 GetKeyboardState(kState);
-                for (int i=0; i < 256; i++)
+                // 48-90 includes all letters and numbers, only supported letters in QKC assignment
+                for (int i=48; i < 90; i++)
                 {
                     // pressed
                     if ((kState[i] & 0x80) != 0 && (kOldState[i] & 0x80) == 0)
                     {
                         System.Diagnostics.Debug.WriteLine(i + "Pressed");
+                        kWorkingMapping[CurrentButtonAssignment] = i;
                     }
                     // released
                     else if ((kState[i] & 0x80) == 0 && (kOldState[i] & 0x80) != 0)
                     {
                         System.Diagnostics.Debug.WriteLine(i + " Released");
+                        CurrentlyAssigned = true;
                     }
                 }
 
@@ -1414,6 +1419,12 @@ namespace nullDCNetplayLauncher
 
                 ActiveQjcDefinitions = ReadFromQjc();
             }
+            else if (kWorkingMapping.Count >= 11)
+            {
+                SaveQKC();
+                successText = $"\nKeyboard Assignments Saved to Keyboard.qkc\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+                ActiveQkc = ReadFromQkc();
+            }
             else
             {
                 SaveMapping(JoystickName);
@@ -1784,6 +1795,30 @@ namespace nullDCNetplayLauncher
         private void btnEnableGamepadMapper_Click(object sender, EventArgs e)
         {
             ZDetected = true;
+        }
+
+        public void SaveQKC()
+        {
+            string qkcOutput = "";
+            string[] buttons = { "Start", "Test", "Up", "Down", "Left", "Right",
+                                "Button_1", "Button_2", "Button_3", "Button_4", 
+                                "Button_5", "Button_6", "Coin"};
+
+            foreach (string button in buttons)
+            {
+                string keyOut = (new KeysConverter()).ConvertToString(kWorkingMapping[button.Replace("Button_", "")]).ToLower();
+                if (kWorkingMapping.ContainsKey(button.Replace("Button_", "")))
+                    qkcOutput += $"{keyOut}={button}\n";
+                else
+                    qkcOutput += $"none={button}\n";
+            }
+
+            var qkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", "Keyboard.qkc");
+            try
+            {
+                File.WriteAllText(qkcPath, qkcOutput);
+            }
+            catch { }
         }
 
         public void SaveMapping(string mappingName)
