@@ -91,12 +91,12 @@
             // 
             this.btnDPad.AutoSize = true;
             this.btnDPad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnDPad.Location = new System.Drawing.Point(82, 251);
+            this.btnDPad.Location = new System.Drawing.Point(80, 251);
             this.btnDPad.Margin = new System.Windows.Forms.Padding(2);
             this.btnDPad.Name = "btnDPad";
-            this.btnDPad.Size = new System.Drawing.Size(46, 23);
+            this.btnDPad.Size = new System.Drawing.Size(106, 23);
             this.btnDPad.TabIndex = 8;
-            this.btnDPad.Text = "Digital";
+            this.btnDPad.Text = "Digital or Keyboard";
             this.btnDPad.UseVisualStyleBackColor = true;
             this.btnDPad.Visible = false;
             this.btnDPad.Click += new System.EventHandler(this.btnDPad_Click);
@@ -106,7 +106,7 @@
             this.btnAnalog.AutoSize = true;
             this.btnAnalog.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnAnalog.Cursor = System.Windows.Forms.Cursors.Arrow;
-            this.btnAnalog.Location = new System.Drawing.Point(202, 251);
+            this.btnAnalog.Location = new System.Drawing.Point(200, 251);
             this.btnAnalog.Margin = new System.Windows.Forms.Padding(2);
             this.btnAnalog.Name = "btnAnalog";
             this.btnAnalog.Size = new System.Drawing.Size(50, 23);
@@ -148,9 +148,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnSkip);
             this.Controls.Add(this.chkForceMapper);
-            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.picArcadeStick);
             this.Controls.Add(this.btnSetup);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnDPad);
             this.Controls.Add(this.btnAnalog);
             this.Controls.Add(this.lblController);

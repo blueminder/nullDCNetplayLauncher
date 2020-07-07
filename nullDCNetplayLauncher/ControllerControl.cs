@@ -124,16 +124,12 @@ namespace nullDCNetplayLauncher
             }
             chkForceMapper.Visible = true;
 
-            if (controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
-            {
-                lblController.Text = "Controller Detected";
-            }
-            chkForceMapper.Visible = true;
-
             if (NetplayLaunchForm.EnableMapper && Launcher.ActiveGamePadMapping.Name == JoystickName)
             {
                 chkForceMapper.Checked = true;
             }
+
+            lblController.Text = "Test Mode Activated";
 
             ActiveQjcDefinitions = ReadFromQjc();
             ActiveQkc = ReadFromQkc();
@@ -1323,7 +1319,7 @@ namespace nullDCNetplayLauncher
 
         private Dictionary<string, int> ReadFromQkc()
         {
-            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", $"Keyboard.qkc");
+            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", "Keyboard.qkc");
 
             if (!File.Exists(expectedQkcPath))
             {
@@ -1353,11 +1349,11 @@ namespace nullDCNetplayLauncher
 
                     key = key.Replace("Button_", "");
 
-                    int keyCode = (int)Enum.Parse(typeof(Keys), value);
-
-                    if (key != "none" && !qkcDefinitions.ContainsKey(key))
+                    if (value != "NONE" && !qkcDefinitions.ContainsKey(key))
+                    {
+                        int keyCode = (int)Enum.Parse(typeof(Keys), value);
                         qkcDefinitions[key] = keyCode;
-
+                    }
                 }
             }
 
@@ -1429,8 +1425,12 @@ namespace nullDCNetplayLauncher
             else if (kWorkingMapping.Count >= 11)
             {
                 SaveQKC();
-                successText = $"\nKeyboard Assignments Saved to Keyboard.qkc\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+
                 ActiveQkc = ReadFromQkc();
+                launcherText = launcherText.Replace(player1_old, "player1=keyboard");
+                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+
+                successText = $"\nKeyboard Assignments Saved to Keyboard.qkc\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
             else
             {
@@ -1813,7 +1813,10 @@ namespace nullDCNetplayLauncher
 
             foreach (string button in buttons)
             {
-                string keyOut = (new KeysConverter()).ConvertToString(kWorkingMapping[button.Replace("Button_", "")]).ToLower();
+                string keyOut = "none";
+                if (kWorkingMapping.ContainsKey(button.Replace("Button_", "")))
+                    keyOut = (new KeysConverter()).ConvertToString(kWorkingMapping[button.Replace("Button_", "")]).ToLower();
+                
                 if (kWorkingMapping.ContainsKey(button.Replace("Button_", "")))
                     qkcOutput += $"{keyOut}={button}\n";
                 else
