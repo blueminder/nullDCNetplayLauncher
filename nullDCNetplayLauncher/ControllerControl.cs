@@ -74,6 +74,8 @@ namespace nullDCNetplayLauncher
         Dictionary<string, int> KeyState = null;
         byte[] kOldState;
 
+        string TestDevice;
+
         Dictionary<string, int> ActiveQkc;
 
         public ControllerControl(ControllerEngine controllerEngine)
@@ -106,14 +108,26 @@ namespace nullDCNetplayLauncher
             TestModeActivated = true;
             CurrentlyPressedButtons = new HashSet<string>();
 
+            if (Joy1Enabled() || NetplayLaunchForm.EnableMapper)
+                TestDevice = "Controller";
+            else
+                TestDevice = "Keyboard";
+
             controller.GamePadAction += controller_GamePadAction;
             Application.Idle += KeyboardAction;
         }
 
         private void KeyboardAction (object sender, EventArgs e)
         {
-            KBRoll();
-            picArcadeStick.Refresh();
+            if(TestModeActivated && TestDevice == "Keyboard")
+            {
+                KBRoll();
+                picArcadeStick.Refresh();
+            }
+            else
+            {
+                KBSetupRoll();
+            }
         }
 
         private void ControllerControl_Load(object sender, EventArgs e)
@@ -129,10 +143,17 @@ namespace nullDCNetplayLauncher
                 chkForceMapper.Checked = true;
             }
 
-            lblController.Text = "Test Mode Activated";
-
             ActiveQjcDefinitions = ReadFromQjc();
             ActiveQkc = ReadFromQkc();
+
+            if (Joy1Enabled() || NetplayLaunchForm.EnableMapper)
+            {
+                ActivateTestController();
+            }
+            else
+            {
+                ActivateTestKB();
+            }
         }
 
         private void ControllerControl_Close(object sender, EventArgs e)
@@ -213,7 +234,8 @@ namespace nullDCNetplayLauncher
                 btnCancel.Enabled = false;
 
                 hideAllButtons();
-                showSetupButtons();
+                showStartButtons(true);
+                //showSetupButtons();
             }
             else
             {
@@ -242,7 +264,8 @@ namespace nullDCNetplayLauncher
                 btnCancel.Enabled = false;
 
                 hideAllButtons();
-                showSetupButtons();
+                showStartButtons();
+                //showSetupButtons();
                 chkForceMapper.Visible = true;
             }
         }
@@ -558,34 +581,37 @@ namespace nullDCNetplayLauncher
 
         private bool Joy1Enabled()
         {
-            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+            string launcherText = File.ReadAllText(Path.Combine(Launcher.rootDir, "launcher.cfg"));
             return launcherText.Contains("player1=joy1");
         }
 
         private void controller_GamePadAction(object sender, ActionEventArgs e)
         {
-            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+            if (TestDevice == "Controller")
             {
-                ZDetected = true;
-                XInputGamePadInputRoll(sender, e);
-            }
-            else if (ReadFromQjc().Count > 0 && ((Joy1Enabled() && TestModeActivated) || (TestModeActivated && AnalogSet)))
-            {
-                // if qjc already exists and joystick enabled, use qjc for test mode
-                DInputRoll(sender, e);
-            }
-            else if (OpenTK.Input.GamePad.GetState(0).IsConnected)
-            {
-                OpenTKGamePadInputRoll(sender, e);
-            }
-            else
-            {
-                // DirectInput fallback for working PS3 and triggerless 
-                // controllers not picked up by XInput or OpenTK
-                DInputRoll(sender, e);
-            }
+                if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+                {
+                    ZDetected = true;
+                    XInputGamePadInputRoll(sender, e);
+                }
+                else if (ReadFromQjc().Count > 0 && ((Joy1Enabled() && TestModeActivated) || (TestModeActivated && AnalogSet)))
+                {
+                    // if qjc already exists and joystick enabled, use qjc for test mode
+                    DInputRoll(sender, e);
+                }
+                else if (OpenTK.Input.GamePad.GetState(0).IsConnected)
+                {
+                    OpenTKGamePadInputRoll(sender, e);
+                }
+                else
+                {
+                    // DirectInput fallback for working PS3 and triggerless 
+                    // controllers not picked up by XInput or OpenTK
+                    DInputRoll(sender, e);
+                }
 
-            picArcadeStick.Refresh();
+                picArcadeStick.Refresh();
+            }
         }
 
         [DllImport("user32.dll")]
@@ -629,6 +655,11 @@ namespace nullDCNetplayLauncher
                 }
             }
 
+            OldKeyState = KeyState;
+        }
+
+        public void KBSetupRoll()
+        {
             if (SetupModeActivated)
             {
                 var kState = new byte[256];
@@ -637,7 +668,7 @@ namespace nullDCNetplayLauncher
 
                 GetKeyboardState(kState);
                 // 48-90 includes all letters and numbers, only supported letters in QKC assignment
-                for (int i=48; i < 90; i++)
+                for (int i = 48; i < 90; i++)
                 {
                     // pressed
                     if ((kState[i] & 0x80) != 0 && (kOldState[i] & 0x80) == 0)
@@ -655,8 +686,6 @@ namespace nullDCNetplayLauncher
 
                 kOldState = kState;
             }
-
-            OldKeyState = KeyState;
         }
 
         public string CapitalizeFirstLetter(string s)
@@ -1420,12 +1449,15 @@ namespace nullDCNetplayLauncher
 
                 successText = $"\nNew qkoJAMMA Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
 
+                TestDevice = "Controller";
                 ActiveQjcDefinitions = ReadFromQjc();
             }
             else if (kWorkingMapping.Count >= 11)
             {
                 SaveQKC();
 
+                TestDevice = "Keyboard";
+                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 ActiveQkc = ReadFromQkc();
                 launcherText = launcherText.Replace(player1_old, "player1=keyboard");
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
@@ -1435,6 +1467,8 @@ namespace nullDCNetplayLauncher
             else
             {
                 SaveMapping(JoystickName);
+
+                TestDevice = "Controller";
 
                 TestMapping = Launcher.mappings.GamePadMappings.FirstOrDefault(p => p.Name == JoystickName).ToDictionary();
 
@@ -1759,6 +1793,24 @@ namespace nullDCNetplayLauncher
             btnCancel.Visible = true;
         }
 
+        private void showStartButtons(bool keyboard = false)
+        {
+            btnSetup.Visible = true;
+            if (keyboard == true)
+            {
+                btnTestKB.Visible = false;
+                btnTestController.Visible = true;
+            }
+            else
+            {
+                btnTestKB.Visible = true;
+                btnTestController.Visible = false;
+            }
+            
+            btnSkip.Visible = false;
+            btnCancel.Visible = false;
+        }
+
         private void hideAllButtons()
         {
             btnSetup.Visible = false;
@@ -1767,6 +1819,8 @@ namespace nullDCNetplayLauncher
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
             chkForceMapper.Visible = false;
+            btnTestController.Visible = false;
+            btnTestKB.Visible = false;
         }
 
         private void btnDetectController_Click(object sender, EventArgs e)
@@ -1898,5 +1952,32 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        private void btnTestController_Click(object sender, EventArgs e)
+        {
+            ActivateTestController();
+        }
+
+        private void ActivateTestController()
+        {
+            TestDevice = "Controller";
+            lblController.Text = $"{TestDevice} Test Mode Activated";
+            btnTestKB.Visible = true;
+            btnTestController.Visible = false;
+            chkForceMapper.Visible = true;
+        }
+
+        private void btnTestKB_Click(object sender, EventArgs e)
+        {
+            ActivateTestKB();
+        }
+
+        private void ActivateTestKB()
+        {
+            TestDevice = "Keyboard";
+            lblController.Text = $"{TestDevice} Test Mode Activated";
+            chkForceMapper.Visible = false;
+            btnTestKB.Visible = false;
+            btnTestController.Visible = true;
+        }
     }
 }

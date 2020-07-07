@@ -36,6 +36,8 @@
             this.btnAnalog = new System.Windows.Forms.Button();
             this.chkForceMapper = new System.Windows.Forms.CheckBox();
             this.btnSkip = new System.Windows.Forms.Button();
+            this.btnTestKB = new System.Windows.Forms.Button();
+            this.btnTestController = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picArcadeStick)).BeginInit();
             this.SuspendLayout();
             // 
@@ -65,7 +67,7 @@
             // 
             this.btnSetup.AutoSize = true;
             this.btnSetup.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnSetup.Location = new System.Drawing.Point(83, 251);
+            this.btnSetup.Location = new System.Drawing.Point(86, 251);
             this.btnSetup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.btnSetup.Name = "btnSetup";
             this.btnSetup.Size = new System.Drawing.Size(45, 23);
@@ -142,10 +144,35 @@
             this.btnSkip.Visible = false;
             this.btnSkip.Click += new System.EventHandler(this.btnSkip_Click);
             // 
+            // btnTestKB
+            // 
+            this.btnTestKB.AutoSize = true;
+            this.btnTestKB.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTestKB.Location = new System.Drawing.Point(159, 251);
+            this.btnTestKB.Name = "btnTestKB";
+            this.btnTestKB.Size = new System.Drawing.Size(86, 23);
+            this.btnTestKB.TabIndex = 13;
+            this.btnTestKB.Text = "Test Keyboard";
+            this.btnTestKB.UseVisualStyleBackColor = true;
+            this.btnTestKB.Click += new System.EventHandler(this.btnTestKB_Click);
+            // 
+            // btnTestController
+            // 
+            this.btnTestController.AutoSize = true;
+            this.btnTestController.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTestController.Location = new System.Drawing.Point(159, 251);
+            this.btnTestController.Name = "btnTestController";
+            this.btnTestController.Size = new System.Drawing.Size(85, 23);
+            this.btnTestController.TabIndex = 14;
+            this.btnTestController.Text = "Test Controller";
+            this.btnTestController.UseVisualStyleBackColor = true;
+            this.btnTestController.Click += new System.EventHandler(this.btnTestController_Click);
+            // 
             // ControllerControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnTestController);
             this.Controls.Add(this.btnSkip);
             this.Controls.Add(this.chkForceMapper);
             this.Controls.Add(this.picArcadeStick);
@@ -153,6 +180,7 @@
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnDPad);
             this.Controls.Add(this.btnAnalog);
+            this.Controls.Add(this.btnTestKB);
             this.Controls.Add(this.lblController);
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "ControllerControl";
@@ -175,5 +203,7 @@
         private System.Windows.Forms.Button btnAnalog;
         private System.Windows.Forms.CheckBox chkForceMapper;
         private System.Windows.Forms.Button btnSkip;
+        private System.Windows.Forms.Button btnTestKB;
+        private System.Windows.Forms.Button btnTestController;
     }
 }
