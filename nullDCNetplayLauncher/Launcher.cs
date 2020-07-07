@@ -880,6 +880,49 @@ namespace nullDCNetplayLauncher
             Application.Exit();
         }
 
+        public static Dictionary<string, int> ReadFromQkc()
+        {
+            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", "Keyboard.qkc");
+
+            if (!File.Exists(expectedQkcPath))
+            {
+                Launcher.RestoreKeyboardQkc();
+            }
+            // depending on controller and system, qkoJAMMA applies underscores or spaces to filename
+            // either format is acceptable
+            var qkcDefinitions = new Dictionary<string, int>();
+            var qkcPath = "";
+            if (File.Exists(expectedQkcPath))
+                qkcPath = expectedQkcPath;
+            else if (File.Exists(expectedQkcPath.Replace(" ", "_")))
+                qkcPath = expectedQkcPath.Replace(" ", "_");
+            else
+                qkcPath = null;
+
+            if (qkcPath != null)
+            {
+                string[] qkcLines = File.ReadAllLines(qkcPath);
+                foreach (string line in qkcLines)
+                {
+                    string key = line.Split('=')[1];
+                    string value = line.Split('=')[0].ToUpper();
+
+                    if (int.TryParse(value, out _))
+                        value = $"D{value}";
+
+                    key = key.Replace("Button_", "");
+
+                    if (value != "NONE" && !qkcDefinitions.ContainsKey(key))
+                    {
+                        int keyCode = (int)Enum.Parse(typeof(Keys), value);
+                        qkcDefinitions[key] = keyCode;
+                    }
+                }
+            }
+
+            return qkcDefinitions;
+        }
+
         public class Game
         {
             [JsonProperty("gameid")]

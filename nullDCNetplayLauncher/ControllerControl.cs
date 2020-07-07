@@ -109,9 +109,9 @@ namespace nullDCNetplayLauncher
             CurrentlyPressedButtons = new HashSet<string>();
 
             if (Joy1Enabled() || NetplayLaunchForm.EnableMapper)
-                TestDevice = "Controller";
+                ActivateTestController();
             else
-                TestDevice = "Keyboard";
+                ActivateTestKB();
 
             controller.GamePadAction += controller_GamePadAction;
             Application.Idle += KeyboardAction;
@@ -144,7 +144,7 @@ namespace nullDCNetplayLauncher
             }
 
             ActiveQjcDefinitions = ReadFromQjc();
-            ActiveQkc = ReadFromQkc();
+            ActiveQkc = Launcher.ReadFromQkc();
 
             if (Joy1Enabled() || NetplayLaunchForm.EnableMapper)
             {
@@ -1346,49 +1346,6 @@ namespace nullDCNetplayLauncher
             return qjcDefinitions;
         }
 
-        private Dictionary<string, int> ReadFromQkc()
-        {
-            var expectedQkcPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "qkoJAMMA", "Keyboard.qkc");
-
-            if (!File.Exists(expectedQkcPath))
-            {
-                Launcher.RestoreKeyboardQkc();
-            }
-            // depending on controller and system, qkoJAMMA applies underscores or spaces to filename
-            // either format is acceptable
-            var qkcDefinitions = new Dictionary<string, int>();
-            var qkcPath = "";
-            if (File.Exists(expectedQkcPath))
-                qkcPath = expectedQkcPath;
-            else if (File.Exists(expectedQkcPath.Replace(" ", "_")))
-                qkcPath = expectedQkcPath.Replace(" ", "_");
-            else
-                qkcPath = null;
-
-            if (qkcPath != null)
-            {
-                string[] qkcLines = File.ReadAllLines(qkcPath);
-                foreach (string line in qkcLines)
-                {
-                    string key = line.Split('=')[1];
-                    string value = line.Split('=')[0].ToUpper();
-
-                    if (int.TryParse(value, out _))
-                        value = $"D{value}";
-
-                    key = key.Replace("Button_", "");
-
-                    if (value != "NONE" && !qkcDefinitions.ContainsKey(key))
-                    {
-                        int keyCode = (int)Enum.Parse(typeof(Keys), value);
-                        qkcDefinitions[key] = keyCode;
-                    }
-                }
-            }
-
-            return qkcDefinitions;
-        }
-
         private void InitializeJoystickBgWorker()
         {
             joystickBgWorker.DoWork += new DoWorkEventHandler(joystickBgWorker_DoWork);
@@ -1458,7 +1415,7 @@ namespace nullDCNetplayLauncher
 
                 TestDevice = "Keyboard";
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                ActiveQkc = ReadFromQkc();
+                ActiveQkc = Launcher.ReadFromQkc();
                 launcherText = launcherText.Replace(player1_old, "player1=keyboard");
                 cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
