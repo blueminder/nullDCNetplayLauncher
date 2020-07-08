@@ -118,6 +118,8 @@ namespace nullDCNetplayLauncher
                     Console.WriteLine("");
                     Console.WriteLine("--audio-sync (only for host)");
                     Console.WriteLine("--frame-limit (only for host)");
+                    Console.WriteLine("");
+                    Console.WriteLine("--controller-setup 1");
                     return;
                 }
 

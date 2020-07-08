@@ -1,12 +1,13 @@
-# NullDC-NAOMI Netplay Launcher Distribution 0.6.5.9
-Configuration optimized by blueminder *(July 5, 2020)*
+# NullDC-NAOMI Netplay Launcher Distribution 0.6.5.10
+Configuration optimized by blueminder *(July 7, 2020)*
 
 **Special Thanks**
 
-- supersonicstep of FGC Arcadia Discord
+- supersonicstep of [FGC Arcadia Discord](https://discord.com/invite/KczAkRr)
 - [MarioBrotha](https://github.com/MarioBrotha) of FGC Arcadia Discord (nullDCMultiLauncher, nullDCControlSetup)
 - [RossenX](https://github.com/RossenX) of FGC Arcadia Discord for Netplay optimizations
 - [poliva](https://github.com/poliva) & [JordiRos](https://github.com/JordiRos) of [Fightcade](https://web.fightcade.com/) for integration & testing
+- Labreezy for window handling code & Netplay protocol research
 - BRBS of FGC Arcadia Discord for jumping on every beta as it comes out and providing feedback.
 - DQRF of GGXXACR Discord
 - RaptorIIRC
@@ -53,9 +54,15 @@ Dreamcast CDI and GDI ROMs are unsupported at this time. The directory names the
 
 1. Open `nullDCNetplayLauncher.exe`
 
-2. Press the Controller Icon in the bottom left corner. Be sure that only one game controller is plugged in and follow the prompts.
+2. Press the Controller Icon in the bottom left corner to set your controller or keyboard.
+
+   If you have a keyboard, keep in that numpad buttons, and arrow keys are unsupported at this time. These will be available in an update very soon. Just click the "Setup" button and follow the prompts.
+
+   If you have a controller, be sure that only one game controller is plugged in to your computer and follow the prompts.
 
    **If the option is available on your arcade stick or controller, switch to PS3 mode.** This has been shown to have the best native compatibility with the qkoJAMMA netplay plugin. If you are using a Brook Universal Fighting Board, you can hold down the *Light Punch* button as you plug it into your PC to activate PS3 mode.
+
+   Once you are done with setup, you may test your button mapping before you exit the dialog. If you ever need to test your current keyboard or controller mapping at any time, the Controller Setup & Testing menu will default to the launcher's current input settings.
 
    ![setup_demo](setup_demo.gif)
 
@@ -89,25 +96,18 @@ The rest of the instructions assume that Radmin is installed, but this should wo
 
       Press the *Launch Game* button.
       
-      
-      
       ![Host Game Demo](host-flow.gif)
       
+   - **Joining a Game**
+   
+      Paste the generated Host Code and server details should automatically be filled in. If any advanced options have been set by your host, your window will expand to reveal these options.
+   
+      Alternatively, you may expand your window to manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
+   
+      Make sure you have your opponent's Radmin IP in the launcher's *Opponent IP* column. Verify that you and your opponent have the same Delay.
       
-- **Joining a Game**
-  
-   Paste the generated Host Code and server details should automatically be filled in. If any advanced options have been set by your host, your window will expand to reveal these options.
+      ![Join Game Demo](guest-flow-pop-out.gif)
    
-   Alternatively, you may expand your window to manually enter your opponent's Host IP, Port, and Delay to continue. Either method works.
-   
-   Make sure you have your opponent's Radmin IP in the launcher's *Opponent IP* column. Verify that you and your opponent have the same Delay.
-   
-   
-   
-   ![Join Game Demo](guest-flow-pop-out.gif)
-   
-   
-
 4. Press the *Launch Game* button.
 
 5. Play!
@@ -153,7 +153,11 @@ If you want the launcher to automatically guess the delay, you may use the `--gu
 
 `nullDCNetplayLauncher.exe --gameid cvs2 --hosting 0 --ip <ip address> --port <port> --guess-ip <remote ip>`
 
-When the Launcher is called via command line, the launcher menu is kept available through an icon on the system tray. You may adjust your Keyboard Mapper options in here while your game is in session.
+When the Launcher is invoked for game sessions via command line, the launcher menu is kept available through an icon on the system tray. You may adjust your Keyboard Mapper options in here while your game is in session.
+
+To access the Controller Setup & Testing by itself via the command line:
+
+`nullDCNetplayLauncher.exe --controller-setup 1 `
 
 ## Troubleshooting
 
