@@ -88,6 +88,9 @@ namespace nullDCNetplayLauncher
                 chkEnableMapper.Checked = false;
             }
 
+            if (launcherText.Contains("custom_cfg=1"))
+                chkCustomCFG.Checked = true;
+
             Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
             RegionOptions["Japan"] = "japan";
             RegionOptions["USA"] = "usa";
@@ -150,11 +153,25 @@ namespace nullDCNetplayLauncher
 
             if(chkCustomCFG.Checked)
             {
-                launcherText = launcherText.Replace("custom_cfg=0", "custom_cfg=1");
+                if (!launcherText.Contains("custom_cfg"))
+                {
+                    launcherText += "custom_cfg=1" + Environment.NewLine;
+                }
+                else
+                {
+                    launcherText = launcherText.Replace("custom_cfg=0", "custom_cfg=1");
+                }
             }
             else
             {
-                launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
+                if (!launcherText.Contains("custom_cfg"))
+                {
+                    launcherText += "custom_cfg=0" + Environment.NewLine;
+                }
+                else
+                {
+                    launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
+                }
             }
             
 
@@ -217,6 +234,7 @@ namespace nullDCNetplayLauncher
             player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
 
             Launcher.LoadRegionSettings();
+            Launcher.RestoreFiles();
 
             MessageBox.Show("Main Settings Successfully Saved");
         }
