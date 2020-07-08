@@ -128,13 +128,13 @@ namespace nullDCNetplayLauncher
                     Launcher.rootDir = Regex.Replace(arguments["root-dir"], @"\s+", string.Empty) + "\\";
                 }
 
-                Launcher.RestoreFiles();
-
                 if (arguments.ContainsKey("controller-setup"))
                 {
                     LoadController();
                     return;
                 }
+
+                Launcher.RestoreFiles();
 
                 if (!arguments.ContainsKey("offline")
                     && !arguments.ContainsKey("ip")

@@ -158,8 +158,6 @@ namespace nullDCNetplayLauncher
 
         private void ControllerControl_Close(object sender, EventArgs e)
         {
-            System.Diagnostics.Debug.WriteLine("BAR " + controller.CapabilitiesGamePad.ToString());
-
             controller.GamePadAction -= controller_GamePadAction;
             Application.Idle -= KeyboardAction;
 
@@ -383,7 +381,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(XOldState, null) || OldButtonState == XInputDotNetPure.ButtonState.Released))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name]);
@@ -397,7 +395,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(XOldState, null) && OldButtonState == XInputDotNetPure.ButtonState.Pressed))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name]);
@@ -424,7 +422,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(XOldState, null) || OldTriggerState == 0))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
+                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name + "Trigger"]);
@@ -438,7 +436,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(XOldState, null) && OldTriggerState == 1))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
+                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name + "Trigger"]);
@@ -468,7 +466,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == 0 && newLeftX == 1 || oldRight == true && newRight == false)
             {
-                System.Diagnostics.Debug.WriteLine("Right Pushed");
+                //System.Diagnostics.Debug.WriteLine("Right Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Left"]);
@@ -482,7 +480,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == 1 && newLeftX == 0 || oldRight == false && newRight == true)
             {
-                System.Diagnostics.Debug.WriteLine("Right Released");
+                //System.Diagnostics.Debug.WriteLine("Right Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Right"]);
@@ -495,7 +493,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == 0 && newLeftX == -1 || oldLeft == true && newLeft == false)
             {
-                System.Diagnostics.Debug.WriteLine("Left Pushed");
+                //System.Diagnostics.Debug.WriteLine("Left Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Right"]);
@@ -509,7 +507,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == -1 && newLeftX == 0 || oldLeft == false && newLeft == true)
             {
-                System.Diagnostics.Debug.WriteLine("Left Released");
+                //System.Diagnostics.Debug.WriteLine("Left Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Left"]);
@@ -522,7 +520,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == 0 && newLeftY == 1 || oldUp == true && newUp == false)
             {
-                System.Diagnostics.Debug.WriteLine("Up Pushed");
+                //System.Diagnostics.Debug.WriteLine("Up Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Down"]);
@@ -536,7 +534,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == 1 && newLeftY == 0 || oldUp == false && newUp == true)
             {
-                System.Diagnostics.Debug.WriteLine("Up Released");
+                //System.Diagnostics.Debug.WriteLine("Up Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Up"]);
@@ -551,7 +549,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == 0 && newLeftY == -1 || oldDown == true && newDown == false)
             {
-                System.Diagnostics.Debug.WriteLine("Down Pushed");
+                //System.Diagnostics.Debug.WriteLine("Down Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Up"]);
@@ -565,7 +563,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == -1 && newLeftY == 0 || oldDown == false && newDown == true)
             {
-                System.Diagnostics.Debug.WriteLine("Down Released");
+                //System.Diagnostics.Debug.WriteLine("Down Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Down"]);
@@ -645,12 +643,12 @@ namespace nullDCNetplayLauncher
                             CurrentlyPressedButtons.Remove("Left");
 
                         CurrentlyPressedButtons.Add(key);
-                        System.Diagnostics.Debug.WriteLine(key + "Pressed");
+                        //System.Diagnostics.Debug.WriteLine(key + "Pressed");
                     }
                     else
                     {
                         CurrentlyPressedButtons.Remove(key);
-                        //System.Diagnostics.Debug.WriteLine(key + "Released");
+                        ////System.Diagnostics.Debug.WriteLine(key + "Released");
                     }
                 }
             }
@@ -673,13 +671,13 @@ namespace nullDCNetplayLauncher
                     // pressed
                     if ((kState[i] & 0x80) != 0 && (kOldState[i] & 0x80) == 0)
                     {
-                        System.Diagnostics.Debug.WriteLine(i + "Pressed");
+                        //System.Diagnostics.Debug.WriteLine(i + "Pressed");
                         kWorkingMapping[CurrentButtonAssignment] = i;
                     }
                     // released
                     else if ((kState[i] & 0x80) == 0 && (kOldState[i] & 0x80) != 0)
                     {
-                        System.Diagnostics.Debug.WriteLine(i + " Released");
+                        //System.Diagnostics.Debug.WriteLine(i + " Released");
                         CurrentlyAssigned = true;
                     }
                 }
@@ -803,7 +801,7 @@ namespace nullDCNetplayLauncher
                             break;
                     }
 
-                    System.Diagnostics.Debug.WriteLine(value);
+                    //System.Diagnostics.Debug.WriteLine(value);
 
 
                     var qkoAssignment = $"hat_{hatNum}_{qkoDirection}";
@@ -883,7 +881,7 @@ namespace nullDCNetplayLauncher
                         var field = $"Is{CapitalizeFirstLetter(qkoDirection)}";
                         WorkingMapping[field] = CapitalizeFirstLetter(qkoDirection);
                         jWorkingMapping[assign] = qkoAssignment;
-                        System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
+                        //System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
                         CurrentlyAssigned = true;
                     }
                     
@@ -938,7 +936,7 @@ namespace nullDCNetplayLauncher
                 else if(SetupModeActivated)
                 {
                     jWorkingMapping[assign] = SetJoystickAnalog(State);
-                    System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
+                    //System.Diagnostics.Debug.WriteLine(jWorkingMapping[assign]);
                     CurrentlyAssigned = true;
                 }
 
@@ -1032,7 +1030,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldButtonState == OpenTK.Input.ButtonState.Released))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name]);
@@ -1046,7 +1044,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(OldState, null) && OldButtonState == OpenTK.Input.ButtonState.Pressed))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name]);
@@ -1072,7 +1070,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldDPadState == false))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
+                    //System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Pressed");
                     
                     if (TestModeActivated)
                     {
@@ -1090,7 +1088,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(OldState, null) && OldDPadState == true))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
+                    //System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment}: {buttonProperty.Name} Released");
                     if (TestModeActivated)
                     {
                         var input = buttonProperty.Name;
@@ -1120,7 +1118,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(OldState, null) || OldTriggerState == 0))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Pressed");
+                    //System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Pressed");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name + "Trigger"]);
@@ -1134,7 +1132,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(OldState, null) && OldTriggerState == 1))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Released");
+                    //System.Diagnostics.Debug.WriteLine($"{CurrentButtonAssignment} Trigger: {buttonProperty.Name} Released");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name + "Trigger"]);
@@ -1154,7 +1152,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == 0 && newLeftX == 1)
             {
-                System.Diagnostics.Debug.WriteLine("Right Pushed");
+                //System.Diagnostics.Debug.WriteLine("Right Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Left"]);
@@ -1172,7 +1170,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == 1 && newLeftX == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Right Released");
+                //System.Diagnostics.Debug.WriteLine("Right Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Right"]);
@@ -1185,7 +1183,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == 0 && newLeftX == -1)
             {
-                System.Diagnostics.Debug.WriteLine("Left Pushed");
+                //System.Diagnostics.Debug.WriteLine("Left Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Right"]);
@@ -1203,7 +1201,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftX == -1 && newLeftX == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Left Released");
+                //System.Diagnostics.Debug.WriteLine("Left Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Left"]);
@@ -1216,7 +1214,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == 0 && newLeftY == 1)
             {
-                System.Diagnostics.Debug.WriteLine("Up Pushed");
+                //System.Diagnostics.Debug.WriteLine("Up Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Down"]);
@@ -1234,7 +1232,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == 1 && newLeftY == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Up Released");
+                //System.Diagnostics.Debug.WriteLine("Up Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Up"]);
@@ -1247,7 +1245,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == 0 && newLeftY == -1)
             {
-                System.Diagnostics.Debug.WriteLine("Down Pushed");
+                //System.Diagnostics.Debug.WriteLine("Down Pushed");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Up"]);
@@ -1265,7 +1263,7 @@ namespace nullDCNetplayLauncher
 
             if (oldLeftY == -1 && newLeftY == 0)
             {
-                System.Diagnostics.Debug.WriteLine("Down Released");
+                //System.Diagnostics.Debug.WriteLine("Down Released");
                 if (TestModeActivated)
                 {
                     CurrentlyPressedButtons.Remove(TestMapping["Down"]);
