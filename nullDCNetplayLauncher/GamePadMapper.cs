@@ -362,44 +362,28 @@ namespace nullDCNetplayLauncher
         const byte KEY_I = 0x49;
         const byte KEY_O = 0x4F;
 
+        Dictionary<string, int> QkcMapping = Launcher.ReadFromQkc();
+
         private void CallButtonMapping(string button, bool push)
         {
             String called = push ? "Pushed" : "Released";
             System.Diagnostics.Debug.WriteLine($"Button {button} {called}");
             Console.WriteLine($"Button {button} {called}");
 
-            Dictionary<string, byte> VirtualMapping = new Dictionary<string, byte>()
-            {
-                { "", 0 },
-                { "1", KEY_8 },
-                { "2", KEY_9 },
-                { "3", KEY_0 },
-                { "4", KEY_U },
-                { "5", KEY_I },
-                { "6", KEY_O },
-                { "Start", KEY_5 },
-                { "Coin", KEY_1 },
-                { "Test", KEY_3 },
-                { "Up", KEY_W },
-                { "Down", KEY_S },
-                { "Left", KEY_A },
-                { "Right", KEY_D },
-            };
-
+            Dictionary<string, int> VirtualMapping = QkcMapping;
             String virtualIndex = (String)Launcher.ActiveGamePadMapping[button];
-            if (virtualIndex.Equals("Test"))
+            if (string.IsNullOrEmpty(virtualIndex))
             {
-                System.Diagnostics.Debug.WriteLine($"Virtual Index {virtualIndex} {called}");
-                //return;
+                return;
             }
 
             if (push)
             {
-                PushKey(VirtualMapping[virtualIndex]);
+                PushKey(BitConverter.GetBytes(VirtualMapping[virtualIndex]).First());
             }
             else
             {
-                ReleaseKey(VirtualMapping[virtualIndex]);
+                ReleaseKey(BitConverter.GetBytes(VirtualMapping[virtualIndex]).First());
             }
         }
 
