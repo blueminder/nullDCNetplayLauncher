@@ -88,6 +88,9 @@ namespace nullDCNetplayLauncher
                 chkEnableMapper.Checked = false;
             }
 
+            if (launcherText.Contains("custom_cfg=1"))
+                chkCustomCFG.Checked = true;
+
             Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
             RegionOptions["Japan"] = "japan";
             RegionOptions["USA"] = "usa";
@@ -148,6 +151,30 @@ namespace nullDCNetplayLauncher
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
 
+            if(chkCustomCFG.Checked)
+            {
+                if (!launcherText.Contains("custom_cfg"))
+                {
+                    launcherText += "custom_cfg=1" + Environment.NewLine;
+                }
+                else
+                {
+                    launcherText = launcherText.Replace("custom_cfg=0", "custom_cfg=1");
+                }
+            }
+            else
+            {
+                if (!launcherText.Contains("custom_cfg"))
+                {
+                    launcherText += "custom_cfg=0" + Environment.NewLine;
+                }
+                else
+                {
+                    launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
+                }
+            }
+            
+
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
@@ -178,7 +205,8 @@ namespace nullDCNetplayLauncher
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
+                if (cboPlayer1.SelectedValue.ToString() == "joy1")
+                    launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
                 var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
@@ -206,6 +234,7 @@ namespace nullDCNetplayLauncher
             player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
 
             Launcher.LoadRegionSettings();
+            Launcher.RestoreFiles();
 
             MessageBox.Show("Main Settings Successfully Saved");
         }

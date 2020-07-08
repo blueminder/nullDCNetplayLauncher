@@ -779,11 +779,17 @@ namespace nullDCNetplayLauncher
         public static void RestoreFiles(bool force = false)
         {
             Launcher.RestoreNullDcFresh(force);
-            Launcher.RestoreNullDcCfg();
+
+            string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+            string lcText = File.ReadAllText(launcherCfgPath);
+            if (!lcText.Contains("custom_cfg=1"))
+            {
+                Launcher.RestoreNullDcCfg();
+            }
+
             Launcher.RestoreNvmem();
             Launcher.CleanMalformedQjcFiles();
             Launcher.RestoreLauncherCfg();
-
             Launcher.LoadInputSettings();
 
             Launcher.FilesRestored = true;
