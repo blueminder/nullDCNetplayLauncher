@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX.DirectInput;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -52,7 +53,15 @@ namespace nullDCNetplayLauncher
             HideConsoleWindow();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new NetplayLaunchForm(tray));
+            Application.Run(new NetplayLaunchForm(tray: tray));
+        }
+
+        public static void LoadController(bool controllerSetup = true)
+        {
+            HideConsoleWindow();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new NetplayLaunchForm(controllerSetup: true));
         }
 
         [STAThread]
@@ -118,6 +127,12 @@ namespace nullDCNetplayLauncher
                 }
 
                 Launcher.RestoreFiles();
+
+                if (arguments.ContainsKey("controller-setup"))
+                {
+                    LoadController();
+                    return;
+                }
 
                 if (!arguments.ContainsKey("offline")
                     && !arguments.ContainsKey("ip")

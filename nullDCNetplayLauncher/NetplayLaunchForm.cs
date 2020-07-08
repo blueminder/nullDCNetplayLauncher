@@ -25,7 +25,7 @@ namespace nullDCNetplayLauncher
         public static Boolean EnableMapper = false;
         public static Boolean StartTray;
 
-        public NetplayLaunchForm(bool tray = false)
+        public NetplayLaunchForm(bool tray = false, bool controllerSetup = false)
         {
             controller = new ControllerEngine();
 
@@ -52,37 +52,45 @@ namespace nullDCNetplayLauncher
                 MessageBox.Show("launcher.cfg not found. Please enter a valid root directory.");
                 System.Environment.Exit(1);
             }
+            
 
             if (launcherCfgText.Contains("enable_mapper=1"))
             {
                 StartMapper();
             }
 
-            InitializeComponent(StartTray);
-            //InitializeComponent();
-
-            if (StartTray)
-                this.WindowState = FormWindowState.Minimized;
-
-
-            ReloadRomList();
-            Launcher.LoadRegionSettings();
-
-            if (StartTray)
+            if (controllerSetup)
             {
-                Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-                if (processes.Length > 0)
-                {
-                    Process nulldcProcess = processes[0];
-                    nulldcProcess.EnableRaisingEvents = true;
+                LaunchControllerSetup(true);
+            }
+            else
+            {
+                InitializeComponent(StartTray);
+                //InitializeComponent();
 
-                    nulldcProcess.Exited += (sender, e) =>
+                if (StartTray)
+                    this.WindowState = FormWindowState.Minimized;
+
+                ReloadRomList();
+                Launcher.LoadRegionSettings();
+
+
+                if (StartTray)
+                {
+                    Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+                    if (processes.Length > 0)
                     {
-                        Application.Exit();
-                    };
+                        Process nulldcProcess = processes[0];
+                        nulldcProcess.EnableRaisingEvents = true;
+
+                        nulldcProcess.Exited += (sender, e) =>
+                        {
+                            Application.Exit();
+                        };
+                    }
                 }
             }
-            
+
         }
 
         private void ReloadRomList()
@@ -369,10 +377,8 @@ namespace nullDCNetplayLauncher
             window.ShowDialog();
         }
 
-        private void btnController_Click(object sender, EventArgs e)
+        private Form LaunchControllerSetup(bool ExitOnClose = false)
         {
-            Launcher.CleanMalformedQjcFiles();
-            StopMapper(true);
             ControllerControl cc = new ControllerControl(controller);
             Form window = new Form
             {
@@ -384,6 +390,15 @@ namespace nullDCNetplayLauncher
                 ClientSize = cc.Size,
                 Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
             };
+
+            if(ExitOnClose)
+            {
+                window.FormClosing += (sender, e) =>
+                {
+                    Application.Exit();
+                };
+            }
+            
             window.Controls.Add(cc);
             cc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
@@ -404,6 +419,15 @@ namespace nullDCNetplayLauncher
                 }
                 StartMapper();
             }
+
+            return window;
+        }
+
+        private void btnController_Click(object sender, EventArgs e)
+        {
+            Launcher.CleanMalformedQjcFiles();
+            StopMapper(true);
+            LaunchControllerSetup();
         }
 
         // https://stackoverflow.com/questions/4667532/colour-individual-items-in-a-winforms-combobox
