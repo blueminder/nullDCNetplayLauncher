@@ -372,7 +372,7 @@ namespace nullDCNetplayLauncher
 
             Dictionary<string, int> VirtualMapping = QkcMapping;
             String virtualIndex = (String)Launcher.ActiveGamePadMapping[button];
-            if (string.IsNullOrEmpty(virtualIndex))
+            if (string.IsNullOrEmpty(virtualIndex) || !VirtualMapping.ContainsKey(virtualIndex))
             {
                 return;
             }

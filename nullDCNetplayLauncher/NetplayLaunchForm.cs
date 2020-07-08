@@ -34,13 +34,6 @@ namespace nullDCNetplayLauncher
 
             StartTray = tray;
 
-            if (!StartTray)
-            {
-                launcher.UpdateLauncher(true);
-                if (!Launcher.FilesRestored)
-                    Launcher.RestoreFiles();
-            }
-            
             string launcherCfgText = "";
             try
             {
@@ -65,6 +58,17 @@ namespace nullDCNetplayLauncher
             }
             else
             {
+                if (!StartTray)
+                {
+                    try
+                    {
+                        launcher.UpdateLauncher(true);
+                    }
+                    catch { }
+                    if (!Launcher.FilesRestored)
+                        Launcher.RestoreFiles();
+                }
+
                 InitializeComponent(StartTray);
                 //InitializeComponent();
 

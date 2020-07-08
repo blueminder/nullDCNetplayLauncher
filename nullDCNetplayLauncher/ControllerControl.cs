@@ -381,7 +381,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(XOldState, null) || OldButtonState == XInputDotNetPure.ButtonState.Released))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
+                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Pressed");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name]);
@@ -395,7 +395,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(XOldState, null) && OldButtonState == XInputDotNetPure.ButtonState.Pressed))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
+                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Released");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name]);
@@ -422,7 +422,7 @@ namespace nullDCNetplayLauncher
                 (Object.ReferenceEquals(XOldState, null) || OldTriggerState == 0))
                 {
                     //CallButtonMapping(buttonProperty.Name, true);
-                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
+                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Pressed");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Add(TestMapping[buttonProperty.Name + "Trigger"]);
@@ -436,7 +436,7 @@ namespace nullDCNetplayLauncher
                     (!Object.ReferenceEquals(XOldState, null) && OldTriggerState == 1))
                 {
                     //CallButtonMapping(buttonProperty.Name, false);
-                    ////System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
+                    //System.Diagnostics.Debug.WriteLine($"{buttonProperty.Name} Trigger Released");
                     if (TestModeActivated)
                     {
                         CurrentlyPressedButtons.Remove(TestMapping[buttonProperty.Name + "Trigger"]);
@@ -1680,17 +1680,17 @@ namespace nullDCNetplayLauncher
             picArcadeStick.Image = (Bitmap)rm.GetObject(buttonNames[e.ProgressPercentage].ToString().ToLower());
             if (directionalButtons.Any(button.Contains))
             {
-                Console.WriteLine($"Press and release {button}.");
+                //Console.WriteLine($"Press and release {button}.");
                 lblController.Text = $"Press and release {button}.";
             }
             else if (faceButtons.Any(button.Contains))
             {
-                Console.WriteLine($"Press and release button {button}.");
+                //Console.WriteLine($"Press and release button {button}.");
                 lblController.Text = $"Press and release button {button}.";
             }
             else
             {
-                Console.WriteLine($"Press and release the {button} button.");
+                //Console.WriteLine($"Press and release the {button} button.");
                 lblController.Text = $"Press and release the {button} button.";
             }
         }
