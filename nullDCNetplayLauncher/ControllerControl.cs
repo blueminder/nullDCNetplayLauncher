@@ -1791,6 +1791,8 @@ namespace nullDCNetplayLauncher
         private void btnSkip_Click(object sender, EventArgs e)
         {
             Skip = true;
+            if (CurrentButtonAssignment == "Test")
+                ZDetected = true;
         }
 
         private void btnDPad_Click(object sender, EventArgs e)
