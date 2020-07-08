@@ -526,7 +526,6 @@ namespace nullDCNetplayLauncher
             window.Show();
         }
 
-        
     }
 
 

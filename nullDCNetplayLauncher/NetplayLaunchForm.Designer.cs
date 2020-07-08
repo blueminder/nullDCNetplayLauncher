@@ -41,21 +41,24 @@
             this.btnDragLoad = new System.Windows.Forms.Button();
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.btnHelp = new System.Windows.Forms.Button();
+            this.tipSettings = new System.Windows.Forms.ToolTip(this.components);
+            this.tipController = new System.Windows.Forms.ToolTip(this.components);
+            this.tipFileDrop = new System.Windows.Forms.ToolTip(this.components);
+            this.tipHelp = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             // 
             // cboGameSelect
             // 
+            this.cboGameSelect.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboGameSelect.FormattingEnabled = true;
             this.cboGameSelect.Location = new System.Drawing.Point(4, 97);
             this.cboGameSelect.Margin = new System.Windows.Forms.Padding(2);
             this.cboGameSelect.Name = "cboGameSelect";
             this.cboGameSelect.Size = new System.Drawing.Size(255, 21);
             this.cboGameSelect.TabIndex = 38;
-            this.cboGameSelect.SelectedIndexChanged += new System.EventHandler(this.cboGameSelect_SelectedIndexChanged);
-            this.cboGameSelect.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.cboGameSelect.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cboGameSelect_DrawItem);
+            this.cboGameSelect.SelectedIndexChanged += new System.EventHandler(this.cboGameSelect_SelectedIndexChanged);
             // 
             // btnHost
             // 
@@ -110,6 +113,7 @@
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(25, 25);
             this.btnSettings.TabIndex = 42;
+            this.tipSettings.SetToolTip(this.btnSettings, "Settings");
             this.btnSettings.UseVisualStyleBackColor = true;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
@@ -122,6 +126,7 @@
             this.btnController.Name = "btnController";
             this.btnController.Size = new System.Drawing.Size(25, 25);
             this.btnController.TabIndex = 43;
+            this.tipController.SetToolTip(this.btnController, "Controller Setup");
             this.btnController.UseVisualStyleBackColor = true;
             this.btnController.Click += new System.EventHandler(this.btnController_Click);
             // 
@@ -134,6 +139,7 @@
             this.btnDragLoad.Name = "btnDragLoad";
             this.btnDragLoad.Size = new System.Drawing.Size(25, 25);
             this.btnDragLoad.TabIndex = 44;
+            this.tipFileDrop.SetToolTip(this.btnDragLoad, "File Drop");
             this.btnDragLoad.UseVisualStyleBackColor = true;
             this.btnDragLoad.Click += new System.EventHandler(this.btnDragLoad_Click);
             // 
@@ -152,6 +158,7 @@
             this.btnHelp.Name = "btnHelp";
             this.btnHelp.Size = new System.Drawing.Size(25, 25);
             this.btnHelp.TabIndex = 45;
+            this.tipHelp.SetToolTip(this.btnHelp, "Help");
             this.btnHelp.UseVisualStyleBackColor = true;
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
@@ -189,5 +196,9 @@
         private System.Windows.Forms.Button btnDragLoad;
         private System.Windows.Forms.NotifyIcon notifyIcon;
         private System.Windows.Forms.Button btnHelp;
+        private System.Windows.Forms.ToolTip tipSettings;
+        private System.Windows.Forms.ToolTip tipController;
+        private System.Windows.Forms.ToolTip tipFileDrop;
+        private System.Windows.Forms.ToolTip tipHelp;
     }
 }
