@@ -148,6 +148,16 @@ namespace nullDCNetplayLauncher
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
 
+            if(chkCustomCFG.Checked)
+            {
+                launcherText = launcherText.Replace("custom_cfg=0", "custom_cfg=1");
+            }
+            else
+            {
+                launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
+            }
+            
+
             if (chkEnableMapper.Checked)
             {
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
@@ -178,7 +188,8 @@ namespace nullDCNetplayLauncher
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
+                if (cboPlayer1.SelectedValue.ToString() == "joy1")
+                    launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
                 var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 

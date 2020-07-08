@@ -41,6 +41,9 @@
             this.btnEditCFG = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabInput = new System.Windows.Forms.TabPage();
+            this.cboRegion = new System.Windows.Forms.ComboBox();
+            this.lblRegion = new System.Windows.Forms.Label();
+            this.grpInput = new System.Windows.Forms.GroupBox();
             this.btnDeleteMapping = new System.Windows.Forms.Button();
             this.cboGamePadMappings = new System.Windows.Forms.ComboBox();
             this.btnSaveInput = new System.Windows.Forms.Button();
@@ -56,23 +59,21 @@
             this.btnSaveFPS = new System.Windows.Forms.Button();
             this.numHostFPS = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.grpInput = new System.Windows.Forms.GroupBox();
-            this.lblRegion = new System.Windows.Forms.Label();
-            this.cboRegion = new System.Windows.Forms.ComboBox();
+            this.chkCustomCFG = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
+            this.grpInput.SuspendLayout();
             this.tabWindow.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
             this.grpShortcuts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
-            this.grpInput.SuspendLayout();
             this.SuspendLayout();
             // 
             // chkEnableMapper
             // 
             this.chkEnableMapper.AutoSize = true;
             this.chkEnableMapper.Location = new System.Drawing.Point(8, 51);
-            this.chkEnableMapper.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.chkEnableMapper.Margin = new System.Windows.Forms.Padding(2);
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(146, 17);
             this.chkEnableMapper.TabIndex = 4;
@@ -99,7 +100,7 @@
             "Joystick 1",
             "Joystick 2"});
             this.cboPlayer1.Location = new System.Drawing.Point(55, 18);
-            this.cboPlayer1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cboPlayer1.Margin = new System.Windows.Forms.Padding(2);
             this.cboPlayer1.Name = "cboPlayer1";
             this.cboPlayer1.Size = new System.Drawing.Size(92, 21);
             this.cboPlayer1.TabIndex = 8;
@@ -109,7 +110,7 @@
             this.rdoDefault.AutoSize = true;
             this.rdoDefault.Checked = true;
             this.rdoDefault.Location = new System.Drawing.Point(11, 5);
-            this.rdoDefault.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdoDefault.Margin = new System.Windows.Forms.Padding(2);
             this.rdoDefault.Name = "rdoDefault";
             this.rdoDefault.Size = new System.Drawing.Size(59, 17);
             this.rdoDefault.TabIndex = 0;
@@ -121,7 +122,7 @@
             // 
             this.rdoStartMax.AutoSize = true;
             this.rdoStartMax.Location = new System.Drawing.Point(11, 29);
-            this.rdoStartMax.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdoStartMax.Margin = new System.Windows.Forms.Padding(2);
             this.rdoStartMax.Name = "rdoStartMax";
             this.rdoStartMax.Size = new System.Drawing.Size(99, 17);
             this.rdoStartMax.TabIndex = 1;
@@ -132,7 +133,7 @@
             // 
             this.rdoCustomSize.AutoSize = true;
             this.rdoCustomSize.Location = new System.Drawing.Point(11, 54);
-            this.rdoCustomSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.rdoCustomSize.Margin = new System.Windows.Forms.Padding(2);
             this.rdoCustomSize.Name = "rdoCustomSize";
             this.rdoCustomSize.Size = new System.Drawing.Size(83, 17);
             this.rdoCustomSize.TabIndex = 2;
@@ -142,7 +143,7 @@
             // txtWindowX
             // 
             this.txtWindowX.Location = new System.Drawing.Point(33, 76);
-            this.txtWindowX.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtWindowX.Margin = new System.Windows.Forms.Padding(2);
             this.txtWindowX.Name = "txtWindowX";
             this.txtWindowX.Size = new System.Drawing.Size(31, 20);
             this.txtWindowX.TabIndex = 3;
@@ -152,7 +153,7 @@
             // txtWindowY
             // 
             this.txtWindowY.Location = new System.Drawing.Point(67, 76);
-            this.txtWindowY.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtWindowY.Margin = new System.Windows.Forms.Padding(2);
             this.txtWindowY.Name = "txtWindowY";
             this.txtWindowY.Size = new System.Drawing.Size(31, 20);
             this.txtWindowY.TabIndex = 4;
@@ -162,7 +163,7 @@
             // btnGrabWindowSize
             // 
             this.btnGrabWindowSize.Location = new System.Drawing.Point(104, 75);
-            this.btnGrabWindowSize.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnGrabWindowSize.Margin = new System.Windows.Forms.Padding(2);
             this.btnGrabWindowSize.Name = "btnGrabWindowSize";
             this.btnGrabWindowSize.Size = new System.Drawing.Size(49, 20);
             this.btnGrabWindowSize.TabIndex = 5;
@@ -174,7 +175,7 @@
             // btnEditCFG
             // 
             this.btnEditCFG.Location = new System.Drawing.Point(4, 17);
-            this.btnEditCFG.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEditCFG.Margin = new System.Windows.Forms.Padding(2);
             this.btnEditCFG.Name = "btnEditCFG";
             this.btnEditCFG.Size = new System.Drawing.Size(142, 23);
             this.btnEditCFG.TabIndex = 4;
@@ -188,7 +189,7 @@
             this.tabControl1.Controls.Add(this.tabWindow);
             this.tabControl1.Controls.Add(this.tabAdvanced);
             this.tabControl1.Location = new System.Drawing.Point(3, 3);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(173, 221);
@@ -196,24 +197,56 @@
             // 
             // tabInput
             // 
+            this.tabInput.Controls.Add(this.chkCustomCFG);
             this.tabInput.Controls.Add(this.cboRegion);
             this.tabInput.Controls.Add(this.lblRegion);
             this.tabInput.Controls.Add(this.grpInput);
             this.tabInput.Controls.Add(this.btnSaveInput);
             this.tabInput.Location = new System.Drawing.Point(4, 22);
-            this.tabInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabInput.Margin = new System.Windows.Forms.Padding(2);
             this.tabInput.Name = "tabInput";
-            this.tabInput.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabInput.Padding = new System.Windows.Forms.Padding(2);
             this.tabInput.Size = new System.Drawing.Size(165, 195);
             this.tabInput.TabIndex = 0;
             this.tabInput.Text = "Main";
             this.tabInput.UseVisualStyleBackColor = true;
             // 
+            // cboRegion
+            // 
+            this.cboRegion.FormattingEnabled = true;
+            this.cboRegion.Location = new System.Drawing.Point(86, 114);
+            this.cboRegion.Name = "cboRegion";
+            this.cboRegion.Size = new System.Drawing.Size(66, 21);
+            this.cboRegion.TabIndex = 56;
+            // 
+            // lblRegion
+            // 
+            this.lblRegion.AutoSize = true;
+            this.lblRegion.Location = new System.Drawing.Point(7, 117);
+            this.lblRegion.Name = "lblRegion";
+            this.lblRegion.Size = new System.Drawing.Size(74, 13);
+            this.lblRegion.TabIndex = 55;
+            this.lblRegion.Text = "Offline Region";
+            // 
+            // grpInput
+            // 
+            this.grpInput.Controls.Add(this.cboPlayer1);
+            this.grpInput.Controls.Add(this.btnDeleteMapping);
+            this.grpInput.Controls.Add(this.lblPlayer1);
+            this.grpInput.Controls.Add(this.cboGamePadMappings);
+            this.grpInput.Controls.Add(this.chkEnableMapper);
+            this.grpInput.Location = new System.Drawing.Point(5, 5);
+            this.grpInput.Name = "grpInput";
+            this.grpInput.Size = new System.Drawing.Size(155, 103);
+            this.grpInput.TabIndex = 54;
+            this.grpInput.TabStop = false;
+            this.grpInput.Text = "Input";
+            // 
             // btnDeleteMapping
             // 
             this.btnDeleteMapping.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteMapping.Image")));
             this.btnDeleteMapping.Location = new System.Drawing.Point(125, 70);
-            this.btnDeleteMapping.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDeleteMapping.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteMapping.Name = "btnDeleteMapping";
             this.btnDeleteMapping.Size = new System.Drawing.Size(22, 22);
             this.btnDeleteMapping.TabIndex = 53;
@@ -226,7 +259,7 @@
             this.cboGamePadMappings.Enabled = false;
             this.cboGamePadMappings.FormattingEnabled = true;
             this.cboGamePadMappings.Location = new System.Drawing.Point(5, 72);
-            this.cboGamePadMappings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cboGamePadMappings.Margin = new System.Windows.Forms.Padding(2);
             this.cboGamePadMappings.Name = "cboGamePadMappings";
             this.cboGamePadMappings.Size = new System.Drawing.Size(113, 21);
             this.cboGamePadMappings.TabIndex = 12;
@@ -235,7 +268,7 @@
             // btnSaveInput
             // 
             this.btnSaveInput.Location = new System.Drawing.Point(12, 174);
-            this.btnSaveInput.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSaveInput.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveInput.Name = "btnSaveInput";
             this.btnSaveInput.Size = new System.Drawing.Size(141, 19);
             this.btnSaveInput.TabIndex = 11;
@@ -253,9 +286,9 @@
             this.tabWindow.Controls.Add(this.rdoStartMax);
             this.tabWindow.Controls.Add(this.rdoCustomSize);
             this.tabWindow.Location = new System.Drawing.Point(4, 22);
-            this.tabWindow.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabWindow.Margin = new System.Windows.Forms.Padding(2);
             this.tabWindow.Name = "tabWindow";
-            this.tabWindow.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabWindow.Padding = new System.Windows.Forms.Padding(2);
             this.tabWindow.Size = new System.Drawing.Size(165, 195);
             this.tabWindow.TabIndex = 1;
             this.tabWindow.Text = "Window";
@@ -264,7 +297,7 @@
             // btnSaveWindow
             // 
             this.btnSaveWindow.Location = new System.Drawing.Point(12, 174);
-            this.btnSaveWindow.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSaveWindow.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveWindow.Name = "btnSaveWindow";
             this.btnSaveWindow.Size = new System.Drawing.Size(141, 19);
             this.btnSaveWindow.TabIndex = 6;
@@ -282,9 +315,9 @@
             this.tabAdvanced.Controls.Add(this.numHostFPS);
             this.tabAdvanced.Controls.Add(this.label1);
             this.tabAdvanced.Location = new System.Drawing.Point(4, 22);
-            this.tabAdvanced.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabAdvanced.Margin = new System.Windows.Forms.Padding(2);
             this.tabAdvanced.Name = "tabAdvanced";
-            this.tabAdvanced.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabAdvanced.Padding = new System.Windows.Forms.Padding(2);
             this.tabAdvanced.Size = new System.Drawing.Size(165, 195);
             this.tabAdvanced.TabIndex = 2;
             this.tabAdvanced.Text = "Advanced";
@@ -305,7 +338,7 @@
             // btnUpdate
             // 
             this.btnUpdate.Location = new System.Drawing.Point(18, 69);
-            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(130, 21);
             this.btnUpdate.TabIndex = 14;
@@ -329,9 +362,9 @@
             this.grpShortcuts.Controls.Add(this.btnOpenQKO);
             this.grpShortcuts.Controls.Add(this.btnJoyCpl);
             this.grpShortcuts.Location = new System.Drawing.Point(6, 94);
-            this.grpShortcuts.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.grpShortcuts.Margin = new System.Windows.Forms.Padding(2);
             this.grpShortcuts.Name = "grpShortcuts";
-            this.grpShortcuts.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.grpShortcuts.Padding = new System.Windows.Forms.Padding(2);
             this.grpShortcuts.Size = new System.Drawing.Size(150, 101);
             this.grpShortcuts.TabIndex = 12;
             this.grpShortcuts.TabStop = false;
@@ -340,7 +373,7 @@
             // btnOpenQKO
             // 
             this.btnOpenQKO.Location = new System.Drawing.Point(4, 45);
-            this.btnOpenQKO.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnOpenQKO.Margin = new System.Windows.Forms.Padding(2);
             this.btnOpenQKO.Name = "btnOpenQKO";
             this.btnOpenQKO.Size = new System.Drawing.Size(142, 23);
             this.btnOpenQKO.TabIndex = 5;
@@ -351,7 +384,7 @@
             // btnJoyCpl
             // 
             this.btnJoyCpl.Location = new System.Drawing.Point(4, 72);
-            this.btnJoyCpl.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnJoyCpl.Margin = new System.Windows.Forms.Padding(2);
             this.btnJoyCpl.Name = "btnJoyCpl";
             this.btnJoyCpl.Size = new System.Drawing.Size(142, 23);
             this.btnJoyCpl.TabIndex = 6;
@@ -362,7 +395,7 @@
             // btnSaveFPS
             // 
             this.btnSaveFPS.Location = new System.Drawing.Point(18, 26);
-            this.btnSaveFPS.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSaveFPS.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveFPS.Name = "btnSaveFPS";
             this.btnSaveFPS.Size = new System.Drawing.Size(130, 21);
             this.btnSaveFPS.TabIndex = 11;
@@ -373,7 +406,7 @@
             // numHostFPS
             // 
             this.numHostFPS.Location = new System.Drawing.Point(112, 6);
-            this.numHostFPS.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.numHostFPS.Margin = new System.Windows.Forms.Padding(2);
             this.numHostFPS.Name = "numHostFPS";
             this.numHostFPS.Size = new System.Drawing.Size(35, 20);
             this.numHostFPS.TabIndex = 9;
@@ -388,57 +421,36 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Host FPS Limit";
             // 
-            // grpInput
+            // chkCustomCFG
             // 
-            this.grpInput.Controls.Add(this.cboPlayer1);
-            this.grpInput.Controls.Add(this.btnDeleteMapping);
-            this.grpInput.Controls.Add(this.lblPlayer1);
-            this.grpInput.Controls.Add(this.cboGamePadMappings);
-            this.grpInput.Controls.Add(this.chkEnableMapper);
-            this.grpInput.Location = new System.Drawing.Point(5, 5);
-            this.grpInput.Name = "grpInput";
-            this.grpInput.Size = new System.Drawing.Size(155, 103);
-            this.grpInput.TabIndex = 54;
-            this.grpInput.TabStop = false;
-            this.grpInput.Text = "Input";
-            // 
-            // lblRegion
-            // 
-            this.lblRegion.AutoSize = true;
-            this.lblRegion.Location = new System.Drawing.Point(7, 117);
-            this.lblRegion.Name = "lblRegion";
-            this.lblRegion.Size = new System.Drawing.Size(74, 13);
-            this.lblRegion.TabIndex = 55;
-            this.lblRegion.Text = "Offline Region";
-            // 
-            // cboRegion
-            // 
-            this.cboRegion.FormattingEnabled = true;
-            this.cboRegion.Location = new System.Drawing.Point(86, 114);
-            this.cboRegion.Name = "cboRegion";
-            this.cboRegion.Size = new System.Drawing.Size(66, 21);
-            this.cboRegion.TabIndex = 56;
+            this.chkCustomCFG.AutoSize = true;
+            this.chkCustomCFG.Location = new System.Drawing.Point(10, 141);
+            this.chkCustomCFG.Name = "chkCustomCFG";
+            this.chkCustomCFG.Size = new System.Drawing.Size(113, 17);
+            this.chkCustomCFG.TabIndex = 57;
+            this.chkCustomCFG.Text = "Allow Custom CFG";
+            this.chkCustomCFG.UseVisualStyleBackColor = true;
             // 
             // SettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tabControl1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "SettingsControl";
             this.Size = new System.Drawing.Size(176, 227);
             this.Load += new System.EventHandler(this.SettingsForm_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabInput.ResumeLayout(false);
             this.tabInput.PerformLayout();
+            this.grpInput.ResumeLayout(false);
+            this.grpInput.PerformLayout();
             this.tabWindow.ResumeLayout(false);
             this.tabWindow.PerformLayout();
             this.tabAdvanced.ResumeLayout(false);
             this.tabAdvanced.PerformLayout();
             this.grpShortcuts.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
-            this.grpInput.ResumeLayout(false);
-            this.grpInput.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -474,5 +486,6 @@
         private System.Windows.Forms.ComboBox cboRegion;
         private System.Windows.Forms.Label lblRegion;
         private System.Windows.Forms.GroupBox grpInput;
+        private System.Windows.Forms.CheckBox chkCustomCFG;
     }
 }
