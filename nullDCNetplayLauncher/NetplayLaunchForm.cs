@@ -21,6 +21,7 @@ namespace nullDCNetplayLauncher
 
         public static ControllerEngine controller;
         public static GamePadMapper gpm;
+        public static VKBMapper vkbm;
 
         public static Boolean EnableMapper = false;
         public static Boolean StartTray;
@@ -77,6 +78,8 @@ namespace nullDCNetplayLauncher
 
                 ReloadRomList();
                 Launcher.LoadRegionSettings();
+
+                //vkbm = new VKBMapper();
 
 
                 if (StartTray)
@@ -218,7 +221,9 @@ namespace nullDCNetplayLauncher
         {
             EnableMapper = true;
             gpm = new GamePadMapper(controller);
+            vkbm = new VKBMapper();
             Application.Idle += gpm.InputRoll;
+            //Application.Idle += vkbm.KeyboardAction;
         }
 
         public static void StopMapper(bool detach = false)
@@ -228,6 +233,7 @@ namespace nullDCNetplayLauncher
             {
                 gpm.StopClock();
                 Application.Idle -= gpm.InputRoll;
+                //Application.Idle -= vkbm.KeyboardAction;
                 gpm.Dispose();
             }
         }

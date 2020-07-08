@@ -156,6 +156,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="VKBMapper.cs" />
     <Compile Include="NetworkQuery.cs" />
     <Compile Include="ControllerControl.cs">
       <SubType>UserControl</SubType>
