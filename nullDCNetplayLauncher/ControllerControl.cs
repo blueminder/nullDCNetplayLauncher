@@ -851,25 +851,29 @@ namespace nullDCNetplayLauncher
                         
                         if (value > 0 && value < 18000)
                         {
-                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_left"]);
+                            if (ActiveQjcDefinitions.ContainsKey($"hat_{hatNum}_left"))
+                                CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_left"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_right"]);
                         }
 
                         if (value > 18000 && value < 36000)
                         {
-                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_right"]);
+                            if (ActiveQjcDefinitions.ContainsKey($"hat_{hatNum}_right"))
+                                CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_right"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_left"]);
                         }
 
                         if (value > 27000 && value < 36000 || value >= 0 && value < 9000)
                         {
-                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_down"]);
+                            if (ActiveQjcDefinitions.ContainsKey($"hat_{hatNum}_down"))
+                                CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_down"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_up"]);
                         }
 
                         if (value > 9000 && value < 27000)
                         {
-                            CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_up"]);
+                            if (ActiveQjcDefinitions.ContainsKey($"hat_{hatNum}_up"))
+                                CurrentlyPressedButtons.Remove(ActiveQjcDefinitions[$"hat_{hatNum}_up"]);
                             CurrentlyPressedButtons.Add(ActiveQjcDefinitions[$"hat_{hatNum}_down"]);
                         }
 
@@ -1387,7 +1391,7 @@ namespace nullDCNetplayLauncher
                     }
                 }
 
-                NetplayLaunchForm.EnableMapper = false;
+                NetplayLaunchForm.StopMapper();
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 launcherText = launcherText.Replace(player1_old, "player1=joy1");
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
@@ -1791,7 +1795,7 @@ namespace nullDCNetplayLauncher
         private void btnSkip_Click(object sender, EventArgs e)
         {
             Skip = true;
-            if (CurrentButtonAssignment == "Test")
+            if (CurrentButtonAssignment == "Test" && kWorkingMapping.Count < 10)
                 ZDetected = true;
         }
 
@@ -1926,6 +1930,8 @@ namespace nullDCNetplayLauncher
         private void btnTestKB_Click(object sender, EventArgs e)
         {
             ActivateTestKB();
+            ZDetected = false;
+            chkForceMapper.Checked = false;
         }
 
         private void ActivateTestKB()
