@@ -130,9 +130,28 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        void control_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up
+                || e.KeyCode == Keys.Down
+                || e.KeyCode == Keys.Left
+                || e.KeyCode == Keys.Right
+                || e.KeyCode == Keys.Enter
+                || e.KeyCode == Keys.Space)
+            {
+                e.IsInputKey = true;
+            }
+        }
+
         private void ControllerControl_Load(object sender, EventArgs e)
-        {   
-            if(controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
+        {
+
+            foreach (Control control in this.Controls)
+            {
+                control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
+            }
+            
+            if (controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
             {
                 lblController.Text = "Controller Detected";
             }
