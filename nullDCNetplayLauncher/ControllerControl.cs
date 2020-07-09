@@ -20,6 +20,7 @@ using XInputDotNetPure;
 using System.Globalization;
 using System.Security.Policy;
 using System.Runtime.InteropServices;
+using System.Runtime.CompilerServices;
 
 namespace nullDCNetplayLauncher
 {
@@ -136,8 +137,7 @@ namespace nullDCNetplayLauncher
                 || e.KeyCode == Keys.Down
                 || e.KeyCode == Keys.Left
                 || e.KeyCode == Keys.Right
-                || e.KeyCode == Keys.Enter
-                || e.KeyCode == Keys.Space)
+                || e.KeyCode == Keys.Enter)
             {
                 e.IsInputKey = true;
             }

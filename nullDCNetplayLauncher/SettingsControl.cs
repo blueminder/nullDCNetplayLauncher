@@ -88,6 +88,15 @@ namespace nullDCNetplayLauncher
                 chkEnableMapper.Checked = false;
             }
 
+            if (launcherText.Contains("vk_enabled=1"))
+            {
+                chkVKBMapper.Checked = true;
+            }
+            else
+            {
+                chkVKBMapper.Checked = false;
+            }
+
             if (launcherText.Contains("custom_cfg=1"))
                 chkCustomCFG.Checked = true;
 
@@ -151,7 +160,34 @@ namespace nullDCNetplayLauncher
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
 
-            if(chkCustomCFG.Checked)
+            if (chkVKBMapper.Checked)
+            {
+                if (!launcherText.Contains("vk_enabled"))
+                {
+                    launcherText += "vk_enabled=1" + Environment.NewLine;
+                }
+                else
+                {
+                    launcherText = launcherText.Replace("vk_enabled=0", "vk_enabled=1");
+                }
+                if (NetplayLaunchForm.EnableVKBMapper)
+                    NetplayLaunchForm.StopVKBMapper();
+                NetplayLaunchForm.StartVKBMapper();
+            }
+            else
+            {
+                if (!launcherText.Contains("vk_enabled"))
+                {
+                    launcherText += "vk_enabled=0" + Environment.NewLine;
+                }
+                else
+                {
+                    launcherText = launcherText.Replace("vk_enabled=1", "vk_enabled=0");
+                }
+                NetplayLaunchForm.StopVKBMapper();
+            }
+
+            if (chkCustomCFG.Checked)
             {
                 if (!launcherText.Contains("custom_cfg"))
                 {
@@ -173,7 +209,6 @@ namespace nullDCNetplayLauncher
                     launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
                 }
             }
-            
 
             if (chkEnableMapper.Checked)
             {

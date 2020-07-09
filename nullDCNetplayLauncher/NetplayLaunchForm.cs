@@ -19,9 +19,12 @@ namespace nullDCNetplayLauncher
         
         UserControl sc = new SettingsControl();
 
+        public static Boolean ControllerSetupOpen = false;
+
         public static ControllerEngine controller;
         public static GamePadMapper gpm;
         public static VKBMapper vkbm;
+        public static Boolean EnableVKBMapper = false;
 
         public static Boolean EnableMapper = false;
         public static Boolean StartTray;
@@ -47,10 +50,17 @@ namespace nullDCNetplayLauncher
                 System.Environment.Exit(1);
             }
             
-
             if (launcherCfgText.Contains("enable_mapper=1"))
             {
                 StartMapper();
+            }
+
+            vkbm = new VKBMapper();
+
+            if (launcherCfgText.Contains("vk_enabled=1"))
+            {
+                EnableVKBMapper = true;
+                StartVKBMapper();
             }
 
             if (controllerSetup)
@@ -78,9 +88,6 @@ namespace nullDCNetplayLauncher
 
                 ReloadRomList();
                 Launcher.LoadRegionSettings();
-
-                //vkbm = new VKBMapper();
-
 
                 if (StartTray)
                 {
@@ -215,6 +222,18 @@ namespace nullDCNetplayLauncher
                 btnJoin.Enabled = false;
                 btnHost.Enabled = false;
             }
+        }
+
+        public static void StartVKBMapper()
+        {
+            EnableVKBMapper = true;
+            Application.Idle += vkbm.KeyboardAction;
+        }
+
+        public static void StopVKBMapper()
+        {
+            EnableVKBMapper = false;
+            Application.Idle -= vkbm.KeyboardAction;
         }
 
         public static void StartMapper()
@@ -387,8 +406,15 @@ namespace nullDCNetplayLauncher
             window.ShowDialog();
         }
 
+        private void cc_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+                e.Handled = true;
+        }
+
         private Form LaunchControllerSetup(bool ExitOnClose = false)
         {
+            ControllerSetupOpen = true;
             ControllerControl cc = new ControllerControl(controller);
             Form window = new Form
             {
@@ -398,8 +424,11 @@ namespace nullDCNetplayLauncher
                 MaximizeBox = false,
                 MinimizeBox = false,
                 ClientSize = cc.Size,
-                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
+                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico,
+                KeyPreview = true
             };
+
+            window.KeyDown += new KeyEventHandler(cc_KeyDown);
 
             if(ExitOnClose)
             {
@@ -429,7 +458,7 @@ namespace nullDCNetplayLauncher
                 }
                 StartMapper();
             }
-
+            ControllerSetupOpen = false;
             return window;
         }
 

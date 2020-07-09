@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,57 +20,45 @@ namespace nullDCNetplayLauncher
         Dictionary<string, int> OldKeyState = null;
         Dictionary<string, int> KeyState = null;
 
+        Dictionary<string, int> QkcDefinition;
+
+        //InterceptKeys ik;
+
         public VKBMapper()
         {
             // authorized virtual keys
             SrcVkb = new Dictionary<string, int>()
             {
                 { "ENTER", 13 },
-                { "SHIFT", 16 },
-                { "CTRL", 17 },
-                { "ALT", 18 },
+                { "SPACE", 32 },
                 { "LEFT", 37 },
                 { "UP", 38 },
                 { "RIGHT", 39 },
                 { "DOWN", 40 },
-                { "0", 96 },
-                { "1", 97 },
-                { "2", 96 },
-                { "3", 96 },
-                { "4", 100 },
-                { "5", 101 },
-                { "6", 102 },
-                { "7", 103 },
-                { "8", 104 },
-                { "9", 105 },
             };
 
-            // qkoJAMMA friendly keys
-            // to replace with actual key assignments
-            DstVkb = new Dictionary<string, int>()
-            {
-                { "D", 68 },
-                { "A", 65 },
-                { "S", 83 },
-                { "W", 87 },
-                { "U", 85 },
-            };
-
+            // source key / dest mapping
             VkbMapping = new Dictionary<string, string>()
             {
-                { "UP", "W" },
-                { "DOWN", "S" },
-                { "LEFT", "A" },
-                { "RIGHT", "D" },
-                { "ENTER", "U" },
+                { "UP", "Up" },
+                { "DOWN", "Down" },
+                { "LEFT", "Left" },
+                { "RIGHT", "Right" },
+                { "ENTER", "Start" },
+                { "SPACE", "Up" },
             };
 
-            Application.Idle += KeyboardAction;
+            //Application.Idle += KeyboardAction;
+
+            //ik = new InterceptKeys();
+
+            QkcDefinition = Launcher.ReadFromQkc();
         }
 
         public void KeyboardAction(object sender, EventArgs e)
         {
-            KBRoll();
+            if (NetplayLaunchForm.EnableVKBMapper)
+                KBRoll();
         }
 
         [DllImport("user32.dll")]
@@ -88,6 +77,7 @@ namespace nullDCNetplayLauncher
 
                 if(KeyState[key] != OldKeyState[key])
                 {
+                    
                     if (KeyState[key] > 0)
                     {
                         if (key == "LEFT")
@@ -121,9 +111,9 @@ namespace nullDCNetplayLauncher
         private void CallVKeyMapping(string vkey, bool push)
         {
             String called = push ? "Pushed" : "Released";
-            System.Diagnostics.Debug.WriteLine($"Virtual Key {vkey} {called}");
+            //System.Diagnostics.Debug.WriteLine($"Virtual Key {vkey} {called}");
 
-            Dictionary<string, int> VirtualMapping = DstVkb;
+            Dictionary<string, int> VirtualMapping = QkcDefinition;
             if (!VkbMapping.ContainsKey(vkey))
                 return;
 
@@ -145,27 +135,29 @@ namespace nullDCNetplayLauncher
 
         public void PushKey(byte key)
         {
-            //Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            //if (processes.Length > 0)
-            //{
-            //Process ndc = processes[0];
-            //IntPtr ptr = ndc.MainWindowHandle;
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            if (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen)
+            {
+                //Process ndc = processes[0];
+                //IntPtr ptr = ndc.MainWindowHandle;
 
-            //SetFocus(ptr);
+                //SetFocus(ptr);
 
-            keybd_event(key, 0, 0, 0);
-            //}
+                keybd_event(key, 0, 0, 0);
+            }
         }
 
         public void ReleaseKey(byte key)
         {
-            //Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            //if (processes.Length > 0)
-            //{
-            const uint KEYEVENTF_KEYUP = 0x0002;
-            keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
-            //}
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            if (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen)
+            {
+                const uint KEYEVENTF_KEYUP = 0x0002;
+                keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
+            }
         }
 
     }
+
+
 }

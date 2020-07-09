@@ -389,26 +389,26 @@ namespace nullDCNetplayLauncher
 
         public void PushKey(byte key)
         {
-            //Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            //if (processes.Length > 0)
-            //{
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            if (processes.Length > 0)
+            {
                 //Process ndc = processes[0];
                 //IntPtr ptr = ndc.MainWindowHandle;
 
                 //SetFocus(ptr);
 
                 keybd_event(key, 0, 0, 0);
-            //}
+            }
         }
 
         public void ReleaseKey(byte key)
         {
-            //Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            //if (processes.Length > 0)
-            //{
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            if (processes.Length > 0)
+            {
                 const uint KEYEVENTF_KEYUP = 0x0002;
                 keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
-            //}
+            }
         }
 
         public Dictionary<string, string> ReadKeyboardQkc()

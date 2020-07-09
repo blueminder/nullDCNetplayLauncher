@@ -41,6 +41,7 @@
             this.btnEditCFG = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabInput = new System.Windows.Forms.TabPage();
+            this.chkCustomCFG = new System.Windows.Forms.CheckBox();
             this.cboRegion = new System.Windows.Forms.ComboBox();
             this.lblRegion = new System.Windows.Forms.Label();
             this.grpInput = new System.Windows.Forms.GroupBox();
@@ -59,7 +60,7 @@
             this.btnSaveFPS = new System.Windows.Forms.Button();
             this.numHostFPS = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkCustomCFG = new System.Windows.Forms.CheckBox();
+            this.chkVKBMapper = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
             this.grpInput.SuspendLayout();
@@ -72,7 +73,7 @@
             // chkEnableMapper
             // 
             this.chkEnableMapper.AutoSize = true;
-            this.chkEnableMapper.Location = new System.Drawing.Point(8, 51);
+            this.chkEnableMapper.Location = new System.Drawing.Point(8, 64);
             this.chkEnableMapper.Margin = new System.Windows.Forms.Padding(2);
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(146, 17);
@@ -211,10 +212,20 @@
             this.tabInput.Text = "Main";
             this.tabInput.UseVisualStyleBackColor = true;
             // 
+            // chkCustomCFG
+            // 
+            this.chkCustomCFG.AutoSize = true;
+            this.chkCustomCFG.Location = new System.Drawing.Point(10, 152);
+            this.chkCustomCFG.Name = "chkCustomCFG";
+            this.chkCustomCFG.Size = new System.Drawing.Size(113, 17);
+            this.chkCustomCFG.TabIndex = 57;
+            this.chkCustomCFG.Text = "Allow Custom CFG";
+            this.chkCustomCFG.UseVisualStyleBackColor = true;
+            // 
             // cboRegion
             // 
             this.cboRegion.FormattingEnabled = true;
-            this.cboRegion.Location = new System.Drawing.Point(86, 114);
+            this.cboRegion.Location = new System.Drawing.Point(88, 123);
             this.cboRegion.Name = "cboRegion";
             this.cboRegion.Size = new System.Drawing.Size(66, 21);
             this.cboRegion.TabIndex = 56;
@@ -222,7 +233,7 @@
             // lblRegion
             // 
             this.lblRegion.AutoSize = true;
-            this.lblRegion.Location = new System.Drawing.Point(7, 117);
+            this.lblRegion.Location = new System.Drawing.Point(9, 126);
             this.lblRegion.Name = "lblRegion";
             this.lblRegion.Size = new System.Drawing.Size(74, 13);
             this.lblRegion.TabIndex = 55;
@@ -230,6 +241,7 @@
             // 
             // grpInput
             // 
+            this.grpInput.Controls.Add(this.chkVKBMapper);
             this.grpInput.Controls.Add(this.cboPlayer1);
             this.grpInput.Controls.Add(this.btnDeleteMapping);
             this.grpInput.Controls.Add(this.lblPlayer1);
@@ -237,7 +249,7 @@
             this.grpInput.Controls.Add(this.chkEnableMapper);
             this.grpInput.Location = new System.Drawing.Point(5, 5);
             this.grpInput.Name = "grpInput";
-            this.grpInput.Size = new System.Drawing.Size(155, 103);
+            this.grpInput.Size = new System.Drawing.Size(155, 112);
             this.grpInput.TabIndex = 54;
             this.grpInput.TabStop = false;
             this.grpInput.Text = "Input";
@@ -245,7 +257,7 @@
             // btnDeleteMapping
             // 
             this.btnDeleteMapping.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteMapping.Image")));
-            this.btnDeleteMapping.Location = new System.Drawing.Point(125, 70);
+            this.btnDeleteMapping.Location = new System.Drawing.Point(125, 84);
             this.btnDeleteMapping.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteMapping.Name = "btnDeleteMapping";
             this.btnDeleteMapping.Size = new System.Drawing.Size(22, 22);
@@ -258,7 +270,7 @@
             this.cboGamePadMappings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboGamePadMappings.Enabled = false;
             this.cboGamePadMappings.FormattingEnabled = true;
-            this.cboGamePadMappings.Location = new System.Drawing.Point(5, 72);
+            this.cboGamePadMappings.Location = new System.Drawing.Point(5, 84);
             this.cboGamePadMappings.Margin = new System.Windows.Forms.Padding(2);
             this.cboGamePadMappings.Name = "cboGamePadMappings";
             this.cboGamePadMappings.Size = new System.Drawing.Size(113, 21);
@@ -421,15 +433,15 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Host FPS Limit";
             // 
-            // chkCustomCFG
+            // chkVKBMapper
             // 
-            this.chkCustomCFG.AutoSize = true;
-            this.chkCustomCFG.Location = new System.Drawing.Point(10, 141);
-            this.chkCustomCFG.Name = "chkCustomCFG";
-            this.chkCustomCFG.Size = new System.Drawing.Size(113, 17);
-            this.chkCustomCFG.TabIndex = 57;
-            this.chkCustomCFG.Text = "Allow Custom CFG";
-            this.chkCustomCFG.UseVisualStyleBackColor = true;
+            this.chkVKBMapper.AutoSize = true;
+            this.chkVKBMapper.Location = new System.Drawing.Point(8, 44);
+            this.chkVKBMapper.Name = "chkVKBMapper";
+            this.chkVKBMapper.Size = new System.Drawing.Size(117, 17);
+            this.chkVKBMapper.TabIndex = 54;
+            this.chkVKBMapper.Text = "Enable Virtual Keys";
+            this.chkVKBMapper.UseVisualStyleBackColor = true;
             // 
             // SettingsControl
             // 
@@ -487,5 +499,6 @@
         private System.Windows.Forms.Label lblRegion;
         private System.Windows.Forms.GroupBox grpInput;
         private System.Windows.Forms.CheckBox chkCustomCFG;
+        private System.Windows.Forms.CheckBox chkVKBMapper;
     }
 }
