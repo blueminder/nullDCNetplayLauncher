@@ -1407,7 +1407,7 @@ namespace nullDCNetplayLauncher
                 TestDevice = "Controller";
                 ActiveQjcDefinitions = ReadFromQjc();
             }
-            else if (kWorkingMapping.Count >= 11)
+            else if (!ZDetected && kWorkingMapping.Count >= 11)
             {
                 SaveQKC();
 
