@@ -31,7 +31,6 @@ namespace nullDCNetplayLauncher
                 { (int)System.Windows.Forms.Keys.Right, "Right" },
                 { (int)System.Windows.Forms.Keys.Return, "Start" },
                 { (int)System.Windows.Forms.Keys.Space, "Up" },
-                { (int)System.Windows.Forms.Keys.Shift, "Coin" },
             };
 
             QkcDefinition = Launcher.ReadFromQkc();
@@ -67,10 +66,16 @@ namespace nullDCNetplayLauncher
         [DllImport("user32.dll")]
         static extern short GetKeyState(int nVirtKey);
 
-        public void KBRoll(object sender, EventArgs e)
+        private bool IsNullDcOpen()
         {
             Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            if (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen || Launcher.GameOpen)
+            return processes.Length > 0 && Launcher.GameOpen;
+        }
+
+        public void KBRoll(object sender, EventArgs e)
+        {
+            
+            if (IsNullDcOpen() || NetplayLaunchForm.ControllerSetupOpen)
             {
                 //System.Diagnostics.Debug.WriteLine(NetplayLaunchForm.ControllerSetupOpen);
 
@@ -110,7 +115,7 @@ namespace nullDCNetplayLauncher
         private void KeyDown(object sender, WindowsHook.KeyEventArgs e)
         {
             if (VkbMapping.ContainsKey((int)e.KeyCode) 
-                && (NetplayLaunchForm.ControllerSetupOpen || Launcher.GameOpen))
+                && (NetplayLaunchForm.ControllerSetupOpen || IsNullDcOpen()))
             {
                 PushKey(QkcDefinition[VkbMapping[(int)e.KeyCode]]);
                 e.SuppressKeyPress = true;
@@ -122,7 +127,7 @@ namespace nullDCNetplayLauncher
             //ReleaseKey(QkcDefinition[VkbMapping[(int)e.KeyCode]]);
 
             if (VkbMapping.ContainsKey((int)e.KeyCode)
-                && (NetplayLaunchForm.ControllerSetupOpen || Launcher.GameOpen))
+                && (NetplayLaunchForm.ControllerSetupOpen || IsNullDcOpen()))
             {
                 ReleaseKey(QkcDefinition[VkbMapping[(int)e.KeyCode]]);
                 System.Diagnostics.Debug.Print($"{QkcDefinition[VkbMapping[(int)e.KeyCode]]} Released");
@@ -137,8 +142,7 @@ namespace nullDCNetplayLauncher
 
         public void PushKey(int keyCode)
         {
-            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            if (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen)
+            if (IsNullDcOpen() || NetplayLaunchForm.ControllerSetupOpen)
             {
                 byte key = BitConverter.GetBytes(keyCode).First();
                 keybd_event(key, 0, 0, 0);
@@ -147,8 +151,7 @@ namespace nullDCNetplayLauncher
 
         public void ReleaseKey(int keyCode)
         {
-            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-            if (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen)
+            if (IsNullDcOpen() || NetplayLaunchForm.ControllerSetupOpen)
             {
                 byte key = BitConverter.GetBytes(keyCode).First();
                 const uint KEYEVENTF_KEYUP = 0x0002;

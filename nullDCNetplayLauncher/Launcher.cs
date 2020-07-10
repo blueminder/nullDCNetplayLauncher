@@ -239,8 +239,17 @@ namespace nullDCNetplayLauncher
         private static int WINDOW_POPUP = 6; //get the official name for this one
         private static int PATHNAME_ENTRY_ID = 0x47C;
 
+        private static bool IsNullDcOpen()
+        {
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            return processes.Length > 0;
+        }
+
         public static void LaunchNullDC(string RomPath, bool isHost = false)
         {
+            if (!IsNullDcOpen())
+                GameOpen = false;
+
             //Credit to Labryz (GitHub: labreezy) for initial work
             //replacing the AHK rom launcher in favor of user32 P/Invoke Methods
             Process[] ndc = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
