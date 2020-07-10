@@ -37,6 +37,8 @@ namespace nullDCNetplayLauncher
         private Dictionary<string, string> KeyboardQkcMapping;
         private OpenTK.Input.GamePadState OTKOldState;
         private XInputDotNetPure.GamePadState XOldState;
+        //private VKBMapper vkbm;
+
 
         public GamePadMapper(ControllerEngine controllerEngine)
         {
@@ -45,6 +47,7 @@ namespace nullDCNetplayLauncher
             KeyboardQkcMapping = ReadKeyboardQkc();
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
             //hWindow = Launcher.NullDCWindowHandle();
+            //vkbm = new VKBMapper();
         }
 
         public void StartClock()
@@ -63,6 +66,7 @@ namespace nullDCNetplayLauncher
                 XInputGamePadInputRoll();
             else
                 OpenTKGamePadInputRoll();
+
         }
 
         PropertyInfo[] AvailableXButtonProperties = typeof(XInputDotNetPure.GamePadButtons).GetProperties().Where(

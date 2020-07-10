@@ -137,7 +137,8 @@ namespace nullDCNetplayLauncher
                 || e.KeyCode == Keys.Down
                 || e.KeyCode == Keys.Left
                 || e.KeyCode == Keys.Right
-                || e.KeyCode == Keys.Enter)
+                || e.KeyCode == Keys.Enter
+                || e.KeyCode == Keys.Space)
             {
                 e.IsInputKey = true;
             }
@@ -145,7 +146,7 @@ namespace nullDCNetplayLauncher
 
         private void ControllerControl_Load(object sender, EventArgs e)
         {
-
+            
             foreach (Control control in this.Controls)
             {
                 control.PreviewKeyDown += new PreviewKeyDownEventHandler(control_PreviewKeyDown);
@@ -1739,7 +1740,7 @@ namespace nullDCNetplayLauncher
 
         }
 
-        private void btnSetup_Click(object sender, EventArgs e)
+        private void btnSetup_MouseClick(object sender, EventArgs e)
         {
             NetplayLaunchForm.EnableMapper = false;
             // reset button assignments on click
@@ -1749,7 +1750,7 @@ namespace nullDCNetplayLauncher
             showDPadOrAnalogScreen();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void btnCancel_MouseClick(object sender, EventArgs e)
         {
             controller.GamePadAction -= controller_GamePadAction;
             SetupUnfinished = true;
@@ -1801,31 +1802,31 @@ namespace nullDCNetplayLauncher
             btnTestKB.Visible = false;
         }
 
-        private void btnDetectController_Click(object sender, EventArgs e)
+        private void btnDetectController_MouseClick(object sender, EventArgs e)
         {
             InitializeJoystick();
         }
 
-        private void btnShowKeyboard_Click(object sender, EventArgs e)
+        private void btnShowKeyboard_MouseClick(object sender, EventArgs e)
         {
             Process.Start("notepad.exe", Launcher.rootDir + "nulldc-1-0-4-en-win\\qkoJAMMA\\keyboard.qkc");
         }
 
-        private void btnSkip_Click(object sender, EventArgs e)
+        private void btnSkip_MouseClick(object sender, EventArgs e)
         {
             Skip = true;
             if (CurrentButtonAssignment == "Test" && kWorkingMapping.Count < 10)
                 ZDetected = true;
         }
 
-        private void btnDPad_Click(object sender, EventArgs e)
+        private void btnDPad_MouseClick(object sender, EventArgs e)
         {
             AnalogSet = false;
             hideAllButtons();
             BeginSetup();
         }
 
-        private void btnAnalog_Click(object sender, EventArgs e)
+        private void btnAnalog_MouseClick(object sender, EventArgs e)
         {
             if(!IsUnnamed)
                 AnalogSet = true;
@@ -1833,7 +1834,7 @@ namespace nullDCNetplayLauncher
             BeginSetup();
         }
 
-        private void btnEnableGamepadMapper_Click(object sender, EventArgs e)
+        private void btnEnableGamepadMapper_MouseClick(object sender, EventArgs e)
         {
             ZDetected = true;
         }
@@ -1932,7 +1933,7 @@ namespace nullDCNetplayLauncher
             }
         }
 
-        private void btnTestController_Click(object sender, EventArgs e)
+        private void btnTestController_MouseClick(object sender, EventArgs e)
         {
             ActivateTestController();
         }
@@ -1946,7 +1947,7 @@ namespace nullDCNetplayLauncher
             chkForceMapper.Visible = true;
         }
 
-        private void btnTestKB_Click(object sender, EventArgs e)
+        private void btnTestKB_MouseClick(object sender, EventArgs e)
         {
             ActivateTestKB();
             ZDetected = false;

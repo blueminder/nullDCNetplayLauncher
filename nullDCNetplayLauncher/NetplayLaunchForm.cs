@@ -55,7 +55,8 @@ namespace nullDCNetplayLauncher
                 StartMapper();
             }
 
-            vkbm = new VKBMapper();
+            
+            KeyPreview = true;
 
             if (launcherCfgText.Contains("vk_enabled=1"))
             {
@@ -100,6 +101,20 @@ namespace nullDCNetplayLauncher
                         nulldcProcess.Exited += (sender, e) =>
                         {
                             Application.Exit();
+                        };
+                    }
+                }
+                else
+                {
+                    Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+                    if (processes.Length > 0)
+                    {
+                        Process nulldcProcess = processes[0];
+                        nulldcProcess.EnableRaisingEvents = true;
+
+                        nulldcProcess.Exited += (sender, e) =>
+                        {
+                            Launcher.GameOpen = false;
                         };
                     }
                 }
@@ -227,13 +242,15 @@ namespace nullDCNetplayLauncher
         public static void StartVKBMapper()
         {
             EnableVKBMapper = true;
-            Application.Idle += vkbm.KeyboardAction;
+            vkbm.Subscribe();
+            //Application.Idle += vkbm.KBRoll;
         }
 
         public static void StopVKBMapper()
         {
             EnableVKBMapper = false;
-            Application.Idle -= vkbm.KeyboardAction;
+            vkbm.Unsubscribe();
+            //Application.Idle -= vkbm.KBRoll;
         }
 
         public static void StartMapper()
@@ -406,12 +423,6 @@ namespace nullDCNetplayLauncher
             window.ShowDialog();
         }
 
-        private void cc_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Space)
-                e.Handled = true;
-        }
-
         private Form LaunchControllerSetup(bool ExitOnClose = false)
         {
             ControllerSetupOpen = true;
@@ -424,11 +435,8 @@ namespace nullDCNetplayLauncher
                 MaximizeBox = false,
                 MinimizeBox = false,
                 ClientSize = cc.Size,
-                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico,
-                KeyPreview = true
+                Icon = nullDCNetplayLauncher.Properties.Resources.icons8_game_controller_26_ico
             };
-
-            window.KeyDown += new KeyEventHandler(cc_KeyDown);
 
             if(ExitOnClose)
             {

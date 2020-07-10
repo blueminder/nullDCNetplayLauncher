@@ -34,6 +34,8 @@ namespace nullDCNetplayLauncher
 
         public static List<Game> GamesJson;
 
+        public static bool GameOpen = false;
+
         public Launcher()
         {
             MethodOptions["Frame Limit"] = 0;
@@ -307,6 +309,8 @@ namespace nullDCNetplayLauncher
             const uint KEYEVENTF_KEYUP = 0x0002;
             keybd_event(VK_RETURN, 0, 0, 0);
             keybd_event(VK_RETURN, 0, KEYEVENTF_KEYUP, 0);
+            System.Threading.Thread.Sleep(5000);
+            GameOpen = true;
         }
 
         // written by MarioBrotha

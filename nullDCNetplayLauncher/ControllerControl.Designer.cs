@@ -74,7 +74,7 @@
             this.btnSetup.TabIndex = 2;
             this.btnSetup.Text = "Setup";
             this.btnSetup.UseVisualStyleBackColor = true;
-            this.btnSetup.Click += new System.EventHandler(this.btnSetup_Click);
+            this.btnSetup.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnSetup_MouseClick);
             // 
             // btnCancel
             // 
@@ -87,7 +87,7 @@
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            this.btnCancel.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnCancel_MouseClick);
             // 
             // btnDPad
             // 
@@ -101,7 +101,7 @@
             this.btnDPad.Text = "Digital or Keyboard";
             this.btnDPad.UseVisualStyleBackColor = true;
             this.btnDPad.Visible = false;
-            this.btnDPad.Click += new System.EventHandler(this.btnDPad_Click);
+            this.btnDPad.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnDPad_MouseClick);
             // 
             // btnAnalog
             // 
@@ -116,7 +116,7 @@
             this.btnAnalog.Text = "Analog";
             this.btnAnalog.UseVisualStyleBackColor = true;
             this.btnAnalog.Visible = false;
-            this.btnAnalog.Click += new System.EventHandler(this.btnAnalog_Click);
+            this.btnAnalog.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnAnalog_MouseClick);
             // 
             // chkForceMapper
             // 
@@ -142,7 +142,7 @@
             this.btnSkip.Text = "Skip";
             this.btnSkip.UseVisualStyleBackColor = true;
             this.btnSkip.Visible = false;
-            this.btnSkip.Click += new System.EventHandler(this.btnSkip_Click);
+            this.btnSkip.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnSkip_MouseClick);
             // 
             // btnTestKB
             // 
@@ -154,7 +154,7 @@
             this.btnTestKB.TabIndex = 13;
             this.btnTestKB.Text = "Test Keyboard";
             this.btnTestKB.UseVisualStyleBackColor = true;
-            this.btnTestKB.Click += new System.EventHandler(this.btnTestKB_Click);
+            this.btnTestKB.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnTestKB_MouseClick);
             // 
             // btnTestController
             // 
@@ -166,7 +166,7 @@
             this.btnTestController.TabIndex = 14;
             this.btnTestController.Text = "Test Controller";
             this.btnTestController.UseVisualStyleBackColor = true;
-            this.btnTestController.Click += new System.EventHandler(this.btnTestController_Click);
+            this.btnTestController.MouseClick += new System.Windows.Forms.MouseEventHandler(this.btnTestController_MouseClick);
             // 
             // ControllerControl
             // 
