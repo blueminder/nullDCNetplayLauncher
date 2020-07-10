@@ -61,6 +61,7 @@ namespace nullDCNetplayLauncher
             if (launcherCfgText.Contains("vk_enabled=1"))
             {
                 EnableVKBMapper = true;
+                vkbm = new VKBMapper();
                 StartVKBMapper();
             }
 

@@ -69,37 +69,42 @@ namespace nullDCNetplayLauncher
 
         public void KBRoll(object sender, EventArgs e)
         {
-            //System.Diagnostics.Debug.WriteLine(NetplayLaunchForm.ControllerSetupOpen);
-
-            KeyState = new Dictionary<int, int>();
-
-            if (OldKeyState == null)
-                OldKeyState = KeyState;
-
-            foreach (int key in VkbMapping.Keys)
+            Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
+            if (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen || Launcher.GameOpen)
             {
-                KeyState[key] = GetKeyState(QkcDefinition[VkbMapping[key]]);
-                Process[] processes = Process.GetProcessesByName("nullDC_Win32_Release-NoTrace");
-                if (KeyState[key] != OldKeyState[key] 
-                    && (processes.Length > 0 || NetplayLaunchForm.ControllerSetupOpen || Launcher.GameOpen)
-                    && VkbMapping.ContainsKey(key))
+                //System.Diagnostics.Debug.WriteLine(NetplayLaunchForm.ControllerSetupOpen);
+
+                KeyState = new Dictionary<int, int>();
+
+                if (OldKeyState == null)
+                    OldKeyState = KeyState;
+
+                foreach (int key in VkbMapping.Keys)
                 {
-                    if (KeyState[key] > 0 && GetKeyState(QkcDefinition[VkbMapping[key]]) <= 0)
+                    if (QkcDefinition.ContainsKey(VkbMapping[key]))
                     {
-                        PushKey(QkcDefinition[VkbMapping[key]]);
-                        System.Diagnostics.Debug.Print($"{QkcDefinition[VkbMapping[key]]} Pushed");
-                    }
-                    if (KeyState[key] < 0)
-                    {
-                        //ReleaseKey(QkcDefinition[VkbMapping[key]]);
-                        //System.Diagnostics.Debug.Print($"{QkcDefinition[VkbMapping[key]]} Released");
+                        KeyState[key] = GetKeyState(QkcDefinition[VkbMapping[key]]);
+                        if (KeyState[key] != OldKeyState[key]
+                            && VkbMapping.ContainsKey(key))
+                        {
+                            if (KeyState[key] > 0 && GetKeyState(QkcDefinition[VkbMapping[key]]) <= 0)
+                            {
+                                PushKey(QkcDefinition[VkbMapping[key]]);
+                                System.Diagnostics.Debug.Print($"{QkcDefinition[VkbMapping[key]]} Pushed");
+                            }
+                            if (KeyState[key] < 0)
+                            {
+                                //ReleaseKey(QkcDefinition[VkbMapping[key]]);
+                                //System.Diagnostics.Debug.Print($"{QkcDefinition[VkbMapping[key]]} Released");
 
+                            }
+                        }
                     }
+
                 }
+
+                OldKeyState = KeyState;
             }
-
-
-            OldKeyState = KeyState;
         }
 
         private void KeyDown(object sender, WindowsHook.KeyEventArgs e)
