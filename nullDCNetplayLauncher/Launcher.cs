@@ -323,7 +323,7 @@ namespace nullDCNetplayLauncher
             string CfgPath = EmuDir + "nullDC.cfg";
             string AntilagPath = EmuDir + "antilag.cfg";
 
-            string enabled = "Enabled=" + (netplayEnabled ? 1 : 0).ToString();
+            string enabled = "Online=" + (netplayEnabled ? 1 : 0).ToString();
             string hosting = "Hosting=" + (isHost ? 1 : 0).ToString();
             string hostip = "Host=" + hostAddress;
             string portcfg = "Port=" + hostPort;
