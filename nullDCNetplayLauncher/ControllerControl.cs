@@ -1363,7 +1363,7 @@ namespace nullDCNetplayLauncher
             string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+            //var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
 
             string successText;
 
@@ -1393,8 +1393,8 @@ namespace nullDCNetplayLauncher
 
                 NetplayLaunchForm.StopMapper();
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                launcherText = launcherText.Replace(player1_old, "player1=joy1");
-                cfgText = cfgText.Replace(player1_old, "player1=joy1");
+                //launcherText = launcherText.Replace(player1_old, "player1=joy1");
+                //cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
                 var qjcPath = Launcher.rootDir + "nulldc-1-0-4-en-win//qkoJAMMA//" + JoystickName + ".qjc";
                 if (File.Exists(qjcPath))
@@ -1413,13 +1413,14 @@ namespace nullDCNetplayLauncher
             }
             else if (!ZDetected && kWorkingMapping.Count >= 11)
             {
-                SaveQKC();
+                //SaveQKC();
+                SaveKB();
 
                 TestDevice = "Keyboard";
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 ActiveQkc = Launcher.ReadFromQkc();
-                launcherText = launcherText.Replace(player1_old, "player1=keyboard");
-                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+                //launcherText = launcherText.Replace(player1_old, "player1=keyboard");
+                //cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
                 successText = $"\nKeyboard Assignments Saved to Keyboard.qkc\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
@@ -1433,9 +1434,9 @@ namespace nullDCNetplayLauncher
 
                 NetplayLaunchForm.EnableMapper = true;
                 launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
-                launcherText = launcherText.Replace(player1_old, "player1=keyboard");
+                //launcherText = launcherText.Replace(player1_old, "player1=keyboard");
 
-                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+                //cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
                 successText = $"\nNew Keyboard Mapper Profile \"{JoystickName}\" Created\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
@@ -1449,7 +1450,7 @@ namespace nullDCNetplayLauncher
             btnSetup.Enabled = true;
 
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
-            File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            //File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
 
             SetupUnfinished = false;
             
@@ -1842,6 +1843,36 @@ namespace nullDCNetplayLauncher
             try
             {
                 File.WriteAllText(qkcPath, qkcOutput);
+            }
+            catch { }
+        }
+
+        public void SaveKB()
+        {
+            string kbOutput = "";
+            string[] buttons = { "Start", "Test", "Up", "Down", "Left", "Right",
+                                "1", "2", "3", "4", "5", "6", "Coin"};
+
+            string[] bear_kb_inputs = { "BPortA_I_START_KEY", "BPortA_I_TEST_KEY_1", "BPortA_I_UP_KEY",
+                                        "BPortA_I_DOWN_KEY", "BPortA_I_LEFT_KEY", "BPortA_I_RIGHT_KEY",
+                                        "BPortA_I_BTN0_KEY", "BPortA_I_BTN1_KEY", "BPortA_I_BTN2_KEY",
+                                        "BPortA_I_BTN3_KEY", "BPortA_I_BTN4_KEY", "BPortA_I_BTN5_KEY", "BPortA_I_COIN_KEY" };
+
+            kbOutput += "BPortA_I_SERVICE_KEY_1=\n";
+            kbOutput += "BPortA_I_SERVICE_KEY_2=\n";
+            kbOutput += "BPortA_I_TEST_KEY_2=\n";
+
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (kWorkingMapping.ContainsKey(buttons[i]))
+                    kbOutput += $"{bear_kb_inputs[i]}={kWorkingMapping[buttons[i]]}\n";
+                else
+                    kbOutput += $"{bear_kb_inputs[i]}=\n";
+            }
+
+            try
+            {
+                Launcher.UpdateKBCFG(kbOutput.TrimEnd());
             }
             catch { }
         }

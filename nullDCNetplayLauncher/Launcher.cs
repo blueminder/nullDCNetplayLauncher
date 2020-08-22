@@ -400,6 +400,35 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        public static void UpdateKBCFG(string kbOutput)
+        {
+            string EmuDir = rootDir + "nulldc-1-0-4-en-win\\";
+            string CfgPath = EmuDir + "nullDC.cfg";
+
+            string[] lines = File.ReadAllLines(CfgPath);
+
+            // write to nullDC.cfg
+            using (StreamWriter writer = new StreamWriter(CfgPath))
+            {
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    //section bearjamma                  
+                    if (lines[i].Contains("[BEARJamma]"))
+                    {
+                        writer.WriteLine("[BEARJamma]");
+                        //rewriting all the lines in this section
+                        writer.WriteLine(kbOutput);
+                        i = i + 16;
+                        //i = i + kbOutput.Split('\n').Length;
+                    }
+                    else
+                    {
+                        writer.WriteLine(lines[i]);
+                    }
+                }
+            }
+        }
+
         public static string GetDistributionRootDirectoryName()
         {
             var LauncherPath = new System.Uri(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase).LocalPath;
