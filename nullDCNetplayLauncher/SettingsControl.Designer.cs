@@ -30,8 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsControl));
             this.chkEnableMapper = new System.Windows.Forms.CheckBox();
-            this.lblPlayer1 = new System.Windows.Forms.Label();
-            this.cboPlayer1 = new System.Windows.Forms.ComboBox();
             this.rdoDefault = new System.Windows.Forms.RadioButton();
             this.rdoStartMax = new System.Windows.Forms.RadioButton();
             this.rdoCustomSize = new System.Windows.Forms.RadioButton();
@@ -54,12 +52,10 @@
             this.btnUpdate = new System.Windows.Forms.Button();
             this.lblCurrentVersion = new System.Windows.Forms.Label();
             this.grpShortcuts = new System.Windows.Forms.GroupBox();
-            this.btnOpenQKO = new System.Windows.Forms.Button();
             this.btnJoyCpl = new System.Windows.Forms.Button();
             this.btnSaveFPS = new System.Windows.Forms.Button();
             this.numHostFPS = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.chkCustomCFG = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
             this.grpInput.SuspendLayout();
@@ -72,7 +68,7 @@
             // chkEnableMapper
             // 
             this.chkEnableMapper.AutoSize = true;
-            this.chkEnableMapper.Location = new System.Drawing.Point(8, 51);
+            this.chkEnableMapper.Location = new System.Drawing.Point(8, 23);
             this.chkEnableMapper.Margin = new System.Windows.Forms.Padding(2);
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(146, 17);
@@ -80,30 +76,6 @@
             this.chkEnableMapper.Text = "Enable Keyboard Mapper";
             this.chkEnableMapper.UseVisualStyleBackColor = true;
             this.chkEnableMapper.CheckedChanged += new System.EventHandler(this.chkEnableMapper_CheckedChanged);
-            // 
-            // lblPlayer1
-            // 
-            this.lblPlayer1.AutoSize = true;
-            this.lblPlayer1.Location = new System.Drawing.Point(5, 21);
-            this.lblPlayer1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblPlayer1.Name = "lblPlayer1";
-            this.lblPlayer1.Size = new System.Drawing.Size(41, 13);
-            this.lblPlayer1.TabIndex = 5;
-            this.lblPlayer1.Text = "Device";
-            // 
-            // cboPlayer1
-            // 
-            this.cboPlayer1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboPlayer1.FormattingEnabled = true;
-            this.cboPlayer1.Items.AddRange(new object[] {
-            "Keyboard",
-            "Joystick 1",
-            "Joystick 2"});
-            this.cboPlayer1.Location = new System.Drawing.Point(55, 18);
-            this.cboPlayer1.Margin = new System.Windows.Forms.Padding(2);
-            this.cboPlayer1.Name = "cboPlayer1";
-            this.cboPlayer1.Size = new System.Drawing.Size(92, 21);
-            this.cboPlayer1.TabIndex = 8;
             // 
             // rdoDefault
             // 
@@ -197,7 +169,6 @@
             // 
             // tabInput
             // 
-            this.tabInput.Controls.Add(this.chkCustomCFG);
             this.tabInput.Controls.Add(this.cboRegion);
             this.tabInput.Controls.Add(this.lblRegion);
             this.tabInput.Controls.Add(this.grpInput);
@@ -214,7 +185,7 @@
             // cboRegion
             // 
             this.cboRegion.FormattingEnabled = true;
-            this.cboRegion.Location = new System.Drawing.Point(86, 114);
+            this.cboRegion.Location = new System.Drawing.Point(86, 94);
             this.cboRegion.Name = "cboRegion";
             this.cboRegion.Size = new System.Drawing.Size(66, 21);
             this.cboRegion.TabIndex = 56;
@@ -222,7 +193,7 @@
             // lblRegion
             // 
             this.lblRegion.AutoSize = true;
-            this.lblRegion.Location = new System.Drawing.Point(7, 117);
+            this.lblRegion.Location = new System.Drawing.Point(7, 97);
             this.lblRegion.Name = "lblRegion";
             this.lblRegion.Size = new System.Drawing.Size(74, 13);
             this.lblRegion.TabIndex = 55;
@@ -230,14 +201,12 @@
             // 
             // grpInput
             // 
-            this.grpInput.Controls.Add(this.cboPlayer1);
             this.grpInput.Controls.Add(this.btnDeleteMapping);
-            this.grpInput.Controls.Add(this.lblPlayer1);
             this.grpInput.Controls.Add(this.cboGamePadMappings);
             this.grpInput.Controls.Add(this.chkEnableMapper);
             this.grpInput.Location = new System.Drawing.Point(5, 5);
             this.grpInput.Name = "grpInput";
-            this.grpInput.Size = new System.Drawing.Size(155, 103);
+            this.grpInput.Size = new System.Drawing.Size(155, 78);
             this.grpInput.TabIndex = 54;
             this.grpInput.TabStop = false;
             this.grpInput.Text = "Input";
@@ -245,7 +214,7 @@
             // btnDeleteMapping
             // 
             this.btnDeleteMapping.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteMapping.Image")));
-            this.btnDeleteMapping.Location = new System.Drawing.Point(125, 70);
+            this.btnDeleteMapping.Location = new System.Drawing.Point(125, 42);
             this.btnDeleteMapping.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteMapping.Name = "btnDeleteMapping";
             this.btnDeleteMapping.Size = new System.Drawing.Size(22, 22);
@@ -258,7 +227,7 @@
             this.cboGamePadMappings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboGamePadMappings.Enabled = false;
             this.cboGamePadMappings.FormattingEnabled = true;
-            this.cboGamePadMappings.Location = new System.Drawing.Point(5, 72);
+            this.cboGamePadMappings.Location = new System.Drawing.Point(5, 44);
             this.cboGamePadMappings.Margin = new System.Windows.Forms.Padding(2);
             this.cboGamePadMappings.Name = "cboGamePadMappings";
             this.cboGamePadMappings.Size = new System.Drawing.Size(113, 21);
@@ -327,7 +296,7 @@
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(117, 51);
+            this.lblVersion.Location = new System.Drawing.Point(112, 67);
             this.lblVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(42, 13);
@@ -337,7 +306,7 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(18, 69);
+            this.btnUpdate.Location = new System.Drawing.Point(13, 85);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(130, 21);
@@ -349,7 +318,7 @@
             // lblCurrentVersion
             // 
             this.lblCurrentVersion.AutoSize = true;
-            this.lblCurrentVersion.Location = new System.Drawing.Point(15, 51);
+            this.lblCurrentVersion.Location = new System.Drawing.Point(10, 67);
             this.lblCurrentVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCurrentVersion.Name = "lblCurrentVersion";
             this.lblCurrentVersion.Size = new System.Drawing.Size(82, 13);
@@ -359,31 +328,19 @@
             // grpShortcuts
             // 
             this.grpShortcuts.Controls.Add(this.btnEditCFG);
-            this.grpShortcuts.Controls.Add(this.btnOpenQKO);
             this.grpShortcuts.Controls.Add(this.btnJoyCpl);
-            this.grpShortcuts.Location = new System.Drawing.Point(6, 94);
+            this.grpShortcuts.Location = new System.Drawing.Point(9, 118);
             this.grpShortcuts.Margin = new System.Windows.Forms.Padding(2);
             this.grpShortcuts.Name = "grpShortcuts";
             this.grpShortcuts.Padding = new System.Windows.Forms.Padding(2);
-            this.grpShortcuts.Size = new System.Drawing.Size(150, 101);
+            this.grpShortcuts.Size = new System.Drawing.Size(150, 73);
             this.grpShortcuts.TabIndex = 12;
             this.grpShortcuts.TabStop = false;
             this.grpShortcuts.Text = "Shortcuts";
             // 
-            // btnOpenQKO
-            // 
-            this.btnOpenQKO.Location = new System.Drawing.Point(4, 45);
-            this.btnOpenQKO.Margin = new System.Windows.Forms.Padding(2);
-            this.btnOpenQKO.Name = "btnOpenQKO";
-            this.btnOpenQKO.Size = new System.Drawing.Size(142, 23);
-            this.btnOpenQKO.TabIndex = 5;
-            this.btnOpenQKO.Text = "Open qkoJAMMA Folder";
-            this.btnOpenQKO.UseVisualStyleBackColor = true;
-            this.btnOpenQKO.Click += new System.EventHandler(this.btnOpenQKO_Click);
-            // 
             // btnJoyCpl
             // 
-            this.btnJoyCpl.Location = new System.Drawing.Point(4, 72);
+            this.btnJoyCpl.Location = new System.Drawing.Point(4, 44);
             this.btnJoyCpl.Margin = new System.Windows.Forms.Padding(2);
             this.btnJoyCpl.Name = "btnJoyCpl";
             this.btnJoyCpl.Size = new System.Drawing.Size(142, 23);
@@ -421,16 +378,6 @@
             this.label1.TabIndex = 7;
             this.label1.Text = "Host FPS Limit";
             // 
-            // chkCustomCFG
-            // 
-            this.chkCustomCFG.AutoSize = true;
-            this.chkCustomCFG.Location = new System.Drawing.Point(10, 141);
-            this.chkCustomCFG.Name = "chkCustomCFG";
-            this.chkCustomCFG.Size = new System.Drawing.Size(113, 17);
-            this.chkCustomCFG.TabIndex = 57;
-            this.chkCustomCFG.Text = "Allow Custom CFG";
-            this.chkCustomCFG.UseVisualStyleBackColor = true;
-            // 
             // SettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -456,8 +403,6 @@
         }
 
         #endregion
-        private System.Windows.Forms.ComboBox cboPlayer1;
-        private System.Windows.Forms.Label lblPlayer1;
         private System.Windows.Forms.CheckBox chkEnableMapper;
         private System.Windows.Forms.Button btnGrabWindowSize;
         private System.Windows.Forms.TextBox txtWindowY;
@@ -473,7 +418,6 @@
         private System.Windows.Forms.Button btnSaveWindow;
         private System.Windows.Forms.TabPage tabAdvanced;
         private System.Windows.Forms.GroupBox grpShortcuts;
-        private System.Windows.Forms.Button btnOpenQKO;
         private System.Windows.Forms.Button btnJoyCpl;
         private System.Windows.Forms.Button btnSaveFPS;
         private System.Windows.Forms.NumericUpDown numHostFPS;
@@ -486,6 +430,5 @@
         private System.Windows.Forms.ComboBox cboRegion;
         private System.Windows.Forms.Label lblRegion;
         private System.Windows.Forms.GroupBox grpInput;
-        private System.Windows.Forms.CheckBox chkCustomCFG;
     }
 }

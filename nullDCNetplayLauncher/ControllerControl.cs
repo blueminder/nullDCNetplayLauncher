@@ -1644,10 +1644,14 @@ namespace nullDCNetplayLauncher
         {
             BackgroundWorker worker = (BackgroundWorker)sender;
             var button_index = 0;
-            if(!chkForceMapper.Checked)
-                ZDetected = false;
-            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
-                ZDetected = true;
+
+            // Turn on Keyboard Mapper by default
+            ZDetected = true;
+
+            //if(!chkForceMapper.Checked)
+                //ZDetected = false;
+            //if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+                //ZDetected = true;
             foreach (string button in buttonNames)
             {
                 worker.ReportProgress(button_index);

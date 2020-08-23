@@ -34,7 +34,6 @@
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnDPad = new System.Windows.Forms.Button();
             this.btnAnalog = new System.Windows.Forms.Button();
-            this.chkForceMapper = new System.Windows.Forms.CheckBox();
             this.btnSkip = new System.Windows.Forms.Button();
             this.btnTestKB = new System.Windows.Forms.Button();
             this.btnTestController = new System.Windows.Forms.Button();
@@ -118,18 +117,6 @@
             this.btnAnalog.Visible = false;
             this.btnAnalog.Click += new System.EventHandler(this.btnAnalog_Click);
             // 
-            // chkForceMapper
-            // 
-            this.chkForceMapper.AutoSize = true;
-            this.chkForceMapper.Location = new System.Drawing.Point(97, 288);
-            this.chkForceMapper.Margin = new System.Windows.Forms.Padding(2);
-            this.chkForceMapper.Name = "chkForceMapper";
-            this.chkForceMapper.Size = new System.Drawing.Size(140, 17);
-            this.chkForceMapper.TabIndex = 11;
-            this.chkForceMapper.Text = "Force Keyboard Mapper";
-            this.chkForceMapper.UseVisualStyleBackColor = true;
-            this.chkForceMapper.CheckedChanged += new System.EventHandler(this.chkForceMapper_CheckedChanged);
-            // 
             // btnSkip
             // 
             this.btnSkip.AutoSize = true;
@@ -174,7 +161,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnTestController);
             this.Controls.Add(this.btnSkip);
-            this.Controls.Add(this.chkForceMapper);
             this.Controls.Add(this.picArcadeStick);
             this.Controls.Add(this.btnSetup);
             this.Controls.Add(this.btnCancel);
@@ -201,7 +187,6 @@
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnDPad;
         private System.Windows.Forms.Button btnAnalog;
-        private System.Windows.Forms.CheckBox chkForceMapper;
         private System.Windows.Forms.Button btnSkip;
         private System.Windows.Forms.Button btnTestKB;
         private System.Windows.Forms.Button btnTestController;

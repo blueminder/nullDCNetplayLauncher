@@ -822,10 +822,13 @@ namespace nullDCNetplayLauncher
 
             string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
             string lcText = File.ReadAllText(launcherCfgPath);
+
+            /*
             if (!lcText.Contains("custom_cfg=1"))
             {
                 Launcher.RestoreNullDcCfg();
             }
+            */
 
             Launcher.RestoreNvmem();
             Launcher.CleanMalformedQjcFiles();

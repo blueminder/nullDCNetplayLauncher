@@ -34,9 +34,9 @@ namespace nullDCNetplayLauncher
         string backup_old;
         string player2_old;
 
-        string p1Entry;
-        string backupEntry;
-        string p2Entry;
+        //string p1Entry;
+        //string backupEntry;
+        //string p2Entry;
 
         private void SettingsForm_Load(object sender, EventArgs e)
         {
@@ -50,9 +50,9 @@ namespace nullDCNetplayLauncher
             //InputOptions["Keyboard"] = "keyboard";
             //InputOptions["Joystick 1"] = "joy1";
 
-            cboPlayer1.DataSource = new BindingSource(InputOptions, null);
-            cboPlayer1.DisplayMember = "Key";
-            cboPlayer1.ValueMember = "Value";
+            //cboPlayer1.DataSource = new BindingSource(InputOptions, null);
+            //cboPlayer1.DisplayMember = "Key";
+            //cboPlayer1.ValueMember = "Value";
 
             //p1Entry = player1_old.Split('=')[1];
             //backupEntry = backup_old.Split('=')[1];
@@ -88,8 +88,8 @@ namespace nullDCNetplayLauncher
                 chkEnableMapper.Checked = false;
             }
 
-            if (launcherText.Contains("custom_cfg=1"))
-                chkCustomCFG.Checked = true;
+            //if (launcherText.Contains("custom_cfg=1"))
+                //chkCustomCFG.Checked = true;
 
             Dictionary<string, string> RegionOptions = new Dictionary<string, string>();
             RegionOptions["Japan"] = "japan";
@@ -151,6 +151,7 @@ namespace nullDCNetplayLauncher
             string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
             string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
 
+            /*
             if(chkCustomCFG.Checked)
             {
                 if (!launcherText.Contains("custom_cfg"))
@@ -173,6 +174,7 @@ namespace nullDCNetplayLauncher
                     launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
                 }
             }
+            */
             
 
             if (chkEnableMapper.Checked)
@@ -205,24 +207,24 @@ namespace nullDCNetplayLauncher
             else
             {
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                if (cboPlayer1.SelectedValue.ToString() == "joy1")
-                    launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
+                //if (cboPlayer1.SelectedValue.ToString() == "joy1")
+                    //launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
                 var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
                 cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
                 NetplayLaunchForm.StopMapper();
             }
 
-            String p1_val = $"{cboPlayer1.SelectedValue}";
+            //String p1_val = $"{cboPlayer1.SelectedValue}";
 
-            if (p1_val.Length == 0)
-                p1_val = "NULL";
+            //if (p1_val.Length == 0)
+                //p1_val = "NULL";
 
             var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
             String region_val = $"{cboRegion.SelectedValue}";
 
-            cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
-            launcherText = launcherText.Replace(player1_old, "player1=" + p1_val);
+            //cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
+            //launcherText = launcherText.Replace(player1_old, "player1=" + p1_val);
             launcherText = launcherText.Replace(region_old, "region=" + region_val);
             File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
@@ -243,8 +245,8 @@ namespace nullDCNetplayLauncher
         {
             if (chkEnableMapper.Checked)
             {
-                cboPlayer1.Text = "Keyboard";
-                cboPlayer1.Enabled = false;
+                //cboPlayer1.Text = "Keyboard";
+                //cboPlayer1.Enabled = false;
                 cboGamePadMappings.Enabled = true;
                 if (Launcher.mappings.GamePadMappings.Count > 1)
                     btnDeleteMapping.Enabled = true;
@@ -252,7 +254,7 @@ namespace nullDCNetplayLauncher
             }
             else
             {
-                cboPlayer1.Enabled = true;
+                //cboPlayer1.Enabled = true;
                 cboGamePadMappings.Enabled = false;
                 btnDeleteMapping.Enabled = false;
                 NetplayLaunchForm.EnableMapper = false;
