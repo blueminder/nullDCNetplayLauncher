@@ -341,34 +341,39 @@ namespace nullDCNetplayLauncher
             }
 
             string[] launchercfglines = File.ReadAllLines(LauncherCfgPath);
-            string[] fpslines = File.ReadAllLines(AntilagPath);
             string[] lines = File.ReadAllLines(CfgPath);
 
-            var host_fps_line = launchercfglines.Where(s => s.Contains("host_fps=")).ToList().First();
-            var guest_fps_line = launchercfglines.Where(s => s.Contains("guest_fps=")).ToList().First();
-
-            var hostFpsEntry = host_fps_line.Split('=')[1];
-            var guestFpsEntry = guest_fps_line.Split('=')[1];
-
-            string fpslimitcfg = "FPSlimit=" + (isHost || !netplayEnabled ? hostFpsEntry : guestFpsEntry).ToString();
-            Console.WriteLine(fpslimitcfg);
-
-            // write to frame limiter
-            using (StreamWriter writer = new StreamWriter(AntilagPath))
+            if (File.Exists(AntilagPath))
             {
-                for (int i = 0; i < fpslines.Length; i++)
+                string[] fpslines = File.ReadAllLines(AntilagPath);
+
+                var host_fps_line = launchercfglines.Where(s => s.Contains("host_fps=")).ToList().First();
+                var guest_fps_line = launchercfglines.Where(s => s.Contains("guest_fps=")).ToList().First();
+
+                var hostFpsEntry = host_fps_line.Split('=')[1];
+                var guestFpsEntry = guest_fps_line.Split('=')[1];
+
+                string fpslimitcfg = "FPSlimit=" + (isHost || !netplayEnabled ? hostFpsEntry : guestFpsEntry).ToString();
+                Console.WriteLine(fpslimitcfg);
+
+                // write to frame limiter
+
+                using (StreamWriter writer = new StreamWriter(AntilagPath))
                 {
-                    if (fpslines[i].StartsWith("FPSlimit"))
+                    for (int i = 0; i < fpslines.Length; i++)
                     {
-                        writer.WriteLine(fpslimitcfg);
-                    }
-                    else
-                    {
-                        writer.WriteLine(fpslines[i]);
+                        if (fpslines[i].StartsWith("FPSlimit"))
+                        {
+                            writer.WriteLine(fpslimitcfg);
+                        }
+                        else
+                        {
+                            writer.WriteLine(fpslines[i]);
+                        }
                     }
                 }
             }
-
+            
             // write to nullDC.cfg
             using (StreamWriter writer = new StreamWriter(CfgPath))
             {

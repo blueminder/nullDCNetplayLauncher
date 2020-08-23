@@ -34,7 +34,6 @@ namespace nullDCNetplayLauncher
         }
 
         private ControllerEngine controller;
-        private Dictionary<string, string> KeyboardQkcMapping;
         private OpenTK.Input.GamePadState OTKOldState;
         private XInputDotNetPure.GamePadState XOldState;
 
@@ -42,7 +41,6 @@ namespace nullDCNetplayLauncher
         {
             controller = controllerEngine;
             StartClock();
-            KeyboardQkcMapping = ReadKeyboardQkc();
             System.Diagnostics.Debug.WriteLine(controller.CapabilitiesGamePad.ToString());
             //hWindow = Launcher.NullDCWindowHandle();
         }
@@ -362,7 +360,7 @@ namespace nullDCNetplayLauncher
         const byte KEY_I = 0x49;
         const byte KEY_O = 0x4F;
 
-        Dictionary<string, int> QkcMapping = Launcher.ReadFromQkc();
+        Dictionary<string, int> QkcMapping = ReadKeyboardQkc();
 
         private void CallButtonMapping(string button, bool push)
         {
@@ -411,19 +409,26 @@ namespace nullDCNetplayLauncher
             //}
         }
 
-        public Dictionary<string, string> ReadKeyboardQkc()
+        public static Dictionary<string, int> ReadKeyboardQkc()
         {
-            var keyboardQkcMapping = new Dictionary<string, string>();
-            string keyboardQkcPath = Launcher.rootDir + "nulldc-1-0-4-en-win\\qkoJAMMA\\Keyboard.qkc";
-            var keyboardQkcLines = File.ReadAllLines(keyboardQkcPath);
+            var ActiveKb = Launcher.ReadFromKBCFG();
+            var ActiveQkc = new Dictionary<string, int>();
 
-            foreach (string line in keyboardQkcLines)
-            {
-                var entry = line.Split('=');
-                keyboardQkcMapping.Add(entry[1], entry[0]);
-            }
+            ActiveQkc["Test"] = ActiveKb["BPortA_I_TEST_KEY_1"];
+            ActiveQkc["Start"] = ActiveKb["BPortA_I_START_KEY"];
+            ActiveQkc["Coin"] = ActiveKb["BPortA_I_COIN_KEY"];
+            ActiveQkc["Up"] = ActiveKb["BPortA_I_UP_KEY"];
+            ActiveQkc["Down"] = ActiveKb["BPortA_I_DOWN_KEY"];
+            ActiveQkc["Left"] = ActiveKb["BPortA_I_LEFT_KEY"];
+            ActiveQkc["Right"] = ActiveKb["BPortA_I_RIGHT_KEY"];
+            ActiveQkc["1"] = ActiveKb["BPortA_I_BTN0_KEY"];
+            ActiveQkc["2"] = ActiveKb["BPortA_I_BTN1_KEY"];
+            ActiveQkc["3"] = ActiveKb["BPortA_I_BTN2_KEY"];
+            ActiveQkc["4"] = ActiveKb["BPortA_I_BTN3_KEY"];
+            ActiveQkc["5"] = ActiveKb["BPortA_I_BTN4_KEY"];
+            ActiveQkc["6"] = ActiveKb["BPortA_I_BTN5_KEY"];
 
-            return keyboardQkcMapping;
+            return ActiveQkc;
         }
     }
 

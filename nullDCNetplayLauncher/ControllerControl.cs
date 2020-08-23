@@ -154,12 +154,12 @@ namespace nullDCNetplayLauncher
             {
                 lblController.Text = "Controller Detected";
             }
-            chkForceMapper.Visible = true;
+            //chkForceMapper.Visible = true;
 
-            if (NetplayLaunchForm.EnableMapper && Launcher.ActiveGamePadMapping.Name == JoystickName)
-            {
-                chkForceMapper.Checked = true;
-            }
+            //if (NetplayLaunchForm.EnableMapper && Launcher.ActiveGamePadMapping.Name == JoystickName)
+            //{
+                //chkForceMapper.Checked = true;
+            //}
 
             ActiveQjcDefinitions = ReadFromQjc();
             ActiveKb = Launcher.ReadFromKBCFG();
@@ -286,7 +286,7 @@ namespace nullDCNetplayLauncher
                 hideAllButtons();
                 showStartButtons();
                 //showSetupButtons();
-                chkForceMapper.Visible = true;
+                //chkForceMapper.Visible = true;
             }
         }
 
@@ -766,7 +766,7 @@ namespace nullDCNetplayLauncher
             {
                 if (DOldState.Buttons[i] != State.Buttons[i])
                 {
-                    if (TestModeActivated && chkForceMapper.Checked)
+                    if (TestModeActivated)
                     {
                         var gamepadButton = defaultDInputButtons[i+1];
                         if (State.Buttons[i] && !DOldState.Buttons[i] && mapping.ContainsKey(gamepadButton))
@@ -827,7 +827,7 @@ namespace nullDCNetplayLauncher
 
 
                     var qkoAssignment = $"hat_{hatNum}_{qkoDirection}";
-                    if (TestModeActivated && chkForceMapper.Checked && mapping.ContainsKey(CapitalizeFirstLetter(qkoDirection)) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
+                    if (TestModeActivated && mapping.ContainsKey(CapitalizeFirstLetter(qkoDirection)) && State.PointOfViewControllers[hatNum] != DOldState.PointOfViewControllers[hatNum])
                     {
                         
                         var dirs = new List<string> { "Up", "Down", "Left", "Right" };
@@ -1446,7 +1446,7 @@ namespace nullDCNetplayLauncher
                 //launcherText = launcherText.Replace(player1_old, "player1=keyboard");
                 //cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
-                successText = $"\nKeyboard Assignments Saved to Keyboard.qkc\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
+                successText = $"\nKeyboard Assignments Saved to nullDC.cfg\n\nExit any old instances of NullDC and \nclick \"Play Offline\" to test your controls.";
             }
             else
             {
@@ -1645,13 +1645,10 @@ namespace nullDCNetplayLauncher
             BackgroundWorker worker = (BackgroundWorker)sender;
             var button_index = 0;
 
-            // Turn on Keyboard Mapper by default
-            ZDetected = true;
-
             //if(!chkForceMapper.Checked)
                 //ZDetected = false;
-            //if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
-                //ZDetected = true;
+            if (XInputDotNetPure.GamePad.GetState(PlayerIndex.One).IsConnected)
+                ZDetected = true;
             foreach (string button in buttonNames)
             {
                 worker.ReportProgress(button_index);
@@ -1663,7 +1660,11 @@ namespace nullDCNetplayLauncher
                 OldState = args.GamePadState;
                 jOldState = args.JoystickState;
                 if (joystick != null)
+                {
+                    ZDetected = true;
                     DOldState = joystick.GetCurrentState();
+                }
+                    
 
                 if (!IsUnnamed)
                 {
@@ -1806,7 +1807,7 @@ namespace nullDCNetplayLauncher
             btnCancel.Visible = false;
             btnDPad.Visible = false;
             btnAnalog.Visible = false;
-            chkForceMapper.Visible = false;
+            //chkForceMapper.Visible = false;
             btnTestController.Visible = false;
             btnTestKB.Visible = false;
         }
@@ -1964,14 +1965,6 @@ namespace nullDCNetplayLauncher
             writer.Close();
         }
 
-        private void chkForceMapper_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chkForceMapper.Checked)
-            {
-                ZDetected = true;
-            }
-        }
-
         private void btnTestController_Click(object sender, EventArgs e)
         {
             ActivateTestController();
@@ -1983,21 +1976,21 @@ namespace nullDCNetplayLauncher
             lblController.Text = $"{TestDevice} Test Mode Activated";
             btnTestKB.Visible = true;
             btnTestController.Visible = false;
-            chkForceMapper.Visible = true;
+            //chkForceMapper.Visible = true;
         }
 
         private void btnTestKB_Click(object sender, EventArgs e)
         {
             ActivateTestKB();
             ZDetected = false;
-            chkForceMapper.Checked = false;
+            //chkForceMapper.Checked = false;
         }
 
         private void ActivateTestKB()
         {
             TestDevice = "Keyboard";
             lblController.Text = $"{TestDevice} Test Mode Activated";
-            chkForceMapper.Visible = false;
+            //chkForceMapper.Visible = false;
             btnTestKB.Visible = false;
             btnTestController.Visible = true;
         }

@@ -95,6 +95,23 @@ namespace nullDCNetplayLauncher
             RegionOptions["Japan"] = "japan";
             RegionOptions["USA"] = "usa";
 
+            if (File.Exists(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg.bak"))
+            {
+                chkEnableFrameLimiter.Checked = false;
+                lblHostFPS.Enabled = false;
+                numHostFPS.Enabled = false;
+                btnSaveFPS.Enabled = false;
+            }
+
+            if (File.Exists(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg"))
+            {
+                chkEnableFrameLimiter.Checked = true;
+                lblHostFPS.Enabled = true;
+                numHostFPS.Enabled = true;
+                btnSaveFPS.Enabled = true;
+            }
+
+
             cboRegion.DataSource = new BindingSource(RegionOptions, null);
             cboRegion.DisplayMember = "Key";
             cboRegion.ValueMember = "Value";
@@ -177,65 +194,52 @@ namespace nullDCNetplayLauncher
             */
             
 
-            if (chkEnableMapper.Checked)
+            launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
+            launcherText = launcherText.Replace("player1=joy1", "player1=keyboard");
+
+            //var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+            //cfgText = cfgText.Replace(player1_old, "player1=keyboard");
+
+            foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
             {
-                launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
-                launcherText = launcherText.Replace("player1=joy1", "player1=keyboard");
-
-                var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-                cfgText = cfgText.Replace(player1_old, "player1=keyboard");
-
-                foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
-                {
-                    mapping.Default = false;
-                }
-
-                ((GamePadMapping)cboGamePadMappings.SelectedValue).Default = true;
-
-                Launcher.ActiveGamePadMapping = (GamePadMapping)cboGamePadMappings.SelectedValue;
-
-                var path = Launcher.rootDir + "//GamePadMappingList.xml";
-                System.Xml.Serialization.XmlSerializer serializer =
-                    new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
-                StreamWriter writer = new StreamWriter(path);
-                serializer.Serialize(writer.BaseStream, Launcher.mappings);
-                writer.Close();
-
-                NetplayLaunchForm.StopMapper(true);
-                NetplayLaunchForm.StartMapper();
+                mapping.Default = false;
             }
-            else
-            {
-                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                //if (cboPlayer1.SelectedValue.ToString() == "joy1")
-                    //launcherText = launcherText.Replace("player1=keyboard", "player1=joy1");
-                var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-                cfgText = cfgText.Replace(player1_old, "player1=joy1");
 
-                NetplayLaunchForm.StopMapper();
-            }
+            ((GamePadMapping)cboGamePadMappings.SelectedValue).Default = true;
+
+            Launcher.ActiveGamePadMapping = (GamePadMapping)cboGamePadMappings.SelectedValue;
+
+            var path = Launcher.rootDir + "//GamePadMappingList.xml";
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
+            StreamWriter writer = new StreamWriter(path);
+            serializer.Serialize(writer.BaseStream, Launcher.mappings);
+            writer.Close();
+
+            NetplayLaunchForm.StopMapper(true);
+            NetplayLaunchForm.StartMapper();
 
             //String p1_val = $"{cboPlayer1.SelectedValue}";
 
             //if (p1_val.Length == 0)
                 //p1_val = "NULL";
 
-            var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
-            String region_val = $"{cboRegion.SelectedValue}";
+            //var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
+            //String region_val = $"{cboRegion.SelectedValue}";
 
             //cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
             //launcherText = launcherText.Replace(player1_old, "player1=" + p1_val);
-            launcherText = launcherText.Replace(region_old, "region=" + region_val);
-            File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            //launcherText = launcherText.Replace(region_old, "region=" + region_val);
+            //File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
             File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
 
             // reload from file
-            cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
-            player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
+            //cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+            //player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+            //backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
+            //player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
 
-            Launcher.LoadRegionSettings();
+            //Launcher.LoadRegionSettings();
             Launcher.RestoreFiles();
 
             MessageBox.Show("Main Settings Successfully Saved");
@@ -342,5 +346,27 @@ namespace nullDCNetplayLauncher
             NetplayLaunchForm.launcher.UpdateLauncher(false);
         }
 
+        private void chkEnableFrameLimiter_CheckedChanged(object sender, EventArgs e)
+        {
+            bool enabled;
+
+            if (chkEnableFrameLimiter.Checked)
+            {
+                if (File.Exists(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg.bak"))
+                    File.Move(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg.bak", Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg");
+                enabled = true;
+            }
+            else
+            {
+                if(File.Exists(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg"))
+                    File.Move(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg", Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg.bak");
+                enabled = false;
+            }
+
+            chkEnableFrameLimiter.Checked = enabled;
+            lblHostFPS.Enabled = enabled;
+            numHostFPS.Enabled = enabled;
+            btnSaveFPS.Enabled = enabled;
+        }
     }
 }
