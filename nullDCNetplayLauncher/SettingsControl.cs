@@ -96,7 +96,7 @@ namespace nullDCNetplayLauncher
                 chkEnableFrameLimiter.Checked = false;
                 lblHostFPS.Enabled = false;
                 numHostFPS.Enabled = false;
-                btnSaveFPS.Enabled = false;
+                //btnSaveFPS.Enabled = false;
             }
 
             if (File.Exists(Launcher.rootDir + "nulldc-1-0-4-en-win\\antilag.cfg"))
@@ -104,7 +104,7 @@ namespace nullDCNetplayLauncher
                 chkEnableFrameLimiter.Checked = true;
                 lblHostFPS.Enabled = true;
                 numHostFPS.Enabled = true;
-                btnSaveFPS.Enabled = true;
+                //btnSaveFPS.Enabled = true;
             }
 
 
@@ -335,12 +335,12 @@ namespace nullDCNetplayLauncher
             chkEnableFrameLimiter.Checked = enabled;
             lblHostFPS.Enabled = enabled;
             numHostFPS.Enabled = enabled;
-            btnSaveFPS.Enabled = enabled;
+            //btnSaveFPS.Enabled = enabled;
         }
 
         private void cboRegion_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cboRegion.SelectedValue != "")
+            if (cboRegion.SelectedValue != "")
             {
                 string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
                 string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
@@ -366,6 +366,35 @@ namespace nullDCNetplayLauncher
                 }
                 File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
             }
+        }
+
+        private void rdoDefault_CheckedChanged(object sender, EventArgs e)
+        {
+            var width = Convert.ToInt32(txtWindowX.Text);
+            var height = Convert.ToInt32(txtWindowY.Text);
+
+            Launcher.SaveWindowSettings(0, width, height);
+        }
+
+        private void rdoStartMax_CheckedChanged(object sender, EventArgs e)
+        {
+            var width = Convert.ToInt32(txtWindowX.Text);
+            var height = Convert.ToInt32(txtWindowY.Text);
+
+            Launcher.SaveWindowSettings(0, width, height, 1);
+        }
+
+        private void rdoCustomSize_CheckedChanged(object sender, EventArgs e)
+        {
+            var width = Convert.ToInt32(txtWindowX.Text);
+            var height = Convert.ToInt32(txtWindowY.Text);
+
+            Launcher.SaveWindowSettings(1, width, height);
+        }
+
+        private void numHostFPS_ValueChanged(object sender, EventArgs e)
+        {
+            Launcher.SaveFpsSettings(Convert.ToInt32(numHostFPS.Value), 90);
         }
     }
 }

@@ -48,15 +48,14 @@
             this.btnDeleteMapping = new System.Windows.Forms.Button();
             this.cboGamePadMappings = new System.Windows.Forms.ComboBox();
             this.tabWindow = new System.Windows.Forms.TabPage();
-            this.btnSaveWindow = new System.Windows.Forms.Button();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
             this.grpFrameLimiter = new System.Windows.Forms.GroupBox();
             this.chkEnableFrameLimiter = new System.Windows.Forms.CheckBox();
             this.lblHostFPS = new System.Windows.Forms.Label();
             this.numHostFPS = new System.Windows.Forms.NumericUpDown();
-            this.btnSaveFPS = new System.Windows.Forms.Button();
             this.grpShortcuts = new System.Windows.Forms.GroupBox();
             this.btnJoyCpl = new System.Windows.Forms.Button();
+            this.grpUpdate = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
             this.grpInput.SuspendLayout();
@@ -65,12 +64,13 @@
             this.grpFrameLimiter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
             this.grpShortcuts.SuspendLayout();
+            this.grpUpdate.SuspendLayout();
             this.SuspendLayout();
             // 
             // chkEnableMapper
             // 
             this.chkEnableMapper.AutoSize = true;
-            this.chkEnableMapper.Location = new System.Drawing.Point(8, 23);
+            this.chkEnableMapper.Location = new System.Drawing.Point(8, 18);
             this.chkEnableMapper.Margin = new System.Windows.Forms.Padding(2);
             this.chkEnableMapper.Name = "chkEnableMapper";
             this.chkEnableMapper.Size = new System.Drawing.Size(146, 17);
@@ -83,7 +83,7 @@
             // 
             this.rdoDefault.AutoSize = true;
             this.rdoDefault.Checked = true;
-            this.rdoDefault.Location = new System.Drawing.Point(11, 5);
+            this.rdoDefault.Location = new System.Drawing.Point(11, 15);
             this.rdoDefault.Margin = new System.Windows.Forms.Padding(2);
             this.rdoDefault.Name = "rdoDefault";
             this.rdoDefault.Size = new System.Drawing.Size(59, 17);
@@ -91,32 +91,35 @@
             this.rdoDefault.TabStop = true;
             this.rdoDefault.Text = "Default";
             this.rdoDefault.UseVisualStyleBackColor = true;
+            this.rdoDefault.CheckedChanged += new System.EventHandler(this.rdoDefault_CheckedChanged);
             // 
             // rdoStartMax
             // 
             this.rdoStartMax.AutoSize = true;
-            this.rdoStartMax.Location = new System.Drawing.Point(11, 29);
+            this.rdoStartMax.Location = new System.Drawing.Point(11, 39);
             this.rdoStartMax.Margin = new System.Windows.Forms.Padding(2);
             this.rdoStartMax.Name = "rdoStartMax";
             this.rdoStartMax.Size = new System.Drawing.Size(99, 17);
             this.rdoStartMax.TabIndex = 1;
             this.rdoStartMax.Text = "Start Maximized";
             this.rdoStartMax.UseVisualStyleBackColor = true;
+            this.rdoStartMax.CheckedChanged += new System.EventHandler(this.rdoStartMax_CheckedChanged);
             // 
             // rdoCustomSize
             // 
             this.rdoCustomSize.AutoSize = true;
-            this.rdoCustomSize.Location = new System.Drawing.Point(11, 54);
+            this.rdoCustomSize.Location = new System.Drawing.Point(11, 64);
             this.rdoCustomSize.Margin = new System.Windows.Forms.Padding(2);
             this.rdoCustomSize.Name = "rdoCustomSize";
             this.rdoCustomSize.Size = new System.Drawing.Size(83, 17);
             this.rdoCustomSize.TabIndex = 2;
             this.rdoCustomSize.Text = "Custom Size";
             this.rdoCustomSize.UseVisualStyleBackColor = true;
+            this.rdoCustomSize.CheckedChanged += new System.EventHandler(this.rdoCustomSize_CheckedChanged);
             // 
             // txtWindowX
             // 
-            this.txtWindowX.Location = new System.Drawing.Point(33, 76);
+            this.txtWindowX.Location = new System.Drawing.Point(33, 86);
             this.txtWindowX.Margin = new System.Windows.Forms.Padding(2);
             this.txtWindowX.Name = "txtWindowX";
             this.txtWindowX.Size = new System.Drawing.Size(31, 20);
@@ -126,7 +129,7 @@
             // 
             // txtWindowY
             // 
-            this.txtWindowY.Location = new System.Drawing.Point(67, 76);
+            this.txtWindowY.Location = new System.Drawing.Point(67, 86);
             this.txtWindowY.Margin = new System.Windows.Forms.Padding(2);
             this.txtWindowY.Name = "txtWindowY";
             this.txtWindowY.Size = new System.Drawing.Size(31, 20);
@@ -136,7 +139,7 @@
             // 
             // btnGrabWindowSize
             // 
-            this.btnGrabWindowSize.Location = new System.Drawing.Point(104, 75);
+            this.btnGrabWindowSize.Location = new System.Drawing.Point(104, 85);
             this.btnGrabWindowSize.Margin = new System.Windows.Forms.Padding(2);
             this.btnGrabWindowSize.Name = "btnGrabWindowSize";
             this.btnGrabWindowSize.Size = new System.Drawing.Size(49, 20);
@@ -171,9 +174,7 @@
             // 
             // tabInput
             // 
-            this.tabInput.Controls.Add(this.lblVersion);
-            this.tabInput.Controls.Add(this.btnUpdate);
-            this.tabInput.Controls.Add(this.lblCurrentVersion);
+            this.tabInput.Controls.Add(this.grpUpdate);
             this.tabInput.Controls.Add(this.cboRegion);
             this.tabInput.Controls.Add(this.lblRegion);
             this.tabInput.Controls.Add(this.grpInput);
@@ -190,7 +191,7 @@
             // 
             this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(112, 86);
+            this.lblVersion.Location = new System.Drawing.Point(107, 16);
             this.lblVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblVersion.Name = "lblVersion";
             this.lblVersion.Size = new System.Drawing.Size(42, 13);
@@ -200,10 +201,10 @@
             // 
             // btnUpdate
             // 
-            this.btnUpdate.Location = new System.Drawing.Point(13, 104);
+            this.btnUpdate.Location = new System.Drawing.Point(5, 37);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(130, 21);
+            this.btnUpdate.Size = new System.Drawing.Size(142, 21);
             this.btnUpdate.TabIndex = 58;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
@@ -211,7 +212,7 @@
             // lblCurrentVersion
             // 
             this.lblCurrentVersion.AutoSize = true;
-            this.lblCurrentVersion.Location = new System.Drawing.Point(10, 86);
+            this.lblCurrentVersion.Location = new System.Drawing.Point(5, 16);
             this.lblCurrentVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblCurrentVersion.Name = "lblCurrentVersion";
             this.lblCurrentVersion.Size = new System.Drawing.Size(82, 13);
@@ -221,7 +222,7 @@
             // cboRegion
             // 
             this.cboRegion.FormattingEnabled = true;
-            this.cboRegion.Location = new System.Drawing.Point(89, 141);
+            this.cboRegion.Location = new System.Drawing.Point(86, 91);
             this.cboRegion.Name = "cboRegion";
             this.cboRegion.Size = new System.Drawing.Size(66, 21);
             this.cboRegion.TabIndex = 56;
@@ -230,7 +231,7 @@
             // lblRegion
             // 
             this.lblRegion.AutoSize = true;
-            this.lblRegion.Location = new System.Drawing.Point(10, 144);
+            this.lblRegion.Location = new System.Drawing.Point(7, 94);
             this.lblRegion.Name = "lblRegion";
             this.lblRegion.Size = new System.Drawing.Size(74, 13);
             this.lblRegion.TabIndex = 55;
@@ -243,7 +244,7 @@
             this.grpInput.Controls.Add(this.chkEnableMapper);
             this.grpInput.Location = new System.Drawing.Point(5, 5);
             this.grpInput.Name = "grpInput";
-            this.grpInput.Size = new System.Drawing.Size(155, 78);
+            this.grpInput.Size = new System.Drawing.Size(155, 71);
             this.grpInput.TabIndex = 54;
             this.grpInput.TabStop = false;
             this.grpInput.Text = "Input";
@@ -251,7 +252,7 @@
             // btnDeleteMapping
             // 
             this.btnDeleteMapping.Image = ((System.Drawing.Image)(resources.GetObject("btnDeleteMapping.Image")));
-            this.btnDeleteMapping.Location = new System.Drawing.Point(125, 42);
+            this.btnDeleteMapping.Location = new System.Drawing.Point(125, 38);
             this.btnDeleteMapping.Margin = new System.Windows.Forms.Padding(2);
             this.btnDeleteMapping.Name = "btnDeleteMapping";
             this.btnDeleteMapping.Size = new System.Drawing.Size(22, 22);
@@ -264,7 +265,7 @@
             this.cboGamePadMappings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboGamePadMappings.Enabled = false;
             this.cboGamePadMappings.FormattingEnabled = true;
-            this.cboGamePadMappings.Location = new System.Drawing.Point(5, 44);
+            this.cboGamePadMappings.Location = new System.Drawing.Point(5, 39);
             this.cboGamePadMappings.Margin = new System.Windows.Forms.Padding(2);
             this.cboGamePadMappings.Name = "cboGamePadMappings";
             this.cboGamePadMappings.Size = new System.Drawing.Size(113, 21);
@@ -273,7 +274,6 @@
             // 
             // tabWindow
             // 
-            this.tabWindow.Controls.Add(this.btnSaveWindow);
             this.tabWindow.Controls.Add(this.btnGrabWindowSize);
             this.tabWindow.Controls.Add(this.rdoDefault);
             this.tabWindow.Controls.Add(this.txtWindowX);
@@ -288,17 +288,6 @@
             this.tabWindow.TabIndex = 1;
             this.tabWindow.Text = "Window";
             this.tabWindow.UseVisualStyleBackColor = true;
-            // 
-            // btnSaveWindow
-            // 
-            this.btnSaveWindow.Location = new System.Drawing.Point(12, 174);
-            this.btnSaveWindow.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSaveWindow.Name = "btnSaveWindow";
-            this.btnSaveWindow.Size = new System.Drawing.Size(141, 19);
-            this.btnSaveWindow.TabIndex = 6;
-            this.btnSaveWindow.Text = "Save";
-            this.btnSaveWindow.UseVisualStyleBackColor = true;
-            this.btnSaveWindow.Click += new System.EventHandler(this.btnSaveWindow_Click);
             // 
             // tabAdvanced
             // 
@@ -318,11 +307,10 @@
             this.grpFrameLimiter.Controls.Add(this.chkEnableFrameLimiter);
             this.grpFrameLimiter.Controls.Add(this.lblHostFPS);
             this.grpFrameLimiter.Controls.Add(this.numHostFPS);
-            this.grpFrameLimiter.Controls.Add(this.btnSaveFPS);
             this.grpFrameLimiter.Cursor = System.Windows.Forms.Cursors.Default;
-            this.grpFrameLimiter.Location = new System.Drawing.Point(6, 9);
+            this.grpFrameLimiter.Location = new System.Drawing.Point(6, 19);
             this.grpFrameLimiter.Name = "grpFrameLimiter";
-            this.grpFrameLimiter.Size = new System.Drawing.Size(154, 90);
+            this.grpFrameLimiter.Size = new System.Drawing.Size(154, 68);
             this.grpFrameLimiter.TabIndex = 17;
             this.grpFrameLimiter.TabStop = false;
             this.grpFrameLimiter.Text = "Frame Limiter";
@@ -343,7 +331,7 @@
             // lblHostFPS
             // 
             this.lblHostFPS.AutoSize = true;
-            this.lblHostFPS.Location = new System.Drawing.Point(3, 39);
+            this.lblHostFPS.Location = new System.Drawing.Point(3, 44);
             this.lblHostFPS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblHostFPS.Name = "lblHostFPS";
             this.lblHostFPS.Size = new System.Drawing.Size(76, 13);
@@ -352,32 +340,22 @@
             // 
             // numHostFPS
             // 
-            this.numHostFPS.Location = new System.Drawing.Point(109, 37);
+            this.numHostFPS.Location = new System.Drawing.Point(111, 42);
             this.numHostFPS.Margin = new System.Windows.Forms.Padding(2);
             this.numHostFPS.Name = "numHostFPS";
             this.numHostFPS.Size = new System.Drawing.Size(35, 20);
             this.numHostFPS.TabIndex = 9;
-            // 
-            // btnSaveFPS
-            // 
-            this.btnSaveFPS.Location = new System.Drawing.Point(2, 61);
-            this.btnSaveFPS.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSaveFPS.Name = "btnSaveFPS";
-            this.btnSaveFPS.Size = new System.Drawing.Size(142, 21);
-            this.btnSaveFPS.TabIndex = 11;
-            this.btnSaveFPS.Text = "Save FPS Limit";
-            this.btnSaveFPS.UseVisualStyleBackColor = true;
-            this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
+            this.numHostFPS.ValueChanged += new System.EventHandler(this.numHostFPS_ValueChanged);
             // 
             // grpShortcuts
             // 
             this.grpShortcuts.Controls.Add(this.btnEditCFG);
             this.grpShortcuts.Controls.Add(this.btnJoyCpl);
-            this.grpShortcuts.Location = new System.Drawing.Point(4, 113);
+            this.grpShortcuts.Location = new System.Drawing.Point(6, 109);
             this.grpShortcuts.Margin = new System.Windows.Forms.Padding(2);
             this.grpShortcuts.Name = "grpShortcuts";
             this.grpShortcuts.Padding = new System.Windows.Forms.Padding(2);
-            this.grpShortcuts.Size = new System.Drawing.Size(156, 73);
+            this.grpShortcuts.Size = new System.Drawing.Size(156, 67);
             this.grpShortcuts.TabIndex = 12;
             this.grpShortcuts.TabStop = false;
             this.grpShortcuts.Text = "Shortcuts";
@@ -392,6 +370,17 @@
             this.btnJoyCpl.Text = "Windows Game Controllers";
             this.btnJoyCpl.UseVisualStyleBackColor = true;
             this.btnJoyCpl.Click += new System.EventHandler(this.btnJoyCpl_Click);
+            // 
+            // grpUpdate
+            // 
+            this.grpUpdate.Controls.Add(this.btnUpdate);
+            this.grpUpdate.Controls.Add(this.lblVersion);
+            this.grpUpdate.Controls.Add(this.lblCurrentVersion);
+            this.grpUpdate.Location = new System.Drawing.Point(5, 126);
+            this.grpUpdate.Name = "grpUpdate";
+            this.grpUpdate.Size = new System.Drawing.Size(154, 63);
+            this.grpUpdate.TabIndex = 60;
+            this.grpUpdate.TabStop = false;
             // 
             // SettingsControl
             // 
@@ -414,6 +403,8 @@
             this.grpFrameLimiter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
             this.grpShortcuts.ResumeLayout(false);
+            this.grpUpdate.ResumeLayout(false);
+            this.grpUpdate.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -430,11 +421,9 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabInput;
         private System.Windows.Forms.TabPage tabWindow;
-        private System.Windows.Forms.Button btnSaveWindow;
         private System.Windows.Forms.TabPage tabAdvanced;
         private System.Windows.Forms.GroupBox grpShortcuts;
         private System.Windows.Forms.Button btnJoyCpl;
-        private System.Windows.Forms.Button btnSaveFPS;
         private System.Windows.Forms.NumericUpDown numHostFPS;
         private System.Windows.Forms.Label lblHostFPS;
         private System.Windows.Forms.ComboBox cboGamePadMappings;
@@ -447,5 +436,6 @@
         private System.Windows.Forms.Label lblCurrentVersion;
         private System.Windows.Forms.CheckBox chkEnableFrameLimiter;
         private System.Windows.Forms.GroupBox grpFrameLimiter;
+        private System.Windows.Forms.GroupBox grpUpdate;
     }
 }
