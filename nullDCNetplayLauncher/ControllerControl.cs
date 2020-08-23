@@ -77,6 +77,7 @@ namespace nullDCNetplayLauncher
         string TestDevice;
 
         Dictionary<string, int> ActiveQkc;
+        Dictionary<string, int> ActiveKb;
 
         public ControllerControl(ControllerEngine controllerEngine)
         {
@@ -130,6 +131,23 @@ namespace nullDCNetplayLauncher
             }
         }
 
+        private void AssignActiveQkc()
+        {
+            ActiveQkc["Test"] = ActiveKb["BPortA_I_TEST_KEY_1"];
+            ActiveQkc["Start"] = ActiveKb["BPortA_I_START_KEY"];
+            ActiveQkc["Coin"] = ActiveKb["BPortA_I_COIN_KEY"];
+            ActiveQkc["Up"] = ActiveKb["BPortA_I_UP_KEY"];
+            ActiveQkc["Down"] = ActiveKb["BPortA_I_DOWN_KEY"];
+            ActiveQkc["Left"] = ActiveKb["BPortA_I_LEFT_KEY"];
+            ActiveQkc["Right"] = ActiveKb["BPortA_I_RIGHT_KEY"];
+            ActiveQkc["1"] = ActiveKb["BPortA_I_BTN0_KEY"];
+            ActiveQkc["2"] = ActiveKb["BPortA_I_BTN1_KEY"];
+            ActiveQkc["3"] = ActiveKb["BPortA_I_BTN2_KEY"];
+            ActiveQkc["4"] = ActiveKb["BPortA_I_BTN3_KEY"];
+            ActiveQkc["5"] = ActiveKb["BPortA_I_BTN4_KEY"];
+            ActiveQkc["6"] = ActiveKb["BPortA_I_BTN5_KEY"];
+        }
+
         private void ControllerControl_Load(object sender, EventArgs e)
         {   
             if(controller.CapabilitiesGamePad.GamePadType.Equals(GamePadType.GamePad))
@@ -144,8 +162,12 @@ namespace nullDCNetplayLauncher
             }
 
             ActiveQjcDefinitions = ReadFromQjc();
-            ActiveQkc = Launcher.ReadFromQkc();
+            ActiveKb = Launcher.ReadFromKBCFG();
+            ActiveQkc = new Dictionary<string, int>();
 
+            AssignActiveQkc();
+            //ActiveQkc = Launcher.ReadFromQkc();
+            
             if (Joy1Enabled() || NetplayLaunchForm.EnableMapper)
             {
                 ActivateTestController();
@@ -1418,7 +1440,9 @@ namespace nullDCNetplayLauncher
 
                 TestDevice = "Keyboard";
                 launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
-                ActiveQkc = Launcher.ReadFromQkc();
+                //ActiveQkc = Launcher.ReadFromQkc();
+                ActiveKb = Launcher.ReadFromKBCFG();
+                AssignActiveQkc();
                 //launcherText = launcherText.Replace(player1_old, "player1=keyboard");
                 //cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 

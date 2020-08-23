@@ -958,6 +958,45 @@ namespace nullDCNetplayLauncher
             return qkcDefinitions;
         }
 
+        public static Dictionary<string, int> ReadFromKBCFG()
+        {
+            var expectedkbPath = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "nullDC.cfg");
+
+            if (!File.Exists(expectedkbPath))
+            {
+                Launcher.RestoreNullDcCfg();
+            }
+            // depending on controller and system, qkoJAMMA applies underscores or spaces to filename
+            // either format is acceptable
+            var kbDefinitions = new Dictionary<string, int>();
+            var kbPath = "";
+            if (File.Exists(expectedkbPath))
+                kbPath = expectedkbPath;
+            else
+                kbPath = null;
+
+            if (kbPath != null)
+            {
+                string[] kbLines = File.ReadAllLines(kbPath).Where(x => x.StartsWith("BPortA_I_")).ToArray();
+                foreach (string line in kbLines)
+                {
+                    string key = line.Split('=')[0];
+                    string value = line.Split('=')[1];
+
+                    int result;
+                    int.TryParse(value, out result);
+
+                    if (value != "" && !kbDefinitions.ContainsKey(key))
+                    {
+                        kbDefinitions[key] = result;
+
+                    }
+                }
+            }
+
+            return kbDefinitions;
+        }
+
         public class Game
         {
             [JsonProperty("gameid")]

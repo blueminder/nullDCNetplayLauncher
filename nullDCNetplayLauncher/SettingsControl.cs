@@ -41,24 +41,24 @@ namespace nullDCNetplayLauncher
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
-            player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
+            //player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
+            //backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
+            //player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
             
             Dictionary<string, string> InputOptions = new Dictionary<string, string>();
             InputOptions[""] = "";
-            InputOptions["Keyboard"] = "keyboard";
-            InputOptions["Joystick 1"] = "joy1";
+            //InputOptions["Keyboard"] = "keyboard";
+            //InputOptions["Joystick 1"] = "joy1";
 
             cboPlayer1.DataSource = new BindingSource(InputOptions, null);
             cboPlayer1.DisplayMember = "Key";
             cboPlayer1.ValueMember = "Value";
 
-            p1Entry = player1_old.Split('=')[1];
-            backupEntry = backup_old.Split('=')[1];
-            p2Entry = player2_old.Split('=')[1];
+            //p1Entry = player1_old.Split('=')[1];
+            //backupEntry = backup_old.Split('=')[1];
+            //p2Entry = player2_old.Split('=')[1];
 
-            cboPlayer1.SelectedValue = p1Entry;
+            //cboPlayer1.SelectedValue = p1Entry;
 
             var windowSettings = Launcher.LoadWindowSettings();
             if (windowSettings[3] == 1)
