@@ -17,7 +17,7 @@ namespace nullDCNetplayLauncher
         Dictionary<String, String> romDict;
         ConnectionPresetList presets;
         
-        UserControl sc = new SettingsControl();
+        SettingsControl sc = new SettingsControl();
 
         public static ControllerEngine controller;
         public static GamePadMapper gpm;
@@ -374,9 +374,10 @@ namespace nullDCNetplayLauncher
                 MinimizeBox = false,
                 ClientSize = sc.Size,
                 Icon = nullDCNetplayLauncher.Properties.Resources.settings
-        };
+            };
 
             window.Controls.Add(sc);
+            window.FormClosing += new System.Windows.Forms.FormClosingEventHandler(sc.SettingsForm_Closing);
             sc.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             window.ShowDialog();
         }

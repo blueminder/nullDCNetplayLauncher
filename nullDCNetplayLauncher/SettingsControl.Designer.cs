@@ -39,33 +39,32 @@
             this.btnEditCFG = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabInput = new System.Windows.Forms.TabPage();
+            this.lblVersion = new System.Windows.Forms.Label();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.lblCurrentVersion = new System.Windows.Forms.Label();
             this.cboRegion = new System.Windows.Forms.ComboBox();
             this.lblRegion = new System.Windows.Forms.Label();
             this.grpInput = new System.Windows.Forms.GroupBox();
             this.btnDeleteMapping = new System.Windows.Forms.Button();
             this.cboGamePadMappings = new System.Windows.Forms.ComboBox();
-            this.btnSaveInput = new System.Windows.Forms.Button();
             this.tabWindow = new System.Windows.Forms.TabPage();
             this.btnSaveWindow = new System.Windows.Forms.Button();
             this.tabAdvanced = new System.Windows.Forms.TabPage();
+            this.grpFrameLimiter = new System.Windows.Forms.GroupBox();
+            this.chkEnableFrameLimiter = new System.Windows.Forms.CheckBox();
+            this.lblHostFPS = new System.Windows.Forms.Label();
+            this.numHostFPS = new System.Windows.Forms.NumericUpDown();
+            this.btnSaveFPS = new System.Windows.Forms.Button();
             this.grpShortcuts = new System.Windows.Forms.GroupBox();
             this.btnJoyCpl = new System.Windows.Forms.Button();
-            this.btnSaveFPS = new System.Windows.Forms.Button();
-            this.numHostFPS = new System.Windows.Forms.NumericUpDown();
-            this.lblHostFPS = new System.Windows.Forms.Label();
-            this.chkEnableFrameLimiter = new System.Windows.Forms.CheckBox();
-            this.lblVersion = new System.Windows.Forms.Label();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.lblCurrentVersion = new System.Windows.Forms.Label();
-            this.grpFrameLimiter = new System.Windows.Forms.GroupBox();
             this.tabControl1.SuspendLayout();
             this.tabInput.SuspendLayout();
             this.grpInput.SuspendLayout();
             this.tabWindow.SuspendLayout();
             this.tabAdvanced.SuspendLayout();
-            this.grpShortcuts.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
             this.grpFrameLimiter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).BeginInit();
+            this.grpShortcuts.SuspendLayout();
             this.SuspendLayout();
             // 
             // chkEnableMapper
@@ -178,7 +177,6 @@
             this.tabInput.Controls.Add(this.cboRegion);
             this.tabInput.Controls.Add(this.lblRegion);
             this.tabInput.Controls.Add(this.grpInput);
-            this.tabInput.Controls.Add(this.btnSaveInput);
             this.tabInput.Location = new System.Drawing.Point(4, 22);
             this.tabInput.Margin = new System.Windows.Forms.Padding(2);
             this.tabInput.Name = "tabInput";
@@ -188,6 +186,38 @@
             this.tabInput.Text = "Main";
             this.tabInput.UseVisualStyleBackColor = true;
             // 
+            // lblVersion
+            // 
+            this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblVersion.AutoSize = true;
+            this.lblVersion.Location = new System.Drawing.Point(112, 86);
+            this.lblVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblVersion.Name = "lblVersion";
+            this.lblVersion.Size = new System.Drawing.Size(42, 13);
+            this.lblVersion.TabIndex = 59;
+            this.lblVersion.Text = "Version";
+            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.Location = new System.Drawing.Point(13, 104);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(130, 21);
+            this.btnUpdate.TabIndex = 58;
+            this.btnUpdate.Text = "Update";
+            this.btnUpdate.UseVisualStyleBackColor = true;
+            // 
+            // lblCurrentVersion
+            // 
+            this.lblCurrentVersion.AutoSize = true;
+            this.lblCurrentVersion.Location = new System.Drawing.Point(10, 86);
+            this.lblCurrentVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblCurrentVersion.Name = "lblCurrentVersion";
+            this.lblCurrentVersion.Size = new System.Drawing.Size(82, 13);
+            this.lblCurrentVersion.TabIndex = 57;
+            this.lblCurrentVersion.Text = "Current Version:";
+            // 
             // cboRegion
             // 
             this.cboRegion.FormattingEnabled = true;
@@ -195,6 +225,7 @@
             this.cboRegion.Name = "cboRegion";
             this.cboRegion.Size = new System.Drawing.Size(66, 21);
             this.cboRegion.TabIndex = 56;
+            this.cboRegion.SelectedIndexChanged += new System.EventHandler(this.cboRegion_SelectedIndexChanged);
             // 
             // lblRegion
             // 
@@ -240,17 +271,6 @@
             this.cboGamePadMappings.TabIndex = 12;
             this.cboGamePadMappings.SelectedIndexChanged += new System.EventHandler(this.cboGamePadMappings_SelectedIndexChanged);
             // 
-            // btnSaveInput
-            // 
-            this.btnSaveInput.Location = new System.Drawing.Point(12, 174);
-            this.btnSaveInput.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSaveInput.Name = "btnSaveInput";
-            this.btnSaveInput.Size = new System.Drawing.Size(141, 19);
-            this.btnSaveInput.TabIndex = 11;
-            this.btnSaveInput.Text = "Save";
-            this.btnSaveInput.UseVisualStyleBackColor = true;
-            this.btnSaveInput.Click += new System.EventHandler(this.btnSaveInput_Click);
-            // 
             // tabWindow
             // 
             this.tabWindow.Controls.Add(this.btnSaveWindow);
@@ -293,6 +313,62 @@
             this.tabAdvanced.Text = "Advanced";
             this.tabAdvanced.UseVisualStyleBackColor = true;
             // 
+            // grpFrameLimiter
+            // 
+            this.grpFrameLimiter.Controls.Add(this.chkEnableFrameLimiter);
+            this.grpFrameLimiter.Controls.Add(this.lblHostFPS);
+            this.grpFrameLimiter.Controls.Add(this.numHostFPS);
+            this.grpFrameLimiter.Controls.Add(this.btnSaveFPS);
+            this.grpFrameLimiter.Cursor = System.Windows.Forms.Cursors.Default;
+            this.grpFrameLimiter.Location = new System.Drawing.Point(6, 9);
+            this.grpFrameLimiter.Name = "grpFrameLimiter";
+            this.grpFrameLimiter.Size = new System.Drawing.Size(154, 90);
+            this.grpFrameLimiter.TabIndex = 17;
+            this.grpFrameLimiter.TabStop = false;
+            this.grpFrameLimiter.Text = "Frame Limiter";
+            // 
+            // chkEnableFrameLimiter
+            // 
+            this.chkEnableFrameLimiter.AutoSize = true;
+            this.chkEnableFrameLimiter.Checked = true;
+            this.chkEnableFrameLimiter.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkEnableFrameLimiter.Location = new System.Drawing.Point(6, 19);
+            this.chkEnableFrameLimiter.Name = "chkEnableFrameLimiter";
+            this.chkEnableFrameLimiter.Size = new System.Drawing.Size(124, 17);
+            this.chkEnableFrameLimiter.TabIndex = 16;
+            this.chkEnableFrameLimiter.Text = "Enable Frame Limiter";
+            this.chkEnableFrameLimiter.UseVisualStyleBackColor = true;
+            this.chkEnableFrameLimiter.CheckedChanged += new System.EventHandler(this.chkEnableFrameLimiter_CheckedChanged);
+            // 
+            // lblHostFPS
+            // 
+            this.lblHostFPS.AutoSize = true;
+            this.lblHostFPS.Location = new System.Drawing.Point(3, 39);
+            this.lblHostFPS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblHostFPS.Name = "lblHostFPS";
+            this.lblHostFPS.Size = new System.Drawing.Size(76, 13);
+            this.lblHostFPS.TabIndex = 7;
+            this.lblHostFPS.Text = "Host FPS Limit";
+            // 
+            // numHostFPS
+            // 
+            this.numHostFPS.Location = new System.Drawing.Point(109, 37);
+            this.numHostFPS.Margin = new System.Windows.Forms.Padding(2);
+            this.numHostFPS.Name = "numHostFPS";
+            this.numHostFPS.Size = new System.Drawing.Size(35, 20);
+            this.numHostFPS.TabIndex = 9;
+            // 
+            // btnSaveFPS
+            // 
+            this.btnSaveFPS.Location = new System.Drawing.Point(2, 61);
+            this.btnSaveFPS.Margin = new System.Windows.Forms.Padding(2);
+            this.btnSaveFPS.Name = "btnSaveFPS";
+            this.btnSaveFPS.Size = new System.Drawing.Size(142, 21);
+            this.btnSaveFPS.TabIndex = 11;
+            this.btnSaveFPS.Text = "Save FPS Limit";
+            this.btnSaveFPS.UseVisualStyleBackColor = true;
+            this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
+            // 
             // grpShortcuts
             // 
             this.grpShortcuts.Controls.Add(this.btnEditCFG);
@@ -317,94 +393,6 @@
             this.btnJoyCpl.UseVisualStyleBackColor = true;
             this.btnJoyCpl.Click += new System.EventHandler(this.btnJoyCpl_Click);
             // 
-            // btnSaveFPS
-            // 
-            this.btnSaveFPS.Location = new System.Drawing.Point(2, 61);
-            this.btnSaveFPS.Margin = new System.Windows.Forms.Padding(2);
-            this.btnSaveFPS.Name = "btnSaveFPS";
-            this.btnSaveFPS.Size = new System.Drawing.Size(142, 21);
-            this.btnSaveFPS.TabIndex = 11;
-            this.btnSaveFPS.Text = "Save FPS Limit";
-            this.btnSaveFPS.UseVisualStyleBackColor = true;
-            this.btnSaveFPS.Click += new System.EventHandler(this.btnSaveFPS_Click);
-            // 
-            // numHostFPS
-            // 
-            this.numHostFPS.Location = new System.Drawing.Point(109, 37);
-            this.numHostFPS.Margin = new System.Windows.Forms.Padding(2);
-            this.numHostFPS.Name = "numHostFPS";
-            this.numHostFPS.Size = new System.Drawing.Size(35, 20);
-            this.numHostFPS.TabIndex = 9;
-            // 
-            // lblHostFPS
-            // 
-            this.lblHostFPS.AutoSize = true;
-            this.lblHostFPS.Location = new System.Drawing.Point(3, 39);
-            this.lblHostFPS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblHostFPS.Name = "lblHostFPS";
-            this.lblHostFPS.Size = new System.Drawing.Size(76, 13);
-            this.lblHostFPS.TabIndex = 7;
-            this.lblHostFPS.Text = "Host FPS Limit";
-            // 
-            // chkEnableFrameLimiter
-            // 
-            this.chkEnableFrameLimiter.AutoSize = true;
-            this.chkEnableFrameLimiter.Checked = true;
-            this.chkEnableFrameLimiter.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkEnableFrameLimiter.Location = new System.Drawing.Point(6, 19);
-            this.chkEnableFrameLimiter.Name = "chkEnableFrameLimiter";
-            this.chkEnableFrameLimiter.Size = new System.Drawing.Size(124, 17);
-            this.chkEnableFrameLimiter.TabIndex = 16;
-            this.chkEnableFrameLimiter.Text = "Enable Frame Limiter";
-            this.chkEnableFrameLimiter.UseVisualStyleBackColor = true;
-            this.chkEnableFrameLimiter.CheckedChanged += new System.EventHandler(this.chkEnableFrameLimiter_CheckedChanged);
-            // 
-            // lblVersion
-            // 
-            this.lblVersion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblVersion.AutoSize = true;
-            this.lblVersion.Location = new System.Drawing.Point(112, 86);
-            this.lblVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(42, 13);
-            this.lblVersion.TabIndex = 59;
-            this.lblVersion.Text = "Version";
-            this.lblVersion.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Location = new System.Drawing.Point(13, 104);
-            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(130, 21);
-            this.btnUpdate.TabIndex = 58;
-            this.btnUpdate.Text = "Update";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            // 
-            // lblCurrentVersion
-            // 
-            this.lblCurrentVersion.AutoSize = true;
-            this.lblCurrentVersion.Location = new System.Drawing.Point(10, 86);
-            this.lblCurrentVersion.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblCurrentVersion.Name = "lblCurrentVersion";
-            this.lblCurrentVersion.Size = new System.Drawing.Size(82, 13);
-            this.lblCurrentVersion.TabIndex = 57;
-            this.lblCurrentVersion.Text = "Current Version:";
-            // 
-            // grpFrameLimiter
-            // 
-            this.grpFrameLimiter.Controls.Add(this.chkEnableFrameLimiter);
-            this.grpFrameLimiter.Controls.Add(this.lblHostFPS);
-            this.grpFrameLimiter.Controls.Add(this.numHostFPS);
-            this.grpFrameLimiter.Controls.Add(this.btnSaveFPS);
-            this.grpFrameLimiter.Cursor = System.Windows.Forms.Cursors.Default;
-            this.grpFrameLimiter.Location = new System.Drawing.Point(6, 9);
-            this.grpFrameLimiter.Name = "grpFrameLimiter";
-            this.grpFrameLimiter.Size = new System.Drawing.Size(154, 90);
-            this.grpFrameLimiter.TabIndex = 17;
-            this.grpFrameLimiter.TabStop = false;
-            this.grpFrameLimiter.Text = "Frame Limiter";
-            // 
             // SettingsControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,10 +410,10 @@
             this.tabWindow.ResumeLayout(false);
             this.tabWindow.PerformLayout();
             this.tabAdvanced.ResumeLayout(false);
-            this.grpShortcuts.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
             this.grpFrameLimiter.ResumeLayout(false);
             this.grpFrameLimiter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numHostFPS)).EndInit();
+            this.grpShortcuts.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -441,7 +429,6 @@
         private System.Windows.Forms.Button btnEditCFG;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabInput;
-        private System.Windows.Forms.Button btnSaveInput;
         private System.Windows.Forms.TabPage tabWindow;
         private System.Windows.Forms.Button btnSaveWindow;
         private System.Windows.Forms.TabPage tabAdvanced;

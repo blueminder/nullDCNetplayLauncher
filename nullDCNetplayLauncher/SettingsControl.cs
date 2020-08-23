@@ -30,10 +30,6 @@ namespace nullDCNetplayLauncher
 
         string[] cfgLines;
 
-        string player1_old;
-        string backup_old;
-        string player2_old;
-
         //string p1Entry;
         //string backupEntry;
         //string p2Entry;
@@ -151,6 +147,31 @@ namespace nullDCNetplayLauncher
             lblVersion.Text = Application.ProductVersion;
         }
 
+        public void SettingsForm_Closing(object sender, EventArgs e)
+        {
+            foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
+            {
+                mapping.Default = false;
+            }
+
+            ((GamePadMapping)cboGamePadMappings.SelectedValue).Default = true;
+
+            Launcher.ActiveGamePadMapping = (GamePadMapping)cboGamePadMappings.SelectedValue;
+
+            var path = Launcher.rootDir + "//GamePadMappingList.xml";
+            System.Xml.Serialization.XmlSerializer serializer =
+                new System.Xml.Serialization.XmlSerializer(typeof(GamePadMappingList));
+            StreamWriter writer = new StreamWriter(path);
+            serializer.Serialize(writer.BaseStream, Launcher.mappings);
+            writer.Close();
+
+            NetplayLaunchForm.StopMapper(true);
+            NetplayLaunchForm.StartMapper();
+
+            //Launcher.LoadRegionSettings();
+            Launcher.RestoreFiles();
+        }
+
         private void btnEditCFG_Click(object sender, EventArgs e)
         {
             Process.Start("notepad.exe", Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
@@ -161,44 +182,9 @@ namespace nullDCNetplayLauncher
             Process.Start("explorer.exe", Launcher.rootDir + "nulldc-1-0-4-en-win\\qkoJAMMA");
         }
 
+        /*
         private void btnSaveInput_Click(object sender, EventArgs e)
         {
-            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
-            string[] launcherCfgLines = File.ReadAllLines(Launcher.rootDir + "launcher.cfg");
-            string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            string[] cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-
-            /*
-            if(chkCustomCFG.Checked)
-            {
-                if (!launcherText.Contains("custom_cfg"))
-                {
-                    launcherText += "custom_cfg=1" + Environment.NewLine;
-                }
-                else
-                {
-                    launcherText = launcherText.Replace("custom_cfg=0", "custom_cfg=1");
-                }
-            }
-            else
-            {
-                if (!launcherText.Contains("custom_cfg"))
-                {
-                    launcherText += "custom_cfg=0" + Environment.NewLine;
-                }
-                else
-                {
-                    launcherText = launcherText.Replace("custom_cfg=1", "custom_cfg=0");
-                }
-            }
-            */
-            
-
-            launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
-            launcherText = launcherText.Replace("player1=joy1", "player1=keyboard");
-
-            //var player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            //cfgText = cfgText.Replace(player1_old, "player1=keyboard");
 
             foreach (GamePadMapping mapping in Launcher.mappings.GamePadMappings)
             {
@@ -219,38 +205,19 @@ namespace nullDCNetplayLauncher
             NetplayLaunchForm.StopMapper(true);
             NetplayLaunchForm.StartMapper();
 
-            //String p1_val = $"{cboPlayer1.SelectedValue}";
-
-            //if (p1_val.Length == 0)
-                //p1_val = "NULL";
-
-            //var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
-            //String region_val = $"{cboRegion.SelectedValue}";
-
-            //cfgText = cfgText.Replace(player1_old, "player1=" + p1_val);
-            //launcherText = launcherText.Replace(player1_old, "player1=" + p1_val);
-            //launcherText = launcherText.Replace(region_old, "region=" + region_val);
-            //File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
-            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
-
-            // reload from file
-            //cfgLines = File.ReadAllLines(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
-            //player1_old = cfgLines.Where(s => s.Contains("player1=")).ToList().First();
-            //backup_old = cfgLines.Where(s => s.Contains("backup=")).ToList().First();
-            //player2_old = cfgLines.Where(s => s.Contains("player2=")).ToList().First();
-
             //Launcher.LoadRegionSettings();
             Launcher.RestoreFiles();
 
             MessageBox.Show("Main Settings Successfully Saved");
         }
-
+        */
         private void chkEnableMapper_CheckedChanged(object sender, EventArgs e)
         {
+            string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+
             if (chkEnableMapper.Checked)
             {
-                //cboPlayer1.Text = "Keyboard";
-                //cboPlayer1.Enabled = false;
+                launcherText = launcherText.Replace("enable_mapper=0", "enable_mapper=1");
                 cboGamePadMappings.Enabled = true;
                 if (Launcher.mappings.GamePadMappings.Count > 1)
                     btnDeleteMapping.Enabled = true;
@@ -258,11 +225,13 @@ namespace nullDCNetplayLauncher
             }
             else
             {
-                //cboPlayer1.Enabled = true;
+                launcherText = launcherText.Replace("enable_mapper=1", "enable_mapper=0");
                 cboGamePadMappings.Enabled = false;
                 btnDeleteMapping.Enabled = false;
                 NetplayLaunchForm.EnableMapper = false;
             }
+
+            File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
         }
 
         private void btnJoyCpl_Click(object sender, EventArgs e)
@@ -367,6 +336,36 @@ namespace nullDCNetplayLauncher
             lblHostFPS.Enabled = enabled;
             numHostFPS.Enabled = enabled;
             btnSaveFPS.Enabled = enabled;
+        }
+
+        private void cboRegion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cboRegion.SelectedValue != "")
+            {
+                string launcherCfgPath = Launcher.rootDir + "launcher.cfg";
+                string launcherText = File.ReadAllText(Launcher.rootDir + "launcher.cfg");
+                var launcherCfgLines = File.ReadAllLines(launcherCfgPath);
+                var region_old = launcherCfgLines.Where(s => s.Contains("region=")).ToList().First();
+                String region_val = ((KeyValuePair<string, string>)cboRegion.SelectedItem).Value;
+                launcherText = launcherText.Replace(region_old, "region=" + region_val);
+                File.WriteAllText(Launcher.rootDir + "launcher.cfg", launcherText);
+
+                string cfgText = File.ReadAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg");
+                var us_bios_path = Path.Combine(Launcher.rootDir, "nulldc-1-0-4-en-win", "data", "naomi_boot.bin");
+                if (region_val == "japan")
+                {
+                    cfgText = cfgText.Replace("Region=USA", "Region=JPN");
+                    if (File.Exists(us_bios_path))
+                        File.Move(us_bios_path, $"{us_bios_path}.inactive");
+                }
+                else if(region_val == "usa")
+                {
+                    cfgText = cfgText.Replace("Region=JPN", "Region=USA");
+                    if (File.Exists($"{us_bios_path}.inactive"))
+                        File.Move($"{us_bios_path}.inactive", us_bios_path);
+                }
+                File.WriteAllText(Launcher.rootDir + "nulldc-1-0-4-en-win\\nullDC.cfg", cfgText);
+            }
         }
     }
 }
