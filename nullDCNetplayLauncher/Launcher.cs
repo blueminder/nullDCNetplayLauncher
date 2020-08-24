@@ -386,13 +386,13 @@ namespace nullDCNetplayLauncher
                         i = i + 1;
                     }
                     //section netplay                   
-                    if (lines[i].Contains("[Netplay]"))
+                    if (lines[i].Contains("[BEARPlay]"))
                     {
-                        writer.WriteLine("[Netplay]");
+                        writer.WriteLine("[BEARPlay]");
                         //rewriting all the lines in this section
                         writer.WriteLine(enabled);
-                        writer.WriteLine(hosting);
                         writer.WriteLine(hostip);
+                        writer.WriteLine(hosting);
                         writer.WriteLine(portcfg);
                         writer.WriteLine(delaycfg);
                         i = i + 5;

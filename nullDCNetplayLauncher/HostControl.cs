@@ -183,7 +183,7 @@ namespace nullDCNetplayLauncher
             Launcher.UpdateCFGFile(
                 netplayEnabled: true,
                 isHost: true,
-                hostAddress: cboHostIP.Text,
+                hostAddress: cboHostIP.SelectedValue.ToString(),
                 hostPort: txtHostPort.Text,
                 frameDelay: Convert.ToInt32(numDelay.Value)
                                    .ToString(),
