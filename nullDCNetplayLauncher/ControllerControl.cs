@@ -1930,7 +1930,7 @@ namespace nullDCNetplayLauncher
                 }
                 else
                 {
-                    kbOutput += $"{bear_kb_inputs[i]}=\n";
+                    kbOutput += $"{bear_kb_inputs[i]}=124\n";
                 }
             }
 
