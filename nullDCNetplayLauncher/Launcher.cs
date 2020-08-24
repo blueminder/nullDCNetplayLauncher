@@ -412,18 +412,28 @@ namespace nullDCNetplayLauncher
 
             string[] lines = File.ReadAllLines(CfgPath);
 
+            string ndcOutput = kbOutput.Replace("BPort", "Port");
+
             // write to nullDC.cfg
             using (StreamWriter writer = new StreamWriter(CfgPath))
             {
                 for (int i = 0; i < lines.Length; i++)
                 {
-                    //section bearjamma                  
-                    if (lines[i].Contains("[BEARJamma]"))
+                    //section bearjamma
+                    if (lines[i].Contains("[ndc_hookjoy]"))
+                    {
+                        writer.WriteLine("[ndc_hookjoy]");
+                        //rewriting all the lines in this section
+                        writer.WriteLine(ndcOutput);
+                        i = i + 32;
+                        //i = i + kbOutput.Split('\n').Length;
+                    }
+                    else if (lines[i].Contains("[BEARJamma]"))
                     {
                         writer.WriteLine("[BEARJamma]");
                         //rewriting all the lines in this section
                         writer.WriteLine(kbOutput);
-                        i = i + 16;
+                        i = i + 32;
                         //i = i + kbOutput.Split('\n').Length;
                     }
                     else
@@ -985,7 +995,7 @@ namespace nullDCNetplayLauncher
 
             if (kbPath != null)
             {
-                string[] kbLines = File.ReadAllLines(kbPath).Where(x => x.StartsWith("BPortA_I_")).ToArray();
+                string[] kbLines = File.ReadAllLines(kbPath).Where(x => x.StartsWith("BPort")).ToArray();
                 foreach (string line in kbLines)
                 {
                     string key = line.Split('=')[0];
