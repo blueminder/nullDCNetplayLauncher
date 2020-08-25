@@ -74,6 +74,7 @@ namespace nullDCNetplayLauncher
                 ShowConsoleWindow();
                 Dictionary<string, string> arguments = new Dictionary<string, string>();
                 bool hosting = false;
+                bool spectate = false;
                 bool offline = false;
                 string hostCode;
                 Launcher.HostInfo hostInfo = new Launcher.HostInfo();
@@ -113,6 +114,7 @@ namespace nullDCNetplayLauncher
                     Console.WriteLine("--delay <frame delay>");
                     Console.WriteLine("--host-code <code>");
                     Console.WriteLine("--hosting <0/1>");
+                    Console.WriteLine("--spectate <0/1>");
                     Console.WriteLine("--ip <ip address>");
                     Console.WriteLine("--port <port number>");
                     Console.WriteLine("");
@@ -208,6 +210,11 @@ namespace nullDCNetplayLauncher
                     Launcher.SaveFpsSettings(host_fps, guest_fps);
                 }
 
+                if (arguments.ContainsKey("spectate"))
+                {
+                    spectate = arguments["spectate"] == "1";
+                }
+
                 if (arguments.ContainsKey("offline"))
                 {
                     offline = arguments["offline"] == "1";
@@ -225,7 +232,7 @@ namespace nullDCNetplayLauncher
                 }
                 else
                 {
-                    if (arguments.ContainsKey("hosting"))
+                    if (arguments.ContainsKey("hosting") && !spectate)
                     {
                         hosting = arguments["hosting"] == "1";
                     }
@@ -276,7 +283,8 @@ namespace nullDCNetplayLauncher
                         hostAddress: hostInfo.IP,
                         hostPort: hostInfo.Port,
                         frameDelay: hostInfo.Delay,
-                        frameMethod: hostInfo.Method);
+                        frameMethod: hostInfo.Method,
+                        isSpectating: spectate);
 
                     Launcher.LaunchNullDC(
                         RomPath: romPath,
