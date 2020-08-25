@@ -79,7 +79,8 @@ namespace nullDCNetplayLauncher
                 hostAddress: txtOpponentIP.Text,
                 hostPort: txtHostPort.Text,
                 frameDelay: Convert.ToInt32(numDelay.Value)
-                                   .ToString());
+                                   .ToString(),
+                isSpectating: chkSpectate.Checked);
             Launcher.LaunchNullDC(Launcher.SelectedGame, isHost: false);
         }
 
@@ -127,13 +128,11 @@ namespace nullDCNetplayLauncher
                     txtOpponentIP.BackColor = Color.Honeydew;
                     numDelay.BackColor = Color.Honeydew;
 
-                    txtHostIP.BackColor = Color.LemonChiffon;
                     txtHostPort.BackColor = Color.LemonChiffon;
                     cboMethod.BackColor = Color.LemonChiffon;
                     cboRegion.BackColor = Color.LemonChiffon;
 
                     txtOpponentIP.Text = hostInfo.IP;
-                    txtHostIP.Text = hostInfo.IP;
                     txtHostPort.Text = hostInfo.Port;
                     numDelay.Value = Convert.ToInt32(hostInfo.Delay);
 
@@ -235,7 +234,6 @@ namespace nullDCNetplayLauncher
             {
                 txtHostCode.Text = "";
                 txtOpponentIP.Text = toLoad.IP;
-                txtHostIP.Text = toLoad.IP;
                 txtHostPort.Text = toLoad.Port;
                 numDelay.Value = toLoad.Delay;
                 cboMethod.SelectedValue = toLoad.Method;
@@ -264,7 +262,6 @@ namespace nullDCNetplayLauncher
             cboPresetName.BackColor = Color.White;
             txtHostCode.BackColor = Color.White;
             txtOpponentIP.BackColor = Color.White;
-            txtHostIP.BackColor = Color.White;
             txtHostPort.BackColor = Color.White;
             numDelay.BackColor = Color.White;
             cboMethod.BackColor = Color.White;

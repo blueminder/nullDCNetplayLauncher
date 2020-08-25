@@ -316,7 +316,11 @@ namespace nullDCNetplayLauncher
             string hostAddress = "127.0.0.1",
             string hostPort = "27886",
             string frameDelay = "1",
-            string frameMethod = "0")
+            string frameMethod = "0",
+            bool record = false,
+            bool playback = false,
+            bool allowSpectators = true,
+            bool isSpectating = false)
         {
             string EmuDir = rootDir + "nulldc-1-0-4-en-win\\";
             string LauncherCfgPath = rootDir + "launcher.cfg";
@@ -328,6 +332,10 @@ namespace nullDCNetplayLauncher
             string hostip = "Host=" + hostAddress;
             string portcfg = "Port=" + hostPort;
             string delaycfg = "Delay=" + frameDelay;
+            string recordcfg = "Record=" + (record ? 1 : 0).ToString();
+            string playbackcfg = "Playback=" + (playback ? 1 : 0).ToString();
+            string allowspectatorscfg = "AllowSpectators=" + (allowSpectators ? 1 : 0).ToString();
+            string spectator = "Spectator=" + (isSpectating ? 1 : 0).ToString();
 
             //for nullDC cfg
             string limitfpscfg = "LimitFPS=0";
@@ -395,7 +403,11 @@ namespace nullDCNetplayLauncher
                         writer.WriteLine(hosting);
                         writer.WriteLine(portcfg);
                         writer.WriteLine(delaycfg);
-                        i = i + 5;
+                        writer.WriteLine(recordcfg);
+                        writer.WriteLine(playbackcfg);
+                        writer.WriteLine(allowspectatorscfg);
+                        writer.WriteLine(spectator);
+                        i = i + 9;
                     }
                     else
                     {

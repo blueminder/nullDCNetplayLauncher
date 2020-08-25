@@ -292,7 +292,7 @@ namespace nullDCNetplayLauncher
                 Icon = nullDCNetplayLauncher.Properties.Resources.round_multiple_stop_black_24dp
             };
 
-            window.MinimumSize = new Size(230, 195);
+            window.MinimumSize = new Size(230, 205);
             window.MaximumSize = new Size(230, 355);
             window.Size = window.MinimumSize;
             window.Controls.Add(jc);
