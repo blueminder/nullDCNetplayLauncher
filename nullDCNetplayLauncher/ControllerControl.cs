@@ -708,8 +708,8 @@ namespace nullDCNetplayLauncher
                     kOldState = kState;
 
                 GetKeyboardState(kState);
-                // 48-222 includes all letters, numbers, special characters, numpad, f keys, shift, ctrl, alt
-                for (int i = 48; i < 222; i++)
+                // 8-222 includes all letters, numbers, special characters, numpad, f keys, shift, ctrl, alt
+                for (int i = 8; i < 222; i++)
                 {
                     // pressed
                     if ((kState[i] & 0x80) != 0 && (kOldState[i] & 0x80) == 0)
@@ -1908,43 +1908,23 @@ namespace nullDCNetplayLauncher
                                         "BPortA_I_BTN0_KEY", "BPortA_I_BTN1_KEY", "BPortA_I_BTN2_KEY",
                                         "BPortA_I_BTN3_KEY", "BPortA_I_BTN4_KEY", "BPortA_I_BTN5_KEY", "BPortA_I_COIN_KEY" };
 
-            kbOutput += "BPortA_I_SERVICE_KEY_1=115\n";
-            kbOutput += "BPortA_I_SERVICE_KEY_2=116\n";
-            kbOutput += "BPortA_I_TEST_KEY_2=118\n";
+            kbOutput += "BPortA_I_SERVICE_KEY_1=124\n";
+            kbOutput += "BPortA_I_SERVICE_KEY_2=124\n";
+            kbOutput += "BPortA_I_TEST_KEY_2=124f\n";
 
             string p1_input = "";
-            string p2_input = "";
 
             for (int i = 0; i < buttons.Length; i++)
             {
                 if (kWorkingMapping.ContainsKey(buttons[i]))
                 {
                     p1_input = bear_kb_inputs[i];
-                    p2_input = p1_input.Replace("BPortA", "BPortB");
-                    if (ActiveKb[p2_input] == kWorkingMapping[buttons[i]])
-                    {
-                        ActiveKb[p2_input] = ActiveKb[p1_input];
-                        ActiveKb[p1_input] = ActiveKb[p2_input];
-                    }
                     kbOutput += $"{bear_kb_inputs[i]}={kWorkingMapping[buttons[i]]}\n";
                 }
                 else
                 {
                     kbOutput += $"{bear_kb_inputs[i]}=124\n";
                 }
-            }
-
-            kbOutput += "BPortB_I_SERVICE_KEY_1=119\n";
-            kbOutput += "BPortB_I_SERVICE_KEY_2=121\n";
-            kbOutput += "BPortB_I_TEST_KEY_2=122\n";
-
-
-            for (int i = 0; i < buttons.Length; i++)
-            {
-                p1_input = bear_kb_inputs[i];
-                p2_input = p1_input.Replace("BPortA", "BPortB");
-
-                kbOutput += $"{p2_input}={ActiveKb[p2_input]}\n";
             }
 
             try

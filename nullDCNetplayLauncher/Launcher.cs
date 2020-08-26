@@ -437,7 +437,7 @@ namespace nullDCNetplayLauncher
                         writer.WriteLine("[ndc_hookjoy]");
                         //rewriting all the lines in this section
                         writer.WriteLine(ndcOutput);
-                        i = i + 32;
+                        i = i + 16;
                         //i = i + kbOutput.Split('\n').Length;
                     }
                     else if (lines[i].Contains("[BEARJamma]"))
@@ -445,7 +445,7 @@ namespace nullDCNetplayLauncher
                         writer.WriteLine("[BEARJamma]");
                         //rewriting all the lines in this section
                         writer.WriteLine(kbOutput);
-                        i = i + 32;
+                        i = i + 16;
                         //i = i + kbOutput.Split('\n').Length;
                     }
                     else
